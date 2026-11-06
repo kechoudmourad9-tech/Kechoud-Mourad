@@ -6,7 +6,7 @@ import { useFontFaces } from "../components/FontFaces";
 import { Grain, Vignette } from "../components/Layers";
 import { clamp } from "../theme";
 import { house } from "./theme";
-import { SEGS, TOTAL, headAt, originOf, out, zoomOf } from "./timeline";
+import { SEGS, TOTAL, originOf, out, zoomOf } from "./timeline";
 
 const C = house.colors;
 const AR: React.CSSProperties = { fontFamily: `${house.fonts.body}, CairoLatin`, direction: "rtl" };
@@ -51,26 +51,41 @@ const Grade: React.FC = () => (
 const Card: React.FC<{ from: number; to: number; w?: number; h?: number; children: React.ReactNode }> = ({
   from, to, w = 1.2, h = 1.42, children,
 }) => {
+  // Full-screen graphic scene: covers the whole frame (footage included), wipes in from the
+  // bottom, wipes out upward (faster), with its own animated background.
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   if (frame < from || frame >= to) return null;
-  const [cx, cy, size] = headAt(frame);
-  const p = spring({ frame: frame - from, fps, config: { damping: 18, stiffness: 190, mass: 0.7 } });
+  void w; void h;
+  const t = frame - from;
+  const p = spring({ frame: t, fps, config: { damping: 22, stiffness: 140, mass: 0.8 } });
   const o = interpolate(frame, [to - 8, to], [0, 1], { ...clamp, easing: house.ease.in });
-  const W = Math.min(1000, size * w);
-  const top0 = cy - Math.min(1080, size * h) / 2 + size * 0.05;
-  const H = Math.min(1080, size * h, 1575 - top0); // keep clear of the caption band
-  const left = Math.max(40, Math.min(1080 - 40 - W, cx - W / 2));
-  const push = 1 + Math.min(1, (frame - from) / (to - from)) * 0.02; // slow push while it holds
+  const reveal = interpolate(p, [0, 1], [100, 0]);
+  const push = 1 + Math.min(1, t / (to - from)) * 0.03; // slow push while it holds
+  const d1 = Math.sin(t / 40) * 60, d2 = Math.cos(t / 55) * 50;
   return (
-    <div style={{ position: "absolute", left, top: top0, width: W, height: H,
-      opacity: interpolate(p, [0, 0.4], [0, 1], clamp) * (1 - o),
-      transform: `translateY(${interpolate(p, [0, 1], [50, 0]) - o * 30}px) scale(${interpolate(p, [0, 1], [0.94, 1]) * push * (1 - o * 0.04)})`,
-      background: C.card, borderRadius: 44, border: `2px solid ${C.cardEdge}`,
-      boxShadow: "0 40px 100px -10px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.06)",
-      padding: 56, display: "flex", flexDirection: "column", justifyContent: "center", overflow: "hidden" }}>
-      {children}
-    </div>
+    <AbsoluteFill style={{ clipPath: `inset(${o * 100}% 0 ${reveal}% 0)` }}>
+      <AbsoluteFill style={{ background: C.bg }} />
+      <div style={{ position: "absolute", width: 1400, height: 1400, borderRadius: "50%", left: -500 + d1, top: -300,
+        background: `radial-gradient(circle, ${C.coral}33, transparent 62%)`, filter: "blur(40px)" }} />
+      <div style={{ position: "absolute", width: 1200, height: 1200, borderRadius: "50%", right: -500 - d2, bottom: -200,
+        background: "radial-gradient(circle, rgba(255,240,225,0.10), transparent 64%)", filter: "blur(50px)" }} />
+      {/* faint grid */}
+      <AbsoluteFill style={{ opacity: 0.06, backgroundImage:
+        "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)",
+        backgroundSize: "90px 90px", backgroundPosition: `0 ${-t * 0.6}px`,
+        maskImage: "radial-gradient(ellipse at center, black 30%, transparent 75%)" }} />
+      {/* coral edge line that leads the wipe */}
+      <div style={{ position: "absolute", left: 0, right: 0, top: `${100 - (100 - reveal)}%`, height: 10, background: C.coral,
+        opacity: reveal > 0.5 ? 1 : 0 }} />
+      <AbsoluteFill style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingBottom: 160 }}>
+        <div style={{ width: 760, display: "flex", flexDirection: "column", justifyContent: "center",
+          transform: `translateY(${interpolate(p, [0, 1], [120, 0]) - o * 60}px) scale(${1.18 * push})`,
+          opacity: interpolate(p, [0.2, 0.7], [0, 1], clamp) }}>
+          {children}
+        </div>
+      </AbsoluteFill>
+    </AbsoluteFill>
   );
 };
 
@@ -194,8 +209,8 @@ const Compare: React.FC<{ a: number; b: number; big: number }> = ({ a, b, big })
       <Title at={a + 6} size={92}>نفس الشي، غير أكبر</Title>
       <div style={{ display: "flex", flexDirection: "row-reverse", alignItems: "flex-end", justifyContent: "center",
         gap: 60, marginTop: 26 }}>
-        {box("الليسي", 95, s1, false)}
-        {box("الجامعة", 190, s2, true)}
+        {box("الليسي", 130, s1, false)}
+        {box("الجامعة", 260, s2, true)}
       </div>
       <Sub at={big + 8}>ماكانش علاه تخاف</Sub>
     </Card>

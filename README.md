@@ -19,7 +19,7 @@ npm run render      # out/montage.mp4
 ## Montage 2 — darija (`Darija`)
 
 - `out/montage-darija.mp4` : 56 s, coupé à partir de 2 min de rush, textes en arabe
-- La méthode vient du skill `capcut-talking-head-edit`, rendue ici avec Remotion (pas besoin de CapCut) :
+- La méthode vient du skill `capcut-talking-head-edit`, rendue ici avec Remotion (pas besoin de CapCut). Les animations sont en plein écran :
   - pauses, doubles prises et faux départs coupés
   - un zoom à chaque coupe, et des zooms lents sur les phrases fortes
   - étalonnage chaud, musique de fond environ 15 dB sous la voix, sons discrets (swipe, ding, check)
