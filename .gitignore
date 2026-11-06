@@ -2,3 +2,4 @@ node_modules/
 out/*
 !out/montage.mp4
 !out/montage-darija.mp4
+!out/montage-maths.mp4

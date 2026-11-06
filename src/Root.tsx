@@ -3,6 +3,7 @@ import { Edit } from "./Edit";
 import { VIDEO } from "./theme";
 import { DarijaEdit } from "./darija/DarijaEdit";
 import { TOTAL } from "./darija/timeline";
+import { MATHS_FRAMES, MathsEdit } from "./maths/MathsEdit";
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -15,5 +16,6 @@ export const RemotionRoot: React.FC = () => (
     height={VIDEO.height}
   />
   <Composition id="Darija" component={DarijaEdit} durationInFrames={TOTAL} fps={30} width={1080} height={1920} />
+  <Composition id="Maths" component={MathsEdit} durationInFrames={MATHS_FRAMES} fps={30} width={1080} height={1920} />
   </>
 );
