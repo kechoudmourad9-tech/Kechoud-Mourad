@@ -361,7 +361,7 @@ const Graphics: React.FC = () => (
 );
 
 /* ================= sound: music ~15 dB under voice, UI sounds ~6.5 dB under ================= */
-const Sfx: React.FC<{ at: number; src: string; v?: number }> = ({ at, src, v = 0.47 }) => (
+const Sfx: React.FC<{ at: number; src: string; v?: number }> = ({ at, src, v = 0.35 }) => (
   <Sequence from={Math.max(0, at)} durationInFrames={40}>
     <Audio src={staticFile(`sfx/${src}.wav`)} volume={v} />
   </Sequence>
@@ -372,7 +372,7 @@ const Sound: React.FC = () => {
   return (
     <>
       <Audio src={staticFile("sfx/bed.wav")}
-        volume={(f) => interpolate(f, [0, 10, TOTAL - 75, TOTAL - 70, TOTAL - 5], [0.0, 0.17, 0.17, 0.3, 0], clamp)} />
+        volume={(f) => interpolate(f, [0, 10, TOTAL - 75, TOTAL - 70, TOTAL - 5], [0.0, 0.07, 0.07, 0.22, 0], clamp)} />
       <Sfx at={G.hook[0]} src="swipe" />
       <Sfx at={G.hook[0] + 22} src="ding" v={0.35} />
       {chapters.map((c) => <Sfx key={`s${c}`} at={c - 2} src="swipe" />)}
