@@ -1,0 +1,12 @@
+[
+ ["s01_stars","img/stars_0.png","push",4.8], ["s02_kingdom","img/kingdom_1.png","pull",5.3], ["s03_ruins","img/ruins_1.png","push",3.8],
+ ["s04_forest","img/hero_forest.png","push",5.3], ["s05_hand","img/hand_1.png","pushfast",2.8], ["s06_city","img/city_1.png","up",6.8],
+ ["s07_walk","img/walk_n3.png","pushfast",1.8], ["m01_army","img/army_1.png","left",1.6], ["m02_warrior","img/warrior_1.png","push",1.6],
+ ["m03_creatures","img/creatures_1.png","up",1.6], ["m04_temple","img/temple_0.png","shake",1.6], ["m05_sword","img/sword_1.png","pushfast",1.6],
+ ["m06_bridge","img/bridge_1.png","pushfast",1.6], ["m07_silhouette","img/silhouette_1.png","down",1.6], ["s08_lookup","img/hero_crack.png","push",3.3],
+ ["s09_crack","img/crack_0.png","pull",3.3], ["s10_crack2","img/crack_1.png","push",4.9], ["b01","img/dragons_1.png","left",1.5],
+ ["b02","img/magic_1.png","shake",1.5], ["b03","img/clash_1.png","right",1.5], ["b04","img/dragons_0.png","right",1.5],
+ ["b05","img/magic_0.png","pushfast",1.5], ["b06","img/clash_0.png","shake",1.5], ["s11_palace","img/palace_0.png","push",2.3],
+ ["s12_hero_palace","img/hero_palace.png","push",1.6], ["s13_mask","img/mask_1.png","push",1.8], ["s14_enemy","img/hero_enemy.png","pushfast",3.3],
+ ["s15_titlebg","img/stars_1.png","push",7.0]
+]
