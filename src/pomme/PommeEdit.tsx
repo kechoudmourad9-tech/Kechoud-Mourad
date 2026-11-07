@@ -13,7 +13,7 @@ const FEET = 1500;
 const SC = 1.35;
 
 /* ---------- colourful sticker text ---------- */
-const Sticker: React.FC<{ at: number; x: number; y: number; bg: string; color?: string; size?: number; rot?: number;
+export const Sticker: React.FC<{ at: number; x: number; y: number; bg: string; color?: string; size?: number; rot?: number;
   until?: number; children: React.ReactNode }> = ({ at, x, y, bg, color = "#fff", size = 64, rot = -3, until, children }) => {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();

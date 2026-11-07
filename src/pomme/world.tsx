@@ -234,3 +234,40 @@ export const Gear: React.FC<{ x: number; y: number; r: number; speed: number; co
     </svg>
   );
 };
+
+/* ---------------- more fruit (used by the set-theory video) ---------------- */
+const fruitBox = (x: number, y: number, size: number, rot: number): React.CSSProperties => ({
+  position: "absolute", left: x - size / 2, top: y - size / 2, transform: `rotate(${rot}deg)`, overflow: "visible",
+  filter: "drop-shadow(0 6px 4px rgba(0,0,0,0.2))",
+});
+
+export const Banana: React.FC<{ x: number; y: number; size?: number; rot?: number }> = ({ x, y, size = 90, rot = 0 }) => (
+  <svg viewBox="-50 -50 100 100" width={size} height={size} style={fruitBox(x, y, size, rot)}>
+    <path d="M-40 -10 Q -30 38 22 34 Q 44 30 46 14 Q 30 26 6 22 Q -26 14 -30 -18 Z" fill="#FFD23F" stroke="#C99A12" strokeWidth={3} strokeLinejoin="round" />
+    <path d="M-34 -6 Q -22 24 14 26" stroke="#F2B807" strokeWidth={4} fill="none" strokeLinecap="round" />
+    <path d="M-30 -18 L -36 -30 L -42 -26 L -40 -10 Z" fill="#7E4A20" />
+  </svg>
+);
+
+export const Orange: React.FC<{ x: number; y: number; size?: number; rot?: number }> = ({ x, y, size = 90, rot = 0 }) => (
+  <svg viewBox="-50 -50 100 100" width={size} height={size} style={fruitBox(x, y, size, rot)}>
+    <circle r={40} fill="#FF8A1F" />
+    {Array.from({ length: 9 }).map((_, i) => <circle key={i} cx={Math.cos(i * 0.7) * 22} cy={Math.sin(i * 1.3) * 22} r={2} fill="#E06A00" opacity={0.6} />)}
+    <ellipse cx={-14} cy={-16} rx={9} ry={12} fill="#fff" opacity={0.3} />
+    <path d="M0 -38 Q 14 -54 30 -44 Q 16 -34 0 -38 Z" fill="#3BC46F" />
+  </svg>
+);
+
+export const Strawberry: React.FC<{ x: number; y: number; size?: number; rot?: number }> = ({ x, y, size = 90, rot = 0 }) => (
+  <svg viewBox="-50 -50 100 100" width={size} height={size} style={fruitBox(x, y, size, rot)}>
+    <path d="M0 42 C -34 20 -40 -18 -22 -30 Q 0 -38 22 -30 C 40 -18 34 20 0 42 Z" fill="#FF2E63" />
+    {[[-14, -10], [8, -14], [-4, 6], [16, 6], [-18, 14], [4, 22], [-6, -22]].map(([a, b], i) => (
+      <ellipse key={i} cx={a} cy={b} rx={2.4} ry={3.6} fill="#FFE27A" />
+    ))}
+    <path d="M-22 -30 L -12 -44 L -2 -34 L 6 -46 L 12 -34 L 24 -42 L 22 -30 Q 0 -24 -22 -30 Z" fill="#2FAE6A" />
+  </svg>
+);
+
+export type FruitName = "pomme" | "banane" | "orange" | "fraise";
+export const Fruit: React.FC<{ name: FruitName; x: number; y: number; size?: number; rot?: number }> = ({ name, ...r }) =>
+  name === "pomme" ? <Apple {...r} /> : name === "banane" ? <Banana {...r} /> : name === "orange" ? <Orange {...r} /> : <Strawberry {...r} />;

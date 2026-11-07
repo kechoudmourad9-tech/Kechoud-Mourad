@@ -1,0 +1,15 @@
+[
+ ["hook", "C'est quoi, un ensemble ? Et pourquoi toutes les mathématiques reposent dessus ?"],
+ ["panier1", "Imaginez avec moi un panier. Dans ce panier, on met une pomme, une banane et une orange."],
+ ["panier2", "Ce panier, c'est un ensemble. Et la pomme, la banane et l'orange, ce sont ses éléments."],
+ ["notation1", "En maths, on l'écrit avec des accolades : A égale pomme, banane, orange."],
+ ["notation2", "Et pour dire que la pomme est dans le panier, on écrit : pomme appartient à A."],
+ ["inclus1", "Maintenant, prenons un petit panier C, avec juste la pomme et la banane."],
+ ["inclus2", "Tous les fruits de C sont aussi dans A. On dit que C est inclus dans A."],
+ ["union", "Prenons un autre panier B, avec une banane et une fraise. Si on verse A et B ensemble, on obtient l'union : A union B."],
+ ["inter", "Et si on garde seulement les fruits qui sont dans les deux paniers à la fois, c'est l'intersection : A inter B. Ici, c'est juste la banane."],
+ ["vide", "Et un panier sans aucun fruit ? C'est l'ensemble vide. On le note avec ce petit rond barré."],
+ ["nombres1", "Avec les nombres, c'est pareil. N, les entiers naturels : zéro, un, deux, trois."],
+ ["nombres2", "Il est inclus dans Z, qui ajoute les nombres négatifs. Lui-même est inclus dans Q, les fractions, puis dans R, les nombres réels."],
+ ["fin", "Voilà : avec juste des paniers et des éléments, on construit toutes les mathématiques. Abonne-toi pour la suite !"]
+]
