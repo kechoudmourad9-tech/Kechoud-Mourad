@@ -9,6 +9,7 @@ import { ENSEMBLES_FRAMES, EnsemblesEdit } from "./pomme/EnsemblesEdit";
 import { MEDIAS_FRAMES, MediasEdit } from "./pomme/MediasEdit";
 import { GALATIA_FRAMES, GalatiaTrailer } from "./galatia/GalatiaTrailer";
 import { STORY_FRAMES, GalatiaStory } from "./galatia/GalatiaStory";
+import { EXPOSE_FRAMES, ExposeEdit } from "./expose/ExposeEdit";
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -27,5 +28,6 @@ export const RemotionRoot: React.FC = () => (
   <Composition id="Medias" component={MediasEdit} durationInFrames={MEDIAS_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="Galatia" component={GalatiaTrailer} durationInFrames={GALATIA_FRAMES} fps={30} width={1920} height={1080} />
   <Composition id="GalatiaStory" component={GalatiaStory} durationInFrames={STORY_FRAMES} fps={30} width={1920} height={1080} />
+  <Composition id="Expose" component={ExposeEdit} durationInFrames={EXPOSE_FRAMES} fps={30} width={1080} height={1920} />
   </>
 );
