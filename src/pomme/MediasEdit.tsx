@@ -1,4 +1,4 @@
-// "وسائل الإعلام والاتصال : الإيجابيات والسلبيات" — Arabic explainer, male synthetic voice (Piper ar_JO-kareem).
+// "وسائل الإعلام والاتصال : الإيجابيات والسلبيات" — Arabic explainer, narrated by the user (first draft used Piper ar_JO-kareem).
 // Same kit as the pomme / ensembles videos (characters, stickers, wipes, captions, SFX); new backgrounds for this video only.
 import {
   AbsoluteFill, Audio, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig,
@@ -305,7 +305,7 @@ const Sound: React.FC = () => {
     W("pos3", 7), W("pos4", 3), W("pos4", 4), W("pos4", 5), W("neg4", 2), W("neg4", 6), W("fin1", 4), W("fin2", 0)];
   return (
     <>
-      <Audio src={staticFile("pomme/voice-medias.m4a")} />
+      <Audio src={staticFile("pomme/voice-medias-real.m4a")} />
       <Audio src={staticFile("sfx/bed104.wav")} volume={(f) => interpolate(f, [0, 15, MEDIAS_FRAMES - 70, MEDIAS_FRAMES - 50, MEDIAS_FRAMES - 3], [0, 0.07, 0.07, 0.22, 0], clamp)} />
       {whoosh.map((t) => <Sfx key={`w${t}`} at={sec(t) - 3} src="whoosh" v={0.35} />)}
       {dings.map((t) => <Sfx key={`d${t}`} at={sec(t) + 8} src="ding" v={0.28} />)}
