@@ -1,4 +1,5 @@
-// "La théorie des ensembles" — 88 s explainer narrated with the user's cloned voice (XTTS-v2).
+// "La théorie des ensembles" — explainer narrated with the user's own recorded voice.
+// Timings were authored against the cloned-voice draft; remap-ensembles.json maps them onto the real recording.
 // Same kit as the pomme video: illustrated field + people, then white formulas on black with colour.
 import {
   AbsoluteFill, Audio, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig,
@@ -7,12 +8,27 @@ import { useFontFaces } from "../components/FontFaces";
 import { Grain, Vignette } from "../components/Layers";
 import { clamp } from "../theme";
 import { Arrow, MathBg, Scene, Tex, sec } from "../maths/kit";
-import captions from "./captions-ensembles.json";
+import captions from "./captions-ensembles-real.json";
+import anchors from "./remap-ensembles.json";
 import { Sticker } from "./PommeEdit";
 import { Basket, Bubble, Field, Fruit, FruitName, P, Person, Sparkles } from "./world";
 
-export const ENSEMBLES_FRAMES = sec(88.3) + 24;
-const s = sec;
+/** draft time (s) -> real-voice time (s): piecewise-linear through matched words, slope 1 past the last word */
+const A = anchors as number[][];
+export const remap = (t: number) => {
+  if (t <= A[0][0]) return t;
+  for (let i = 1; i < A.length; i++) {
+    if (t <= A[i][0]) {
+      const [o0, n0] = A[i - 1], [o1, n1] = A[i];
+      return n0 + ((t - o0) / (o1 - o0)) * (n1 - n0);
+    }
+  }
+  const [oL, nL] = A[A.length - 1];
+  return nL + (t - oL);
+};
+const s = (t: number) => sec(remap(t));
+// the real recording stops after "nombres réels": keep a short music-only outro
+export const ENSEMBLES_FRAMES = s(81.3) + sec(5.6);
 
 /* ---------- helpers ---------- */
 const usePop = (at: number, cfg = P.spring.bouncy) => {
@@ -143,9 +159,6 @@ const Notation: React.FC = () => (
     ))}
     <Tex at={s(19.3)} y={700} size={92} dur={40}
       tex={"A = \\{\\, {\\color{#FF3B4E}\\text{pomme}},\\ {\\color{#FFD23F}\\text{banane}},\\ {\\color{#FF8A1F}\\text{orange}} \\,\\}"} />
-    <Tex at={s(24.4)} y={1080} size={140} tex={"{\\color{#FF3B4E}\\text{pomme}} \\in A"} box={{ at: s(26.1), color: P.pink }} />
-    <Arrow at={s(26.1)} from={[700, 1330]} to={[640, 1150]} bend={0.25} color={P.yellow} width={8} />
-    <Sticker at={s(26.1)} x={700} y={1380} bg={P.yellow} color={P.ink} size={58} rot={-3}>appartient à</Sticker>
   </>
 );
 
@@ -293,13 +306,13 @@ const Sfx: React.FC<{ at: number; src: string; v?: number }> = ({ at, src, v = 0
   </Sequence>
 );
 const CUTS = [4.5, 15.7, 27.7, 39.3, 57.6, 63.5, 81.3];
-const POPS = [0.3, 1.2, 2.4, 2.63, 2.87, 3.1, 3.33, 5.8, 8.2, 9.1, 10.1, 11.8, 15.1, 18.7, 20.2, 20.7, 21.2, 26.1, 30.4, 38.0, 41.6, 42.6, 46.8, 53.9, 58.6, 60.2,
+const POPS = [0.3, 1.2, 2.4, 2.63, 2.87, 3.1, 3.33, 5.8, 8.2, 9.1, 10.1, 11.8, 15.1, 18.7, 20.2, 20.7, 21.2, 30.4, 38.0, 41.6, 42.6, 46.8, 53.9, 58.6, 60.2,
   70.2, 70.8, 71.1, 71.7, 74.5, 74.8, 78.0, 78.3, 80.4, 80.7, 82.3, 83.3, 83.43, 83.57, 83.7, 85.0, 86.4];
-const DINGS = [26.1, 38.4, 56.8, 62.9, 79.6, 86.5];
+const DINGS = [38.4, 56.8, 62.9, 79.6, 86.5];
 const Sound: React.FC = () => (
   <>
-    <Audio src={staticFile("pomme/voice-ensembles.m4a")} />
-    <Audio src={staticFile("sfx/bed90.wav")} volume={(f) => interpolate(f, [0, 15, ENSEMBLES_FRAMES - 45, ENSEMBLES_FRAMES - 3], [0, 0.07, 0.07, 0], clamp)} />
+    <Audio src={staticFile("pomme/voice-ensembles-real.m4a")} />
+    <Audio src={staticFile("sfx/bed90.wav")} volume={(f) => interpolate(f, [0, 15, s(81.0), s(81.0) + 15, ENSEMBLES_FRAMES - 3], [0, 0.07, 0.07, 0.25, 0], clamp)} />
     {CUTS.map((t) => <Sfx key={`w${t}`} at={s(t) - 2} src="whoosh" v={0.35} />)}
     {POPS.map((t) => <Sfx key={`p${t}`} at={s(t) - 1} src="pop" v={0.26} />)}
     {DINGS.map((t) => <Sfx key={`d${t}`} at={s(t)} src="ding" v={0.28} />)}
