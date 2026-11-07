@@ -172,7 +172,7 @@ export const Token: React.FC<{ size: number; spin?: number }> = ({ size, spin = 
 );
 
 /* ---------------- scene + background ---------------- */
-export const Scene: React.FC<{ from: number; to: number; n?: string; title?: string; children: React.ReactNode }> = ({
+export const Scene: React.FC<{ from: number; to: number; n?: string; title?: React.ReactNode; children: React.ReactNode }> = ({
   from, to, n, title, children,
 }) => {
   const frame = useCurrentFrame();
