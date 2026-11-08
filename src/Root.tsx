@@ -12,6 +12,7 @@ import { STORY_FRAMES, GalatiaStory } from "./galatia/GalatiaStory";
 import { EXPOSE_FRAMES, ExposeEdit } from "./expose/ExposeEdit";
 import { LANGUES_FRAMES, LanguesEdit } from "./langues/LanguesEdit";
 import { NEONEXI_FRAMES, NeoNexiEdit } from "./neonexi/NeoNexiEdit";
+import { DOODLE_FRAMES, TopologyDoodle } from "./doodle/TopologyDoodle";
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -33,5 +34,6 @@ export const RemotionRoot: React.FC = () => (
   <Composition id="Expose" component={ExposeEdit} durationInFrames={EXPOSE_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="Langues" component={LanguesEdit} durationInFrames={LANGUES_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="NeoNexi" component={NeoNexiEdit} durationInFrames={NEONEXI_FRAMES} fps={30} width={1920} height={1080} />
+  <Composition id="TopologyDoodle" component={TopologyDoodle} durationInFrames={DOODLE_FRAMES} fps={30} width={1080} height={1920} />
   </>
 );
