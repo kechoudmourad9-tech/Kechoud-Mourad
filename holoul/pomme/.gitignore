@@ -1,0 +1,8 @@
+cache/
+renders/mix.wav
+assets/voice.wav
+# fichiers du skill Holoul-motion (licence : pas de republication) — à recopier depuis templates/render/ du skill
+src/render.js
+src/main.js
+src/index.html
+src/lib/
