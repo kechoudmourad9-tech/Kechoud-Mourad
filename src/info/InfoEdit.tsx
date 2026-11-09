@@ -231,7 +231,7 @@ const Cpu: React.FC<{ t: number }> = ({ t }) => {
     const k1 = ramp(t, tf, tf + 0.6), k2 = ramp(t, td, td + 0.5), k3 = ramp(t, te, te + 0.5);
     stage = k3 > 0.5 ? 3 : k2 > 0.5 ? 2 : k1 > 0.5 ? 1 : 0;
     pos = [0, 1, 2].map((j) => lerp(lerp(lerp(P[0][j], P[1][j], k1), P[2][j], k2), P[3][j], k3)) as V3;
-  } else { const u = ((t - S(21)) * 2.4) % 1, s3 = Math.floor(u * 3), k = (u * 3) % 1; stage = s3 + 1; pos = [0, 1, 2].map((j) => lerp(P[[0, 1, 2][s3]][j], P[[1, 2, 3][s3]][j], k)) as V3; }
+  } else { const u = ((((t - S(21)) * 2.4) % 1) + 1) % 1, s3 = Math.min(2, Math.floor(u * 3)), k = (u * 3) % 1; stage = s3 + 1; pos = [0, 1, 2].map((j) => lerp(P[[0, 1, 2][s3]][j], P[[1, 2, 3][s3]][j], k)) as V3; }
   const paint = ramp(t, S(22) + 1.5, E(22));
   return (<>
     <Stage t={t} a={N.cyan} b={N.pink} />
@@ -369,7 +369,7 @@ const Code: React.FC<{ t: number }> = ({ t }) => {
 /* ================= H — software / OS ================= */
 const APPS: [string, string][] = [["Navigateur", N.blue], ["Jeux", N.pink], ["Messages", N.green]];
 const Software: React.FC<{ t: number }> = ({ t }) => {
-  const os = t >= a_(32), turn = Math.floor((t - S(33)) * 1.6) % 3;
+  const os = t >= a_(32), turn = ((Math.floor((t - S(33)) * 1.6) % 3) + 3) % 3;
   return (<>
     <Stage t={t} a={N.blue} b={N.yellow} />
     {!os && <Guide t={t} x={-2.5} />}
