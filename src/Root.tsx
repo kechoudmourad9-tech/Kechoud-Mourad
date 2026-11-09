@@ -14,6 +14,7 @@ import { LANGUES_FRAMES, LanguesEdit } from "./langues/LanguesEdit";
 import { NEONEXI_FRAMES, NeoNexiEdit } from "./neonexi/NeoNexiEdit";
 import { DOODLE_FRAMES, TopologyDoodle } from "./doodle/TopologyDoodle";
 import { TOPO_FRAMES, TopologyExplainer } from "./doodle/TopologyExplainer";
+import { RELATIONS_FRAMES, RelationsEdit } from "./relations/RelationsEdit";
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -37,5 +38,6 @@ export const RemotionRoot: React.FC = () => (
   <Composition id="NeoNexi" component={NeoNexiEdit} durationInFrames={NEONEXI_FRAMES} fps={30} width={1920} height={1080} />
   <Composition id="TopologyDoodle" component={TopologyDoodle} durationInFrames={DOODLE_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="TopologyExplainer" component={TopologyExplainer} durationInFrames={TOPO_FRAMES} fps={30} width={1080} height={1920} />
+  <Composition id="Relations" component={RelationsEdit} durationInFrames={RELATIONS_FRAMES} fps={30} width={1080} height={1920} />
   </>
 );
