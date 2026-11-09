@@ -1,3 +1,4 @@
+import { TERRE_FRAMES, TerreEdit } from "./terre/TerreEdit";
 import { SUITES_FRAMES, SuitesEdit } from "./suites/SuitesEdit";
 import { Composition } from "remotion";
 import { Edit } from "./Edit";
@@ -41,5 +42,6 @@ export const RemotionRoot: React.FC = () => (
   <Composition id="TopologyExplainer" component={TopologyExplainer} durationInFrames={TOPO_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="Relations" component={RelationsEdit} durationInFrames={RELATIONS_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="Suites" component={SuitesEdit} durationInFrames={SUITES_FRAMES} fps={30} width={1080} height={1920} />
+  <Composition id="Terre" component={TerreEdit} durationInFrames={TERRE_FRAMES} fps={30} width={1080} height={1920} />
   </>
 );
