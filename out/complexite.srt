@@ -1,0 +1,959 @@
+1
+00:00:00,500 --> 00:00:03,220
+Pourquoi une application met une seconde à répondre, et
+
+2
+00:00:03,220 --> 00:00:05,940
+une autre dix minutes, sur le même ordinateur ?
+
+3
+00:00:06,260 --> 00:00:08,670
+La réponse tient en un mot : la complexité.
+
+4
+00:00:08,990 --> 00:00:15,620
+La complexité, c'est l'art de mesurer l'efficacité d'un algorithme, sans même l'exécuter.
+
+5
+00:00:15,940 --> 00:00:19,573
+Dans cette vidéo, on fait le tour complet :
+
+6
+00:00:19,573 --> 00:00:23,207
+la notation grand O, les grandes familles, les tris,
+
+7
+00:00:23,207 --> 00:00:26,840
+la mémoire, et le célèbre problème P égale NP.
+
+8
+00:00:27,160 --> 00:00:28,460
+Et tu vas voir que c'est beaucoup
+
+9
+00:00:28,460 --> 00:00:29,760
+plus simple que ça en a l'air.
+
+10
+00:00:30,630 --> 00:00:33,920
+D'abord, un algorithme, c'est une suite d'instructions pour
+
+11
+00:00:33,920 --> 00:00:37,210
+résoudre un problème. Comme une recette de cuisine.
+
+12
+00:00:37,530 --> 00:00:40,725
+Pour un même problème, il existe souvent
+
+13
+00:00:40,725 --> 00:00:43,920
+plusieurs algorithmes. Certains sont rapides, d'autres catastrophiques.
+
+14
+00:00:44,240 --> 00:00:48,382
+Comment les comparer ? On pourrait chronométrer. Mais le temps dépend
+
+15
+00:00:48,382 --> 00:00:52,900
+de la machine, du langage, et même de la température du processeur.
+
+16
+00:00:53,220 --> 00:00:56,710
+Alors on compte autre chose : le nombre d'opérations élémentaires.
+
+17
+00:00:57,030 --> 00:00:59,315
+Et surtout, on regarde comment ce nombre
+
+18
+00:00:59,315 --> 00:01:01,600
+grandit quand la taille des données augmente.
+
+19
+00:01:01,920 --> 00:01:03,720
+Cette taille, on l'appelle n.
+
+20
+00:01:04,040 --> 00:01:06,354
+n, ça peut être le nombre de contacts
+
+21
+00:01:06,354 --> 00:01:08,667
+dans ton téléphone, le nombre de pixels d'une
+
+22
+00:01:08,667 --> 00:01:11,270
+image, ou le nombre de villes sur une carte.
+
+23
+00:01:11,590 --> 00:01:14,585
+La vraie question n'est donc pas : combien de temps ça
+
+24
+00:01:14,585 --> 00:01:17,580
+prend ? Mais : que se passe-t-il quand n double ?
+
+25
+00:01:18,450 --> 00:01:22,300
+Pour répondre, les informaticiens utilisent la notation grand O.
+
+26
+00:01:22,620 --> 00:01:25,294
+Imaginons un algorithme qui fait trois n
+
+27
+00:01:25,294 --> 00:01:28,350
+au carré, plus cinq n, plus cent opérations.
+
+28
+00:01:28,670 --> 00:01:31,240
+Quand n vaut un million, le terme
+
+29
+00:01:31,240 --> 00:01:33,810
+n au carré écrase tous les autres.
+
+30
+00:01:34,130 --> 00:01:35,879
+Alors on ne garde que le
+
+31
+00:01:35,879 --> 00:01:37,920
+terme dominant, et on oublie les constantes.
+
+32
+00:01:38,240 --> 00:01:41,100
+On dit que l'algorithme est en O de n au carré.
+
+33
+00:01:41,420 --> 00:01:44,620
+Le grand O décrit la tendance, pas le
+
+34
+00:01:44,620 --> 00:01:47,820
+temps exact. C'est une vue d'avion de l'algorithme.
+
+35
+00:01:48,140 --> 00:01:50,051
+Et par convention, il décrit le
+
+36
+00:01:50,051 --> 00:01:52,280
+pire des cas : la borne supérieure.
+
+37
+00:01:53,150 --> 00:01:56,720
+Il existe une poignée de grandes familles, à connaître par cœur.
+
+38
+00:01:57,040 --> 00:01:59,780
+La meilleure : O de un, le temps constant.
+
+39
+00:02:00,100 --> 00:02:04,080
+Peu importe la taille des données, le nombre d'opérations ne change pas.
+
+40
+00:02:04,400 --> 00:02:08,450
+Exemple : lire la dixième case d'un tableau. On y va directement.
+
+41
+00:02:08,770 --> 00:02:12,540
+Ensuite, O de log n : le temps logarithmique.
+
+42
+00:02:12,860 --> 00:02:14,780
+À chaque étape, on divise le problème par deux.
+
+43
+00:02:15,100 --> 00:02:20,740
+Pour un milliard d'éléments, il suffit d'environ trente étapes. C'est presque magique.
+
+44
+00:02:21,060 --> 00:02:24,023
+Puis O de n : le temps
+
+45
+00:02:24,023 --> 00:02:27,410
+linéaire. Si les données doublent, le travail double.
+
+46
+00:02:27,730 --> 00:02:30,120
+Exemple : chercher le plus grand nombre dans
+
+47
+00:02:30,120 --> 00:02:32,510
+une liste. Il faut tout regarder, une fois.
+
+48
+00:02:32,830 --> 00:02:34,865
+O de n log n, c'est
+
+49
+00:02:34,865 --> 00:02:37,240
+le territoire des bons algorithmes de tri.
+
+50
+00:02:37,560 --> 00:02:40,420
+Un peu plus que linéaire, mais ça reste très efficace.
+
+51
+00:02:40,740 --> 00:02:43,362
+O de n au carré :
+
+52
+00:02:43,362 --> 00:02:46,420
+le temps quadratique. Typiquement, deux boucles imbriquées.
+
+53
+00:02:46,740 --> 00:02:48,580
+Chaque élément est comparé à tous les autres.
+
+54
+00:02:48,900 --> 00:02:51,340
+Dix fois plus de données, cent fois plus de travail.
+
+55
+00:02:51,660 --> 00:02:54,720
+Et puis, il y a les monstres. O
+
+56
+00:02:54,720 --> 00:02:57,780
+de deux puissance n : le temps exponentiel.
+
+57
+00:02:58,100 --> 00:03:00,610
+Ajouter un seul élément double le temps de calcul.
+
+58
+00:03:00,930 --> 00:03:03,480
+Avec n égale cent, même le plus puissant des
+
+59
+00:03:03,480 --> 00:03:06,030
+superordinateurs n'aurait pas fini avant la mort du Soleil.
+
+60
+00:03:06,350 --> 00:03:09,230
+Pire encore : O de factorielle n.
+
+61
+00:03:09,230 --> 00:03:12,110
+Il faut tester tous les ordres possibles.
+
+62
+00:03:12,430 --> 00:03:14,670
+Avec seulement vingt éléments, cela fait déjà
+
+63
+00:03:14,670 --> 00:03:17,230
+plus de deux milliards de milliards de possibilités.
+
+64
+00:03:17,550 --> 00:03:21,130
+Regarde la différence, pour un million de données.
+
+65
+00:03:21,450 --> 00:03:28,570
+Logarithmique : vingt opérations. Linéaire : un million. Quadratique : mille milliards.
+
+66
+00:03:28,890 --> 00:03:32,320
+À un milliard d'opérations par seconde, ça donne
+
+67
+00:03:32,320 --> 00:03:35,750
+: instantané, une milliseconde, ou un quart d'heure.
+
+68
+00:03:36,070 --> 00:03:39,660
+Et pour l'exponentiel ? Plus que l'âge de l'univers.
+
+69
+00:03:40,530 --> 00:03:43,134
+Prenons un exemple concret : chercher un
+
+70
+00:03:43,134 --> 00:03:46,110
+nom dans un annuaire d'un million de personnes.
+
+71
+00:03:46,430 --> 00:03:48,790
+Première méthode : la recherche linéaire. On lit
+
+72
+00:03:48,790 --> 00:03:51,150
+les noms un par un, depuis le début.
+
+73
+00:03:51,470 --> 00:03:53,695
+Dans le pire des cas, un million
+
+74
+00:03:53,695 --> 00:03:55,920
+de comparaisons. C'est du O de n.
+
+75
+00:03:56,240 --> 00:03:59,042
+Deuxième méthode : la recherche dichotomique.
+
+76
+00:03:59,042 --> 00:04:02,310
+Mais attention, elle exige une liste triée.
+
+77
+00:04:02,630 --> 00:04:06,585
+On ouvre l'annuaire au milieu. Le nom est avant ? On jette
+
+78
+00:04:06,585 --> 00:04:10,540
+la moitié de droite. Après ? On jette la moitié de gauche.
+
+79
+00:04:10,860 --> 00:04:13,223
+Et on recommence, encore et encore,
+
+80
+00:04:13,223 --> 00:04:15,980
+en divisant par deux à chaque fois.
+
+81
+00:04:16,300 --> 00:04:19,505
+Résultat : vingt comparaisons au maximum, au lieu
+
+82
+00:04:19,505 --> 00:04:22,710
+d'un million. C'est du O de log n.
+
+83
+00:04:23,030 --> 00:04:25,355
+Voilà pourquoi une base de données retrouve ton
+
+84
+00:04:25,355 --> 00:04:27,970
+compte en une fraction de seconde, parmi des milliards.
+
+85
+00:04:28,840 --> 00:04:31,881
+Encore faut-il que les données soient triées. Et trier,
+
+86
+00:04:31,881 --> 00:04:35,260
+c'est l'un des problèmes les plus étudiés de toute l'informatique.
+
+87
+00:04:35,580 --> 00:04:38,290
+Le tri le plus naïf, c'est le tri à bulles.
+
+88
+00:04:38,610 --> 00:04:40,577
+On compare les voisins deux par deux, et
+
+89
+00:04:40,577 --> 00:04:42,790
+on les échange s'ils sont dans le mauvais ordre.
+
+90
+00:04:43,110 --> 00:04:45,790
+Et on recommence, jusqu'à ce que tout soit rangé.
+
+91
+00:04:46,110 --> 00:04:50,290
+Simple, mais lent : O de n au carré.
+
+92
+00:04:50,610 --> 00:04:53,710
+Pour un million d'éléments, il faudrait mille milliards de comparaisons.
+
+93
+00:04:54,030 --> 00:04:58,610
+Le tri fusion, lui, applique une stratégie redoutable : diviser pour régner.
+
+94
+00:04:58,930 --> 00:05:00,779
+On coupe la liste en deux, puis encore
+
+95
+00:05:00,779 --> 00:05:02,860
+en deux, jusqu'à obtenir des listes d'un seul élément.
+
+96
+00:05:03,180 --> 00:05:05,188
+Ensuite, on fusionne les morceaux deux
+
+97
+00:05:05,188 --> 00:05:07,530
+à deux, en les remettant dans l'ordre.
+
+98
+00:05:07,850 --> 00:05:10,540
+Il y a log n niveaux de découpage,
+
+99
+00:05:10,540 --> 00:05:13,230
+et à chaque niveau, n éléments à fusionner.
+
+100
+00:05:13,550 --> 00:05:16,090
+Total : O de n log n.
+
+101
+00:05:16,410 --> 00:05:19,715
+Pour un million d'éléments : vingt millions d'opérations, au
+
+102
+00:05:19,715 --> 00:05:23,020
+lieu de mille milliards. Cinquante mille fois plus rapide.
+
+103
+00:05:23,340 --> 00:05:27,003
+Le tri rapide, ou quicksort, choisit un pivot, met les petits
+
+104
+00:05:27,003 --> 00:05:31,000
+à gauche et les grands à droite, puis recommence de chaque côté.
+
+105
+00:05:31,320 --> 00:05:35,295
+En moyenne, il est en O de n log n. Mais avec
+
+106
+00:05:35,295 --> 00:05:39,270
+un très mauvais pivot, il retombe en O de n au carré.
+
+107
+00:05:39,590 --> 00:05:41,945
+Et on a même prouvé une limite : aucun tri
+
+108
+00:05:41,945 --> 00:05:44,300
+par comparaisons ne peut faire mieux que n log n.
+
+109
+00:05:45,170 --> 00:05:47,595
+Ce qui nous amène à une nuance importante
+
+110
+00:05:47,595 --> 00:05:50,020
+: un algorithme n'a pas une seule complexité.
+
+111
+00:05:50,340 --> 00:05:51,614
+Il y a le meilleur cas
+
+112
+00:05:51,614 --> 00:05:53,100
+: l'élément cherché est le tout premier.
+
+113
+00:05:53,420 --> 00:05:55,960
+Le pire cas : il est tout à la fin, ou absent.
+
+114
+00:05:56,280 --> 00:05:58,020
+Et le cas moyen : ce qui
+
+115
+00:05:58,020 --> 00:05:59,760
+arrive en pratique, sur des données ordinaires.
+
+116
+00:06:00,080 --> 00:06:04,151
+Grand O donne une borne supérieure. Grand Oméga,
+
+117
+00:06:04,151 --> 00:06:08,730
+une borne inférieure. Et grand Thêta, un encadrement exact.
+
+118
+00:06:09,050 --> 00:06:11,063
+En général, on se méfie du pire cas.
+
+119
+00:06:11,063 --> 00:06:13,076
+Parce que c'est lui qui fait planter un
+
+120
+00:06:13,076 --> 00:06:15,340
+site le jour où tout le monde se connecte.
+
+121
+00:06:16,210 --> 00:06:17,905
+Mais le temps n'est pas la seule
+
+122
+00:06:17,905 --> 00:06:19,600
+ressource. Il y a aussi la mémoire.
+
+123
+00:06:19,920 --> 00:06:24,230
+La complexité en espace mesure la mémoire supplémentaire dont l'algorithme a besoin.
+
+124
+00:06:24,550 --> 00:06:26,415
+Le tri à bulles travaille sur
+
+125
+00:06:26,415 --> 00:06:28,590
+place : O de un en mémoire.
+
+126
+00:06:28,910 --> 00:06:31,160
+Le tri fusion, lui, a besoin d'une
+
+127
+00:06:31,160 --> 00:06:33,410
+copie des données : O de n.
+
+128
+00:06:33,730 --> 00:06:35,857
+Très souvent, on peut échanger l'un contre l'autre
+
+129
+00:06:35,857 --> 00:06:38,250
+: dépenser plus de mémoire pour gagner du temps.
+
+130
+00:06:38,570 --> 00:06:41,080
+C'est exactement le principe d'un cache : on retient
+
+131
+00:06:41,080 --> 00:06:43,590
+les résultats déjà calculés, pour ne jamais les refaire.
+
+132
+00:06:44,460 --> 00:06:47,465
+Et la complexité ne dépend pas que de l'algorithme. Elle
+
+133
+00:06:47,465 --> 00:06:50,470
+dépend aussi de la façon dont on range les données.
+
+134
+00:06:50,790 --> 00:06:54,420
+Dans un tableau, on accède à n'importe quelle case en temps constant.
+
+135
+00:06:54,420 --> 00:06:58,050
+Mais insérer au milieu oblige à tout décaler : O de n.
+
+136
+00:06:58,370 --> 00:07:01,875
+Dans une liste chaînée, c'est l'inverse : insérer est immédiat,
+
+137
+00:07:01,875 --> 00:07:05,380
+mais pour atteindre un élément, il faut suivre la chaîne.
+
+138
+00:07:05,700 --> 00:07:09,300
+La table de hachage calcule directement où se trouve la
+
+139
+00:07:09,300 --> 00:07:12,900
+donnée. Recherche, ajout, suppression : O de un en moyenne.
+
+140
+00:07:13,220 --> 00:07:14,979
+C'est elle qui se cache derrière les
+
+141
+00:07:14,979 --> 00:07:16,990
+dictionnaires de Python, et les objets de JavaScript.
+
+142
+00:07:17,310 --> 00:07:20,171
+Et l'arbre binaire équilibré garde les données triées,
+
+143
+00:07:20,171 --> 00:07:23,390
+avec toutes les opérations en O de log n.
+
+144
+00:07:23,710 --> 00:07:26,615
+Choisir la bonne structure, c'est souvent passer
+
+145
+00:07:26,615 --> 00:07:29,520
+d'un programme inutilisable à un programme instantané.
+
+146
+00:07:30,390 --> 00:07:33,570
+Parlons maintenant d'un piège classique : la récursivité.
+
+147
+00:07:33,890 --> 00:07:37,830
+Une fonction récursive, c'est une fonction qui s'appelle elle-même.
+
+148
+00:07:38,150 --> 00:07:40,090
+Prenons la suite de Fibonacci : chaque
+
+149
+00:07:40,090 --> 00:07:42,030
+nombre est la somme des deux précédents.
+
+150
+00:07:42,350 --> 00:07:44,770
+La version naïve recalcule sans arrêt les mêmes valeurs.
+
+151
+00:07:45,090 --> 00:07:49,090
+L'arbre des appels explose : la complexité est exponentielle.
+
+152
+00:07:49,410 --> 00:07:51,580
+Calculer le cinquantième terme prendrait des heures.
+
+153
+00:07:51,900 --> 00:07:55,080
+La solution : la mémoïsation. On note chaque résultat
+
+154
+00:07:55,080 --> 00:07:58,260
+dans un tableau, la première fois qu'on le calcule.
+
+155
+00:07:58,580 --> 00:08:04,730
+D'exponentielle, la complexité devient linéaire. Quelques microsecondes.
+
+156
+00:08:05,050 --> 00:08:08,565
+Cette idée porte un nom : la programmation dynamique. Découper un
+
+157
+00:08:08,565 --> 00:08:12,080
+problème en sous-problèmes, et ne jamais résoudre deux fois le même.
+
+158
+00:08:12,400 --> 00:08:15,065
+On la retrouve partout : dans ton GPS,
+
+159
+00:08:15,065 --> 00:08:17,730
+dans les correcteurs orthographiques, et même en génétique.
+
+160
+00:08:18,600 --> 00:08:20,970
+Dernier outil : la complexité amortie.
+
+161
+00:08:21,290 --> 00:08:24,440
+Une liste dynamique double sa capacité quand elle est
+
+162
+00:08:24,440 --> 00:08:27,940
+pleine. Ce jour-là, il faut tout recopier : c'est cher.
+
+163
+00:08:28,260 --> 00:08:30,175
+Mais ça arrive si rarement, qu'en
+
+164
+00:08:30,175 --> 00:08:32,410
+moyenne, chaque ajout coûte O de un.
+
+165
+00:08:32,730 --> 00:08:36,990
+Comme un abonnement annuel : une grosse dépense, répartie sur toute l'année.
+
+166
+00:08:37,860 --> 00:08:41,370
+Passons maintenant au grand mystère de l'informatique.
+
+167
+00:08:41,690 --> 00:08:44,690
+On classe les problèmes selon leur difficulté.
+
+168
+00:08:45,010 --> 00:08:48,820
+La classe P regroupe ceux qu'on sait résoudre rapidement, en
+
+169
+00:08:48,820 --> 00:08:52,630
+temps polynomial : n, n au carré, n au cube.
+
+170
+00:08:52,950 --> 00:08:55,050
+Trier, chercher, trouver le plus court
+
+171
+00:08:55,050 --> 00:08:57,500
+chemin : tout ça est dans P.
+
+172
+00:08:57,820 --> 00:09:00,850
+La classe NP regroupe les problèmes dont on peut vérifier
+
+173
+00:09:00,850 --> 00:09:03,880
+une solution rapidement, même si la trouver semble très difficile.
+
+174
+00:09:04,200 --> 00:09:07,395
+Pense à un sudoku géant. Le résoudre est
+
+175
+00:09:07,395 --> 00:09:10,990
+long. Mais vérifier une grille remplie prend quelques secondes.
+
+176
+00:09:11,310 --> 00:09:14,240
+Autre exemple : le voyageur de commerce. Trouver
+
+177
+00:09:14,240 --> 00:09:17,170
+un circuit court passant par toutes les villes.
+
+178
+00:09:17,490 --> 00:09:19,680
+Avec vingt villes, il y a déjà des
+
+179
+00:09:19,680 --> 00:09:21,870
+dizaines de millions de milliards de trajets possibles.
+
+180
+00:09:22,190 --> 00:09:24,680
+Parmi les problèmes NP, certains sont les plus
+
+181
+00:09:24,680 --> 00:09:27,170
+durs de tous : on les appelle NP-complets.
+
+182
+00:09:27,490 --> 00:09:29,487
+Ils ont une propriété fascinante : ils
+
+183
+00:09:29,487 --> 00:09:31,770
+sont tous reliés entre eux par des réductions.
+
+184
+00:09:32,090 --> 00:09:34,344
+Si un jour quelqu'un résout rapidement un seul
+
+185
+00:09:34,344 --> 00:09:36,880
+d'entre eux, alors ils tombent tous, d'un seul coup.
+
+186
+00:09:37,200 --> 00:09:39,369
+Le premier de la liste, c'est le problème
+
+187
+00:09:39,369 --> 00:09:41,810
+SAT : peut-on rendre vraie une formule logique ?
+
+188
+00:09:42,130 --> 00:09:43,969
+D'où la question à un million de
+
+189
+00:09:43,969 --> 00:09:46,070
+dollars : est-ce que P égale NP ?
+
+190
+00:09:46,390 --> 00:09:48,485
+Autrement dit : si une solution est facile
+
+191
+00:09:48,485 --> 00:09:50,580
+à vérifier, est-elle forcément facile à trouver ?
+
+192
+00:09:50,900 --> 00:09:53,936
+Presque tous les chercheurs pensent que non. Mais personne
+
+193
+00:09:53,936 --> 00:09:57,310
+n'a réussi à le prouver, depuis plus de cinquante ans.
+
+194
+00:09:57,630 --> 00:09:59,462
+L'institut Clay offre un million de
+
+195
+00:09:59,462 --> 00:10:01,600
+dollars à celui ou celle qui tranchera.
+
+196
+00:10:01,920 --> 00:10:03,960
+Et l'enjeu est énorme : toute la
+
+197
+00:10:03,960 --> 00:10:06,000
+cryptographie repose sur des problèmes supposés difficiles.
+
+198
+00:10:06,320 --> 00:10:09,100
+Si P était égal à NP, les codes secrets de
+
+199
+00:10:09,100 --> 00:10:11,880
+tes cartes bancaires et de tes messages pourraient être cassés.
+
+200
+00:10:12,750 --> 00:10:14,121
+Et il y a encore pire
+
+201
+00:10:14,121 --> 00:10:15,720
+que difficile : il y a l'impossible.
+
+202
+00:10:16,040 --> 00:10:19,300
+En mille neuf cent trente-six, Alan Turing démontre
+
+203
+00:10:19,300 --> 00:10:22,560
+que certains problèmes n'ont aucun algorithme. Aucun. Jamais.
+
+204
+00:10:22,880 --> 00:10:25,560
+Le plus célèbre : le problème de l'arrêt.
+
+205
+00:10:25,880 --> 00:10:28,720
+Peut-on écrire un programme qui dit, pour n'importe quel autre
+
+206
+00:10:28,720 --> 00:10:31,560
+programme, s'il va s'arrêter, ou tourner en boucle infinie ?
+
+207
+00:10:31,880 --> 00:10:34,740
+La réponse est non. C'est mathématiquement impossible.
+
+208
+00:10:35,060 --> 00:10:37,482
+Autrement dit, les ordinateurs ont des limites,
+
+209
+00:10:37,482 --> 00:10:40,250
+que même une puissance infinie ne franchira pas.
+
+210
+00:10:41,120 --> 00:10:43,550
+Alors, que fait-on face à un problème trop dur ?
+
+211
+00:10:43,870 --> 00:10:46,722
+Première option : l'approximation. On accepte
+
+212
+00:10:46,722 --> 00:10:50,050
+une solution presque optimale, mais calculée rapidement.
+
+213
+00:10:50,370 --> 00:10:53,325
+Deuxième option : les heuristiques. Des règles astucieuses,
+
+214
+00:10:53,325 --> 00:10:56,650
+qui marchent très bien en pratique, sans aucune garantie.
+
+215
+00:10:56,970 --> 00:11:00,749
+Troisième option : le hasard. Certains algorithmes tirent
+
+216
+00:11:00,749 --> 00:11:05,000
+au sort, et se trompent avec une probabilité minuscule.
+
+217
+00:11:05,320 --> 00:11:08,830
+Et puis il y a l'ordinateur quantique. Pour quelques
+
+218
+00:11:08,830 --> 00:11:12,730
+problèmes précis, comme la factorisation, il promet un gain exponentiel.
+
+219
+00:11:13,050 --> 00:11:17,050
+Mais attention : il ne résout pas magiquement les problèmes NP-complets.
+
+220
+00:11:17,920 --> 00:11:20,290
+En pratique, que faut-il retenir ?
+
+221
+00:11:20,610 --> 00:11:25,190
+Un : avant d'optimiser, regarde la complexité. Une meilleure machine fait
+
+222
+00:11:25,190 --> 00:11:29,770
+gagner un facteur deux. Un meilleur algorithme, un facteur un million.
+
+223
+00:11:30,090 --> 00:11:33,640
+Deux : méfie-toi des boucles imbriquées, sur de grandes données.
+
+224
+00:11:33,960 --> 00:11:36,470
+Trois : choisis la bonne structure de données.
+
+225
+00:11:36,790 --> 00:11:40,006
+Quatre : pour les petites tailles, tout va vite.
+
+226
+00:11:40,006 --> 00:11:43,580
+La complexité ne compte vraiment que lorsque n devient grand.
+
+227
+00:11:43,900 --> 00:11:46,453
+Et cinq : certains problèmes sont réellement
+
+228
+00:11:46,453 --> 00:11:49,370
+durs. Le reconnaître, c'est déjà gagner du temps.
+
+229
+00:11:49,690 --> 00:11:50,190
+Résumons.
+
+230
+00:11:50,510 --> 00:11:52,535
+La complexité mesure comment le coût d'un
+
+231
+00:11:52,535 --> 00:11:54,560
+algorithme grandit avec la taille des données.
+
+232
+00:11:54,880 --> 00:11:58,549
+Le grand O garde l'essentiel :
+
+233
+00:11:58,549 --> 00:12:02,830
+constant, logarithmique, linéaire, quasi linéaire, quadratique, exponentiel.
+
+234
+00:12:03,150 --> 00:12:07,990
+Entre deux algorithmes, la différence peut aller de la milliseconde à l'éternité.
+
+235
+00:12:08,310 --> 00:12:10,925
+Et au sommet, une question toujours ouverte
+
+236
+00:12:10,925 --> 00:12:13,540
+: P est-il égal à NP ?
+
+237
+00:12:13,860 --> 00:12:16,600
+La prochaine fois que ton programme rame, tu sauras
+
+238
+00:12:16,600 --> 00:12:19,340
+quoi te demander : quelle est sa complexité ?
+
+239
+00:12:19,660 --> 00:12:21,778
+Si cette vidéo t'a aidé, abonne-toi.
+
+240
+00:12:21,778 --> 00:12:24,250
+Et à très vite pour la suite.
