@@ -1,3 +1,4 @@
+import { POV_FRAMES, PovEdit } from "./pov/PovEdit";
 import { INFO_FRAMES, InfoEdit } from "./info/InfoEdit";
 import { TERRE_FRAMES, TerreEdit } from "./terre/TerreEdit";
 import { SUITES_FRAMES, SuitesEdit } from "./suites/SuitesEdit";
@@ -45,5 +46,6 @@ export const RemotionRoot: React.FC = () => (
   <Composition id="Suites" component={SuitesEdit} durationInFrames={SUITES_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="Terre" component={TerreEdit} durationInFrames={TERRE_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="Info" component={InfoEdit} durationInFrames={INFO_FRAMES} fps={30} width={1080} height={1920} />
+  <Composition id="Pov" component={PovEdit} durationInFrames={POV_FRAMES} fps={30} width={1080} height={1920} />
   </>
 );
