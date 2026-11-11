@@ -88,8 +88,7 @@ export const CxEdit: React.FC = () => {
       <AbsoluteFill style={{ background: "#000", opacity: interpolate(f, [CX_FRAMES - 12, CX_FRAMES - 1], [0, 1], clamp) }} />
       <Audio src={staticFile("cx/voice.m4a")} />
       <Audio src={staticFile("cx/bed.m4a")} volume={(x) => interpolate(x, [0, 20, CX_FRAMES - 60, CX_FRAMES - 3], [0, 0.06, 0.06, 0], clamp)} />
-      {CLIPS.slice(1).map((cl, j) => <Sfx key={j} at={cl.a - 0.03} src={cl.kind === "chap" ? "whoosh" : cl.kind === "slamr" ? "bass" : j % 3 === 0 ? "swipe" : j % 3 === 1 ? "tick" : "pop"}
-        v={cl.kind === "chap" ? 0.34 : cl.kind === "slamr" ? 0.3 : 0.17} />)}
+      <Audio src={staticFile("cx/sfx.m4a")} />
     </AbsoluteFill>
   );
 };
