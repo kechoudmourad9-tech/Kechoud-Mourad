@@ -433,6 +433,7 @@ app.post("/api/messages/:name", canWrite, limit("msg", 120, 60), upload.single("
   const m = msgShape(get("SELECT * FROM messages WHERE id=?", Number(r.lastInsertRowid)));
   const post = postId ? get("SELECT id,title,thumb,media,media_kind,type FROM posts WHERE id=?", postId) : null;
   io.to(`u:${u.id}`).emit("dm", { message: m, from: pub(req.user), post }); io.to(`u:${req.user.id}`).emit("dm", { message: m, from: pub(req.user), post, echo: u.username });
+  if (!online.has(u.id) && !get("SELECT 1 x FROM notifications WHERE user_id=? AND type='message' AND read=0 AND link=?", u.id, `#/messages/${req.user.username}`)) notify(u.id, "message", `You received a message from @${req.user.username}.`, `#/messages/${req.user.username}`);
   res.json({ message: m, post });
 });
 app.delete("/api/messages/item/:id", auth, (req, res) => {
@@ -501,6 +502,8 @@ app.post("/api/mod/users/:id/:action(warn|mute|unmute|tempban)", mod, (req, res)
   if (a === "tempban") { const d = Math.max(1, Math.min(int(req.body.days, 3), 30)); run("UPDATE users SET status='banned', ban_until=? WHERE id=?", now() + d * 86400, u.id); kick(u.id); }
   log(req.user.id, a, `@${u.username}`, why); res.json({ ok: true });
 });
+app.get("/api/mod/comments", mod, (req, res) => { const s = `%${str(req.query.q, 60).replace(/[\\%_]/g, "\\$&")}%`;
+  res.json({ comments: all("SELECT c.id, c.body, c.post_id, c.created_at, u.username FROM comments c JOIN users u ON u.id=c.user_id WHERE c.body LIKE ? ESCAPE '\\' ORDER BY c.id DESC LIMIT 100", s) }); });
 app.get("/api/mod/logs", mod, (req, res) => res.json({ logs: all("SELECT l.*, COALESCE(u.username,'AutoMod') actor_name FROM mod_logs l LEFT JOIN users u ON u.id=l.actor ORDER BY l.id DESC LIMIT 200") }));
 
 /* ================= ADMIN ONLY ================= */
