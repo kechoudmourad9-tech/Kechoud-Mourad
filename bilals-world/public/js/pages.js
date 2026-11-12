@@ -22,7 +22,7 @@ R.home = async (app) => {
     <div class="stage" id="stage"><div class="orb"></div><div class="ring"></div><div class="ring r2"></div><i class="cube c1"></i><i class="cube c2"></i><i class="cube c3"></i>
       <div class="portrait">${meta.hero ? `<img src="${e(meta.hero)}" alt="Bilal Fadili — community hero visual">` : `<span class="mono">B</span>`}</div>
       <div class="float glass f1">🎬 Edits</div><div class="float glass f2">🏆 Leaderboard</div><div class="float glass f3">🔴 Live Moments</div><div class="float glass f4">💬 Chat &amp; Voice</div></div></section>
-    <section class="sec reveal"><div class="chips scroll">${Object.entries(TYPE).map(([k, v]) => `<a class="chip" href="#/t/${k}">${v[0]} ${v[2]}</a>`).join("")}<a class="chip" href="#/moments">⭐ Bilal Moments</a><a class="chip" href="#/top">🔥 Top TikToks</a><a class="chip" href="#/hashtags"># Hashtags</a></div></section>
+    <section class="sec reveal"><div class="chips scroll">${Object.entries(TYPE).map(([k, v]) => `<a class="chip" href="#/t/${k}">${v[0]} ${v[2]}</a>`).join("")}<a class="chip on" href="#/watch">▶ Watch Shorts</a><a class="chip" href="#/moments">⭐ Bilal Moments</a><a class="chip" href="#/top">🔥 Top TikToks</a><a class="chip" href="#/hashtags"># Hashtags</a></div></section>
     <section class="sec"><div class="row"><h2>🔥 Trending now</h2><a class="btn sm" href="#/explore">See all</a></div><div id="trend" style="margin-top:18px"></div></section>
     <section class="sec"><div class="row"><h2>🏆 TikTok Leaderboard</h2><a class="btn sm" href="#/leaderboard">Full ranking</a></div>
       ${lb.rows.length ? podium(lb.rows, (r) => r.views, "TikTok views") : empty("🏁", "The race has not started. Post your TikTok and take the #1 spot!")}</section>
@@ -125,7 +125,7 @@ R.post = async (app, [id]) => { const { post: p, history } = await GET("/posts/"
         <div class="row wrapr" style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px">
           <button class="btn ${p.liked ? "on" : ""}" data-act="like" data-id="${p.id}">❤️ <span>${fmt(p.likes)}</span> Likes</button><button class="btn ${p.saved ? "on" : ""}" data-act="save" data-id="${p.id}">🔖 Save</button>
           <button class="btn" data-act="share" data-id="${p.id}" data-title="${e(p.title)}">↗ Share</button><button class="btn" data-act="report" data-type="post" data-id="${p.id}">🚨 Report</button>
-          ${mine || modr ? `<button class="btn danger" data-act="delpost" data-id="${p.id}">🗑 Delete</button>` : ""}${modr ? `<button class="btn" data-act="hidepost" data-id="${p.id}">${p.hidden ? "👁 Unhide" : "🙈 Hide"}</button>` : ""}</div></div>
+          ${mine ? `<button class="btn" data-act="editpost" data-id="${p.id}">✏️ Edit</button>` : ""}${mine || modr ? `<button class="btn danger" data-act="delpost" data-id="${p.id}">🗑 Delete</button>` : ""}${modr ? `<button class="btn" data-act="hidepost" data-id="${p.id}">${p.hidden ? "👁 Unhide" : "🙈 Hide"}</button>` : ""}</div></div>
       ${p.tiktokUrl ? `<div class="glass pad" style="margin-top:16px"><div class="row wrapr"><h3 class="grow">📊 TikTok statistics</h3><b class="gt" style="font-size:24px">👁️ ${fmt(p.tiktokViews)} views</b></div>
         ${p.statStatus === "pending" ? `<p><span class="st pending">⚠️ Pending Verification</span> <span class="mut sm">A moderator will review the latest update.</span></p>` : ""}
         ${mine ? `<form class="row wrapr" data-form="views" data-id="${p.id}" style="margin-top:12px"><input class="in grow" type="number" name="views" min="0" max="5000000000" placeholder="Current TikTok views" required style="min-width:160px"><button class="btn pri">Update views</button></form>
@@ -146,6 +146,12 @@ BW.acts.creply = (el) => { if (!needMe()) return; const f = $("form[data-form=co
 BW.acts.creplyx = () => { const f = $("form[data-form=comment]"); f.parentId.value = ""; $("#replyto").textContent = ""; };
 BW.acts.clike = guard(async (el) => { if (!needMe()) return; const r = await POST(`/comments/${el.dataset.id}/like`); el.classList.toggle("on", r.on); $("span", el).textContent = fmt(r.count); });
 BW.acts.cdel = guard(async (el) => { if (!confirm("Delete this comment?")) return; await DEL(`/comments/${el.dataset.id}`); BW.loadComments(el.dataset.post); });
+BW.acts.editpost = guard(async (el) => { const { post: p } = await GET("/posts/" + el.dataset.id);
+  BW.modal(`<h2>✏️ Edit post</h2><form data-form="editpost" data-id="${p.id}"><label class="f">Title</label><input class="in" name="title" required minlength="3" maxlength="100" value="${e(p.title)}">
+    <label class="f">Description</label><textarea class="in" name="description" maxlength="2000">${e(p.description)}</textarea><label class="f">Hashtags</label><input class="in" name="hashtags" maxlength="300" value="${e(p.tags.map((x) => "#" + x).join(" "))}">
+    <label class="f">Bilal Moments category</label><select class="in" name="momentCat"><option value="0">— none —</option>${(BW.meta?.moments || []).map((m) => `<option value="${m.id}" ${m.id === p.momentCat ? "selected" : ""}>${e(m.emoji)} ${e(m.name)}</option>`).join("")}</select>
+    <button class="btn pri" style="width:100%;margin-top:16px">Save changes</button></form>`); });
+BW.forms.editpost = async (f) => { await BW.api("PATCH", "/posts/" + f.dataset.id, { title: f.title.value, description: f.description.value, hashtags: f.hashtags.value, momentCat: +f.momentCat.value }); BW.toast("Post updated ✅", "ok"); BW.render(); };
 BW.acts.delpost = guard(async (el) => { if (!confirm("Delete this post permanently?")) return; await DEL(`/posts/${el.dataset.id}`); BW.toast("Post deleted."); BW.go("#/explore"); });
 BW.acts.hidepost = guard(async (el) => { const r = await POST(`/mod/posts/${el.dataset.id}/hide`); BW.toast(r.hidden ? "Post hidden." : "Post visible again."); BW.render(); });
 BW.forms.views = async (f) => { const r = await POST(`/posts/${f.dataset.id}/views`, { views: +f.views.value }); BW.toast(r.status === "approved" ? "Views updated ✅" : r.status === "pending" ? "Update sent — pending verification ⚠️" : "No change.", "ok"); BW.render(); };
@@ -176,9 +182,35 @@ R.settings = (app) => { if (!BW.me) return BW.acts.auth(); const m = BW.me;
       <label class="f">Username</label><input class="in" name="username" value="${e(m.username)}" maxlength="20" ${m.role === "ADMIN" ? "disabled" : ""}><label class="f">Bio</label><textarea class="in" name="bio" maxlength="200" placeholder="Bilal editor since 2026 🇩🇿">${e(m.bio)}</textarea>
       <button class="btn pri" style="margin-top:16px">Save profile</button></form>
     <form class="glass pad" data-form="password"><h3>Password</h3><label class="f">Current password</label><input class="in" type="password" name="password" required autocomplete="current-password"><label class="f">New password</label><input class="in" type="password" name="newPassword" required minlength="8" autocomplete="new-password">
-      <button class="btn" style="margin-top:16px">Change password</button><p class="sm mut">Email: ${e(m.email)} · Warnings: ${m.warnings}</p></form></div>`); };
+      <button class="btn" style="margin-top:16px">Change password</button><p class="sm mut">Email: ${e(m.email)} · Warnings: ${m.warnings}</p></form>
+    <div class="glass pad"><h3>🚫 Blocked users</h3><div id="blocks" style="margin-top:12px"><p class="mut">Loading…</p></div></div>
+    ${m.role === "ADMIN" ? "" : `<form class="glass pad" data-form="delaccount"><h3>Delete my account</h3><p class="sm mut">Removes your profile, posts, comments, likes and messages permanently.</p><label class="f">Confirm with your password</label><input class="in" type="password" name="password" required autocomplete="current-password"><button class="btn danger" style="margin-top:16px">Delete my account</button></form>`}</div>`);
+  GET("/me/blocks").then((r) => { const b = $("#blocks"); if (b) b.innerHTML = r.users.length ? r.users.map((u) => `<div class="row" style="margin-bottom:8px">${avatar(u, 32)}<b class="grow">@${e(u.username)}</b><button class="btn sm" data-act="block" data-user="${e(u.username)}">Unblock</button></div>`).join("") : `<p class="mut">You have not blocked anyone.</p>`; }).catch(() => {}); };
+BW.forms.delaccount = async (f) => { if (!confirm("Delete your account and all your posts, comments and messages? This cannot be undone.")) return; await POST("/me/delete", { password: f.password.value }); BW.sock?.disconnect(); BW.sock = null; BW.me = null; BW.toast("Account deleted."); BW.go("#/home"); };
 BW.forms.profile = async (f) => { const fd = new FormData(f); if (!f.avatar.files.length) fd.delete("avatar"); await BW.api("POST", "/me/profile", fd); await BW.boot(true); BW.toast("Profile updated ✅", "ok"); BW.render(); };
 BW.forms.password = async (f) => { await POST("/auth/password", { password: f.password.value, newPassword: f.newPassword.value }); f.reset(); BW.toast("Password changed ✅", "ok"); };
+
+/* ================= NOTIFICATIONS ================= */
+R.notifications = async (app) => { if (!BW.me) return BW.acts.auth(); const r = await GET("/notifications"), ic = { like: "❤️", comment: "💬", reply: "↩️", follow: "👥", message: "✉️", call: "📞", warning: "⚠️", removed: "🗑️", stats: "📊", rank: "🏆", role: "🛡️" };
+  page(app, "Notifications", `${head("🔔 Notifications")}${r.items.length ? `<div class="glass">${r.items.map((n) => `<a class="lbrow ${n.read ? "" : "unread"}" href="${e(n.link || "#/home")}"><span style="font-size:22px">${ic[n.type] || "🔔"}</span><span class="grow">${e(n.text)}<br><span class="mut sm">${ago(n.created_at)}</span></span></a>`).join("")}</div>` : empty("🔔", "No notifications yet.")}`);
+  if (BW.me.unread) { BW.me.unread = 0; POST("/notifications/read").catch(() => {}); BW.chrome(); } };
+
+/* ================= WATCH — immersive vertical feed (TikTok-style) ================= */
+R.watch = async (app, [start = ""]) => { app.dataset.title = "Watch"; let page = 0, more = true, busy = false;
+  app.innerHTML = `<div class="watch" id="watch"></div>`; const box = $("#watch");
+  const slide = (p) => `<section class="slide" data-id="${p.id}">${p.mediaKind === "video" ? `<video src="${e(p.media)}" ${p.thumb ? `poster="${e(p.thumb)}"` : ""} loop playsinline preload="none"></video>` : `<img src="${e(p.media)}" alt="${e(p.title)}" loading="lazy">`}
+    <div class="shade"></div><div class="info"><div class="row" style="gap:8px">${avatar(p.user, 38)}${userLink(p.user)}<span class="chip sm">${TYPE[p.type]?.[0]} ${TYPE[p.type]?.[1]}</span></div>
+      <h3 style="margin:8px 0 4px"><a href="#/post/${p.id}">${e(p.title)}</a></h3><div class="sm">${tags(p.tags.slice(0, 4))}</div></div>
+    <div class="side2"><button class="act ${p.liked ? "on" : ""}" data-act="like" data-id="${p.id}" aria-label="Like">❤️<span>${fmt(p.likes)}</span></button><a class="act" href="#/post/${p.id}" aria-label="Comments">💬<span>${fmt(p.comments)}</span></a>
+      <button class="act s ${p.saved ? "on" : ""}" data-act="save" data-id="${p.id}" aria-label="Save">🔖</button><button class="act" data-act="share" data-id="${p.id}" data-title="${e(p.title)}" aria-label="Share">↗</button>
+      <button class="act" data-act="wmute" aria-label="Sound">🔇</button><button class="act" data-act="report" data-type="post" data-id="${p.id}" aria-label="Report">🚨</button></div></section>`;
+  const io = new IntersectionObserver((es) => es.forEach((x) => { const v = $("video", x.target); if (x.isIntersecting && x.intersectionRatio > 0.6) { if (v) { v.muted = BW.wmuted !== false; v.play().catch(() => {}); } if (x.target === box.lastElementChild) load(); } else if (v) v.pause(); }), { threshold: [0, 0.6, 1] });
+  const load = async () => { if (busy || !more) return; busy = true; try { const r = await GET(`/posts?media=any&sort=trending&page=${page++}`); more = r.more; if (!document.body.contains(box)) return;
+      r.posts.forEach((p) => { box.insertAdjacentHTML("beforeend", slide(p)); io.observe(box.lastElementChild); });
+      if (!box.children.length) box.innerHTML = `<div class="wrap sec">${empty("🎞️", "No videos or images yet — upload the first one!", `<div style="margin-top:14px"><button class="btn pri" data-act="create" data-type="short">+ Upload a Short</button></div>`)}</div>`;
+      if (start) { $(`[data-id="${CSS.escape(start)}"]`, box)?.scrollIntoView(); start = ""; } } finally { busy = false; } };
+  await load(); box.addEventListener("click", (ev) => { const v = ev.target.closest(".slide")?.querySelector("video"); if (v && ev.target === v) (v.paused ? v.play() : v.pause()); }); };
+BW.acts.wmute = (el) => { BW.wmuted = BW.wmuted === false; $$(".watch video").forEach((v) => (v.muted = BW.wmuted)); $$("[data-act=wmute]").forEach((b) => (b.textContent = BW.wmuted ? "🔇" : "🔊")); };
 
 /* ================= STATIC PAGES ================= */
 const prose = (app, title, html) => page(app, title, `<div class="glass pad sec prose" style="padding:34px;margin-inline:auto">${html}</div>`);

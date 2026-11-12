@@ -69,7 +69,7 @@ BW.feed = (box, params) => {
 };
 
 /* ---------- navigation chrome ---------- */
-const NAV = [["home", "Home"], ["explore", "Explore"], ["foryou", "For You"], ["t/edit", "Edits"], ["t/clip", "Clips"], ["t/tiktok", "TikToks"], ["moments", "Moments"], ["community", "Community"], ["leaderboard", "Leaderboard"], ["messages", "Messages"]];
+const NAV = [["explore", "Explore"], ["foryou", "For You"], ["t/edit", "Edits"], ["t/clip", "Clips"], ["t/tiktok", "TikToks"], ["watch", "Shorts"], ["moments", "Moments"], ["community", "Community"], ["leaderboard", "Leaderboard"], ["messages", "Messages"]];
 BW.chrome = () => {
   const m = BW.me, cur = location.hash.slice(2).split("?")[0] || "home";
   $("#nav").innerHTML = `<div class="wrap"><a class="logo" href="#/home"><i>B</i><span>BILAL’S WORLD</span></a>
@@ -89,12 +89,12 @@ BW.chrome = () => {
     <div><a href="#/rules">Rules</a><a href="#/about">About</a><a href="#/privacy">Privacy</a><a href="#/terms">Terms</a><a href="#/contact">Contact</a></div></div>`;
 };
 BW.acts.menu = () => { const b = $("#menu"); if (b.innerHTML) return (b.innerHTML = ""); const m = BW.me; $("#bell").innerHTML = "";
-  b.innerHTML = `<div class="drop glass"><a href="#/u/${e(m.username)}">👤 <span>My profile</span></a><a href="#/saved">🔖 <span>Saved</span></a><a href="#/liked">❤️ <span>Liked</span></a><a href="#/foryou/following">👥 <span>Following feed</span></a>
+  b.innerHTML = `<div class="drop glass"><a href="#/u/${e(m.username)}">👤 <span>My profile</span></a><a href="#/notifications">🔔 <span>Notifications</span></a><a href="#/saved">🔖 <span>Saved</span></a><a href="#/liked">❤️ <span>Liked</span></a><a href="#/foryou/following">👥 <span>Following feed</span></a>
     <a href="#/messages">💬 <span>Messages</span></a><a href="#/settings">⚙️ <span>Settings</span></a>${m.role !== "USER" ? `<a href="#/admin">🛡️ <span>${m.role === "ADMIN" ? "Admin dashboard" : "Moderation"}</span></a>` : ""}
     <button class="item" data-act="logout">🚪 <span>Log out</span></button></div>`; };
 BW.acts.bell = guard(async () => { const b = $("#bell"); if (b.innerHTML) return (b.innerHTML = ""); $("#menu").innerHTML = ""; b.innerHTML = `<div class="drop glass"><div class="pad mut">Loading…</div></div>`;
   const r = await GET("/notifications"); const ic = { like: "❤️", comment: "💬", reply: "↩️", follow: "👥", message: "✉️", call: "📞", warning: "⚠️", removed: "🗑️", stats: "📊", rank: "🏆", role: "🛡️" };
-  b.innerHTML = `<div class="drop glass"><div class="row between" style="padding:8px 12px"><b>Notifications</b></div>${r.items.length ? r.items.map((n) => `<a href="${e(n.link || "#/home")}" class="${n.read ? "" : "unread"}"><span>${ic[n.type] || "🔔"}</span><span><span>${e(n.text)}</span><br><span class="mut sm">${ago(n.created_at)}</span></span></a>`).join("") : `<div class="pad mut center">No notifications yet.</div>`}</div>`;
+  b.innerHTML = `<div class="drop glass"><div class="row between" style="padding:8px 12px"><b>Notifications</b><a class="tag sm" href="#/notifications" style="padding:0">See all</a></div>${r.items.length ? r.items.map((n) => `<a href="${e(n.link || "#/home")}" class="${n.read ? "" : "unread"}"><span>${ic[n.type] || "🔔"}</span><span><span>${e(n.text)}</span><br><span class="mut sm">${ago(n.created_at)}</span></span></a>`).join("") : `<div class="pad mut center">No notifications yet.</div>`}</div>`;
   if (BW.me.unread) { BW.me.unread = 0; POST("/notifications/read"); $("[data-act=bell] .badge")?.remove(); } });
 document.addEventListener("click", (ev) => { if (!ev.target.closest("#menu,#bell,[data-act=menu],[data-act=bell]")) { const m = $("#menu"), b = $("#bell"); if (m) m.innerHTML = ""; if (b) b.innerHTML = ""; } });
 
@@ -168,9 +168,21 @@ BW.acts.create = (el) => { if (!needMe()) return; const moment = el?.dataset?.mo
 BW.acts.ptype = (el) => { $$(".typegrid button").forEach((b) => b.classList.toggle("on", b === el)); el.closest("form").type.value = el.dataset.type; };
 BW.acts.addtag = (el) => { const i = el.closest("form").hashtags; if (!new RegExp(`#${el.dataset.tag}(\\s|$)`, "i").test(i.value)) i.value = (i.value + " #" + el.dataset.tag).trim(); };
 BW.forms.create = async (f) => { const b = $("button.hot", f); b.disabled = true; b.textContent = "Publishing…";
-  try { const r = await BW.api("POST", "/posts", new FormData(f)); BW.closeModal();
+  try { const fd = new FormData(f), v = f.media.files[0];
+    if (v && v.type.startsWith("video/") && !f.thumb.files.length) { const th = await BW.videoThumb(v).catch(() => null); if (th) fd.set("thumb", th, "thumb.jpg"); else fd.delete("thumb"); }
+    const r = await BW.api("POST", "/posts", fd); BW.closeModal();
     BW.toast(r.stat?.status === "pending" ? "Published! Your TikTok views are pending verification ⚠️" : "Published! 🚀", "ok"); BW.go("#/post/" + r.id); }
   finally { b.disabled = false; b.textContent = "Publish"; } };
+
+/* grab a frame of the selected video in the browser → used as the post thumbnail (lighter feeds, no server transcoding) */
+BW.videoThumb = (file) => new Promise((res, rej) => { const v = document.createElement("video"), u = URL.createObjectURL(file); v.muted = true; v.playsInline = true; v.preload = "auto"; v.src = u;
+  const fail = () => { URL.revokeObjectURL(u); rej(new Error("thumb")); }; setTimeout(fail, 8000); v.onerror = fail;
+  v.onloadeddata = () => { v.currentTime = Math.min(1, (v.duration || 2) / 3); };
+  v.onseeked = () => { const k = Math.min(1, 720 / Math.max(v.videoWidth, v.videoHeight)), c = document.createElement("canvas"); c.width = Math.round(v.videoWidth * k); c.height = Math.round(v.videoHeight * k);
+    c.getContext("2d").drawImage(v, 0, 0, c.width, c.height); c.toBlob((b) => { URL.revokeObjectURL(u); b ? res(b) : rej(new Error("thumb")); }, "image/jpeg", 0.82); }; });
+/* preview videos on hover */
+document.addEventListener("pointerenter", (ev) => { const v = ev.target.closest?.(".card")?.querySelector(".thumb video"); if (v) v.play().catch(() => {}); }, true);
+document.addEventListener("pointerleave", (ev) => { const v = ev.target.closest?.(".card")?.querySelector(".thumb video"); if (v) { v.pause(); v.currentTime = 0.5; } }, true);
 
 /* ---------- background particles ---------- */
 (() => { const c = $("#fx"), x = c.getContext("2d"); let W, H, P = [];

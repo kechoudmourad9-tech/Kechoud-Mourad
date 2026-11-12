@@ -196,6 +196,16 @@ app.post("/api/me/profile", canWrite, limit("write", 90, 60), upload.single("ava
   res.json({ ok: true, username: req.user.role === "ADMIN" ? req.user.username : username });
 });
 
+app.get("/api/me/blocks", auth, (req, res) => res.json({ users: all("SELECT u.* FROM blocks b JOIN users u ON u.id=b.blocked WHERE b.blocker=?", req.user.id).map(pub) }));
+app.post("/api/me/delete", auth, limit("auth", 12, 600), (req, res) => {
+  if (req.user.role === "ADMIN") return err(res, 403, "The administrator account cannot be deleted.");
+  if (!checkPass(String(req.body.password || ""), req.user.pass)) return err(res, 400, "Wrong password.");
+  all("SELECT media, thumb FROM posts WHERE user_id=?", req.user.id).forEach((p) => [p.media, p.thumb].forEach((m) => m.startsWith("/uploads/") && fs.unlink(path.join(UP, path.basename(m)), () => {})));
+  if (req.user.avatar.startsWith("/uploads/")) fs.unlink(path.join(UP, path.basename(req.user.avatar)), () => {});
+  run("DELETE FROM reports WHERE reporter=? OR (target_type='user' AND target_id=?)", req.user.id, req.user.id); run("DELETE FROM users WHERE id=?", req.user.id);
+  sec("account_deleted", req, req.user.username); res.clearCookie("bw_s", { path: "/" }); res.json({ ok: true });
+});
+
 /* ================= POSTS ================= */
 const POSTSEL = `SELECT p.*, u.username, u.avatar, u.role urole,
   (SELECT COUNT(*) FROM likes l WHERE l.post_id=p.id) lk, (SELECT COUNT(*) FROM comments c WHERE c.post_id=p.id) cm,
@@ -224,6 +234,7 @@ app.get("/api/posts", (req, res) => {
   if (q.feed === "liked") { if (!me) return res.json({ posts: [], more: false }); w.push("EXISTS(SELECT 1 FROM likes s WHERE s.user_id=? AND s.post_id=p.id)"); a.push(me); }
   if (me) { w.push("p.user_id NOT IN (SELECT blocked FROM blocks WHERE blocker=?)"); a.push(me); }
   if (q.sort === "tiktok") w.push("p.tiktok_views>0");
+  if (q.media === "video") w.push("p.media_kind='video'"); else if (q.media === "any") w.push("p.media_kind!=''");
   if (q.feed === "foryou" && me) {
     // personalised: trending candidates re-scored with follows, followed hashtags and hashtags of liked posts
     const rows = all(`${POSTSEL} WHERE ${w.join(" AND ")} ORDER BY ${TREND} DESC LIMIT 240`, ...a);
@@ -292,6 +303,14 @@ app.post("/api/posts/:id/views", canWrite, limit("write", 90, 60), (req, res) =>
   const p = get("SELECT * FROM posts WHERE id=?", int(req.params.id)); if (!p || p.user_id !== req.user.id) return err(res, 403, "Only the creator can update these statistics.");
   if (!p.tiktok_url) return err(res, 400, "This post has no TikTok link.");
   const r = submitViews(p, req.user, req.body.views); if (r.error) return err(res, 400, r.error); res.json(r);
+});
+app.patch("/api/posts/:id", canWrite, limit("write", 90, 60), (req, res) => {
+  const p = get("SELECT * FROM posts WHERE id=?", int(req.params.id)); if (!p || p.user_id !== req.user.id) return err(res, 403, "Only the creator can edit this post.");
+  const title = str(req.body.title, 100), description = str(req.body.description, 2000); if (title.length < 3) return err(res, 400, "Add a title (3 characters minimum).");
+  const tags = parseTags(req.body.hashtags).filter((x) => !get("SELECT 1 x FROM banned_tags WHERE tag=?", x));
+  const bad = moderate(req.user, title, description, tags.join(" ")); if (bad) return err(res, 400, bad);
+  run("UPDATE posts SET title=?, description=?, moment_cat=? WHERE id=?", title, description, get("SELECT id FROM moment_cats WHERE id=?", int(req.body.momentCat))?.id || 0, p.id);
+  run("DELETE FROM post_tags WHERE post_id=?", p.id); tags.forEach((x) => run("INSERT OR IGNORE INTO post_tags VALUES(?,?)", p.id, x)); res.json({ ok: true });
 });
 app.delete("/api/posts/:id", auth, (req, res) => {
   const p = get("SELECT * FROM posts WHERE id=?", int(req.params.id)); if (!p) return err(res, 404, "Post not found.");

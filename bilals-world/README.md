@@ -27,6 +27,26 @@ On first start the server creates the **ADMIN** account (username `ADMIN`). If `
 
 For production: put it behind HTTPS (required for the microphone / voice calls), back up `data/` and `uploads/`, and add a TURN server in `public/js/chat.js` (`iceServers`) so calls also work behind strict NATs.
 
+## Demo content (optional)
+
+```bash
+npm run seed              # adds 6 demo accounts (demo_*) with posts, likes, comments and TikTok stats
+npm run seed -- --clear   # removes every demo account and its content
+```
+
+Demo posts use generated abstract artwork — no real person is depicted. Clear them before opening the site to the public.
+
+## Put it online
+
+The app is one Node process plus a data folder, so any host that runs Node or Docker and gives you a persistent disk works (a VPS, Railway, Render, Fly.io…).
+
+```bash
+docker build -t bilals-world .
+docker run -d -p 3000:3000 -v bilals-world-data:/data -e ADMIN_PASSWORD='choose-a-strong-password' bilals-world
+```
+
+Then put HTTPS in front (the host's built-in TLS, or Caddy / nginx with WebSocket upgrade enabled). HTTPS is mandatory: browsers refuse microphone access on plain HTTP, so voice calls would not work.
+
 ## What is inside
 
 - **Frontend** (`public/`): single-page app in plain JavaScript, strict CSP (no inline scripts), dark glassmorphism UI, 3D hero with parallax, particles, scroll reveals, skeleton loaders, infinite scroll, mobile bottom navigation.
@@ -34,6 +54,8 @@ For production: put it behind HTTPS (required for the microphone / voice calls),
 - **Accounts**: register / login / logout, profile (username, avatar, bio), followers / following, block.
 - **Posts**: Edit, Clip, TikTok, Live Moment, Meme, Fan Art, Short — upload video/image, title, description, hashtags, Bilal Moments category, TikTok URL, original link. Likes (one per user), saves, shares, reports, views.
 - **Comments**: replies, likes, delete, report, sort by popular / newest.
+- **Watch**: full-screen vertical feed (swipe / scroll-snap, autoplay, like, save, share) for videos and images.
+- **Creator tools**: edit a post, automatic thumbnail generated in the browser for uploaded videos, video preview on hover, delete your own account, blocked-users list.
 - **Discovery**: Explore (tabs, filters, periods), For You (personalised), Following, hashtags (popular / trending / recent, follow a hashtag), global search, Bilal Moments, Top TikToks.
 - **TikTok statistics with anti-fraud**: every views change is logged (old value, new value, date, user, status). Small increases are auto-approved; large jumps are `Pending Verification` until a moderator approves or rejects. Only approved views count.
 - **Leaderboards**: Most Views, Most Popular, Rising Editors, Most Active, Best TikTok, Community — by Today / Week / Month / Year / All Time, with gold / silver / bronze podium. Rank shown on profiles.
