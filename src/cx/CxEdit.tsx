@@ -47,13 +47,30 @@ const View: React.FC<{ t: number }> = ({ t }) => {
   const c = CLIPS[i], u = t - c.a, d = (CLIPS[i + 1]?.a ?? T.total) - c.a;
   const dir = i % 2 ? 1 : -1, punch = 1.12 - 0.12 * eo(u / 0.22) + 0.035 * (u / d);
   const [ink, dim] = INK[c.bg];
+  const gl = sat(1 - u / 0.16), dx = 26 * gl * dir, f = Math.floor(t * 15);
   return (
-    <div style={{ position: "absolute", left: 0, top: 0, width: 1920, height: 1080, overflow: "hidden" }}>
-      <div style={{ position: "absolute", inset: 0, transform: `translateX(${(1 - eo(u / 0.18)) * 40 * dir}px) scale(${punch}) rotate(${(1 - eo(u / 0.2)) * 1.1 * dir}deg)` }}>
-        {BG[c.bg]}
-        <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{ position: "absolute", inset: 0 }}>{(R[c.kind] ?? R.slam)(c.args, { u, d, ink, dim, bg: c.bg })}</svg>
+    <div style={{ position: "absolute", left: 0, top: 0, width: 1920, height: 1080, overflow: "hidden", background: "#000" }}>
+      <svg width={0} height={0} style={{ position: "absolute" }}><defs>
+        <filter id={`rgb${i}`} x="-4%" width="108%" colorInterpolationFilters="sRGB">
+          <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r" /><feOffset in="r" dx={dx} result="ro" />
+          <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g" />
+          <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b" /><feOffset in="b" dx={-dx} result="bo" />
+          <feBlend in="ro" in2="g" mode="screen" result="rg" /><feBlend in="rg" in2="bo" mode="screen" />
+        </filter></defs></svg>
+      <div style={{ position: "absolute", inset: 0, filter: gl > 0 ? `url(#rgb${i})` : undefined,
+        transform: `translate(${(1 - eo(u / 0.18)) * 40 * dir + Math.sin(t * 0.7) * 5}px, ${Math.cos(t * 0.53) * 4 + (gl > 0.5 ? Math.sin(t * 190) * 7 : 0)}px) scale(${punch}) rotate(${(1 - eo(u / 0.2)) * 1.1 * dir}deg)` }}>
+        <div style={{ position: "absolute", inset: -40, transform: `scale(${1.05 - 0.03 * (u / d)})` }}><div style={{ position: "absolute", inset: 40 }}>{BG[c.bg]}</div></div>
+        <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{ position: "absolute", inset: 0 }}>
+          <defs><filter id="sticker" x="-25%" y="-25%" width="150%" height="150%">
+            <feMorphology in="SourceAlpha" operator="dilate" radius={7} result="dil" /><feFlood floodColor="#ffffff" /><feComposite in2="dil" operator="in" result="out" />
+            <feGaussianBlur in="dil" stdDeviation={9} result="bl" /><feOffset in="bl" dy={12} result="off" /><feComponentTransfer in="off" result="sh"><feFuncA type="linear" slope={0.45} /></feComponentTransfer>
+            <feMerge><feMergeNode in="sh" /><feMergeNode in="out" /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs>
+          {(R[c.kind] ?? R.slam)(c.args, { u, d, ink, dim, bg: c.bg })}</svg>
       </div>
-      <div style={{ position: "absolute", inset: 0, background: "#fff", opacity: sat(1 - u * 11) * 0.7 }} />
+      <div style={{ position: "absolute", inset: 0, background: "#fff", opacity: sat(1 - u * 14) * 0.3 }} />
+      {gl > 0.3 ? [0, 1, 2].map((b) => <div key={b} style={{ position: "absolute", left: 0, right: 0, top: ((f * 131 + b * 367) % 1000), height: 30 + ((f * 17 + b * 29) % 60), background: b % 2 ? "rgba(40,224,255,0.22)" : "rgba(255,45,45,0.22)",
+        transform: `translateX(${((f * 53 + b * 97) % 80) - 40}px)` }} />) : null}
+      <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${staticFile("cx/grain.png")})`, backgroundPosition: `${(f * 173) % 512}px ${(f * 311) % 512}px`, opacity: c.bg === "paper" ? 0.2 : 0.14, mixBlendMode: "overlay" }} />
     </div>
   );
 };

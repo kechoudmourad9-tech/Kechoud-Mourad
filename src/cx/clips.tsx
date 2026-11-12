@@ -26,6 +26,19 @@ const Pill: React.FC<{ x: number; y: number; text: string; c?: string; fg?: stri
   const w = text.length * s * 0.5 + s * 1.2;
   return sc <= 0.001 ? null : <g transform={`translate(${x} ${y}) scale(${sc})`}><rect x={-w / 2} y={-s * 0.75} width={w} height={s * 1.5} rx={s * 0.4} fill={c} /><T x={0} y={2} s={s} c={fg}>{text}</T></g>;
 };
+/** hand-drawn marker loop around a zone (wobbly, slightly more than one turn) */
+export const Mark: React.FC<{ x: number; y: number; rx: number; ry: number; p: number; c?: string; seed?: number; w?: number }> = ({ x, y, rx, ry, p, c = RED, seed = 1, w = 13 }) => {
+  if (p <= 0) return null; let d = "";
+  for (let i = 0; i <= 46; i++) { const a = -2.3 + (i / 40) * Math.PI * 2, wob = 1 + (rnd(i, seed) - 0.5) * 0.07 + (i / 46) * 0.07; d += `${i ? "L" : "M"}${x + Math.cos(a) * rx * wob} ${y + Math.sin(a) * ry * wob} `; }
+  return <path d={d} fill="none" stroke={c} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1 - sat(p)} opacity={0.92} />;
+};
+/** hand-drawn double underline */
+export const Squig: React.FC<{ x: number; y: number; w: number; p: number; c?: string; seed?: number }> = ({ x, y, w, p, c = RED, seed = 2 }) => {
+  if (p <= 0) return null; let d = `M${x - w / 2} ${y}`;
+  for (let i = 1; i <= 12; i++) d += ` L${x - w / 2 + (w * i) / 12} ${y + (rnd(i, seed) - 0.5) * 16}`;
+  for (let i = 11; i >= 2; i--) d += ` L${x - w / 2 + (w * i) / 12} ${y + 26 + (rnd(i, seed + 3) - 0.5) * 14}`;
+  return <path d={d} fill="none" stroke={c} strokeWidth={12} strokeLinecap="round" strokeLinejoin="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1 - sat(p)} opacity={0.92} />;
+};
 const Head: React.FC<{ x: number; y: number; p: number; c: string; a?: number; s?: number }> = ({ x, y, p, c, a = 0, s = 1 }) => (
   p < 0.95 ? null : <path d="M-30 -22 L10 0 L-30 22 Z" fill={c} transform={`translate(${x} ${y}) rotate(${a}) scale(${s})`} />
 );
@@ -98,13 +111,14 @@ export const R: Record<string, (a: A, c: Ctx) => React.ReactNode> = {
     <rect x={760} y={420} width={12} height={240 * k(u, 0.2, 0.3)} fill="#fff" /><T x={820} y={540} s={fit(title as string, 130, 1000)} c="#fff" anchor="start" sc={k(u, 0.25, 0.3)}>{(title as string).toUpperCase()}</T></>,
   slam: ([txt, sub], { u, ink, dim }) => { const s = fit(txt as string, 330); const g = u < 0.35 ? 14 : 3; return <>
     <T x={960 + g} y={sub ? 480 : 540} s={s} c={RED} sc={pp(u, 0.03)}>{txt as string}</T><T x={960 - g} y={sub ? 480 : 540} s={s} c={CYAN} sc={pp(u, 0.03)}>{txt as string}</T><T x={960} y={sub ? 480 : 540} s={s} c={ink} sc={pp(u, 0.03)}>{txt as string}</T>
-    {sub ? <T x={960} y={480 + s * 0.75 + 30} s={76} c={dim} f="InterX" sc={k(u, 0.3, 0.25)}>{sub as string}</T> : null}</>; },
+    {sub ? <T x={960} y={480 + s * 0.75 + 30} s={76} c={dim} f="InterX" sc={k(u, 0.3, 0.25)}>{sub as string}</T> : <Squig x={960} y={540 + s * 0.62} w={Math.min(1500, (txt as string).length * s * 0.42)} p={k(u, 0.45, 0.4)} />}</>; },
   slamr: ([txt, sub], { u }) => { const s = fit(txt as string, 330); return <><T x={960} y={sub ? 480 : 540} s={s} c="#fff" sc={pp(u, 0.03)} rot={-3}>{txt as string}</T>
     {sub ? <T x={960} y={480 + s * 0.75 + 40} s={80} c="#ffd9d9" f="InterX" sc={k(u, 0.3, 0.25)}>{sub as string}</T> : null}</>; },
   tex: ([txt, sub], { u, ink }) => { const s = fit(txt as string, 430, 1650, 0.52); return <>
     <T x={960} y={sub ? 460 : 540} s={s} c={ink} f="KaTeX_Main" sc={pp(u, 0.05)} glow={ink === "#ffffff" ? BLUE : undefined}>{txt as string}</T>
-    {sub ? <Pill x={960} y={460 + s * 0.62 + 90} text={sub as string} sc={pp(u, 0.45)} s={70} /> : null}</>; },
-  icon: ([name, label], { u, ink }) => <><g transform={`translate(960 ${label ? 450 : 540}) scale(${1.5 * pp(u, 0.03)})`}>{(ICONS[name as string] ?? ICONS.bulb)(ink, u)}</g>
+    <Mark x={960} y={(sub ? 460 : 540) + s * 0.04} rx={Math.min(900, (txt as string).length * s * 0.27 + 110)} ry={s * 0.62} p={k(u, 0.55, 0.55)} c={ink === "#141414" ? RED : YEL} seed={(txt as string).length} />
+    {sub ? <Pill x={960} y={460 + s * 0.62 + 110} text={sub as string} sc={pp(u, 0.45)} s={70} /> : null}</>; },
+  icon: ([name, label], { u, ink }) => <><g filter="url(#sticker)" transform={`translate(960 ${label ? 450 : 540}) rotate(${Math.sin(u * 2.2) * 2.5}) scale(${1.5 * pp(u, 0.03)})`}>{(ICONS[name as string] ?? ICONS.bulb)(ink, u)}</g>
     {label ? <Pill x={960} y={920} text={label as string} sc={pp(u, 0.35)} s={78} /> : null}</>,
   list: ([title, items], { u, d, ink }) => { const it = items as string[], gap = Math.min(150, 740 / it.length), s = Math.min(96, gap * 0.66); return <>
     <T x={960} y={130} s={fit(title as string, 84, 1500)} c={RED} sc={pp(u, 0)}>{title as string}</T><rect x={960 - 260 * k(u, 0.1)} y={190} width={520 * k(u, 0.1)} height={8} fill={ink} />
@@ -129,7 +143,8 @@ export const R: Record<string, (a: A, c: Ctx) => React.ReactNode> = {
       <T x={x0 + i * (w + 40) + w / 2} y={950} s={Math.min(70, w * 0.4)} c={ink} f="KaTeX_Main">{l}</T>
       {Tp[i] ? <T x={x0 + i * (w + 40) + w / 2} y={880 - h - 50} s={fit(Tp[i], 60, w + 30, 0.5)} c={ink} sc={pp(u, 0.5 + i * 0.18)}>{Tp[i]}</T> : null}</g>; })}</>; },
   num: ([txt, label], { u, d, ink }) => { const s = txt as string, n = Math.ceil(sat(u / Math.min(1.6, d * 0.6)) * s.length); return <>
-    <T x={960} y={470} s={fit(s, 300, 1700, 0.5)} c={ink}>{s.slice(0, n)}</T>{label ? <Pill x={960} y={720} text={label as string} sc={pp(u, 0.5)} s={72} /> : null}</>; },
+    <T x={960} y={470} s={fit(s, 300, 1700, 0.5)} c={ink}>{s.slice(0, n)}</T><Squig x={960} y={470 + fit(s, 300, 1700, 0.5) * 0.62} w={Math.min(1600, s.length * fit(s, 300, 1700, 0.5) * 0.4)} p={k(u, Math.min(1.6, d * 0.6), 0.35)} c={YEL} />
+    {label ? <Pill x={960} y={760} text={label as string} sc={pp(u, 0.5)} s={72} /> : null}</>; },
   code: ([lines, hi], { u, d }) => { const L = lines as string[], tot = L.join("").length, shown = Math.floor(sat(u / Math.min(2.2, d * 0.7)) * tot); let acc = 0; return <>
     <rect x={210} y={170} width={1500} height={740} rx={30} fill="#11131f" stroke="#2c3152" strokeWidth={6} /><rect x={210} y={170} width={1500} height={80} rx={30} fill="#1c2036" />
     {[RED, YEL, GRN].map((c, i) => <circle key={c} cx={270 + i * 50} cy={210} r={16} fill={c} />)}
