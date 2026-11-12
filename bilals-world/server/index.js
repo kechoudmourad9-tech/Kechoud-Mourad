@@ -143,6 +143,25 @@ app.get("/api/auth/me", (req, res) => {
   res.json({ user: { ...pub(u), email: u.email, status: u.status, mute_until: u.mute_until, warnings: u.warnings, unread: get("SELECT COUNT(*) n FROM notifications WHERE user_id=? AND read=0", u.id).n,
     unreadMsg: get("SELECT COUNT(*) n FROM messages WHERE to_id=? AND read=0 AND deleted=0", u.id).n } });
 });
+/* password reset: emailed link when SMTP_URL is configured, otherwise the ADMIN can generate a one-time link */
+const mailer = process.env.SMTP_URL ? require("nodemailer").createTransport(process.env.SMTP_URL) : null;
+const PUBLIC_URL = (process.env.PUBLIC_URL || "").replace(/\/$/, "");
+const sha = (s) => crypto.createHash("sha256").update(s).digest("hex");
+const resetLink = (req, uid) => { const tok = crypto.randomBytes(32).toString("base64url"); run("DELETE FROM password_resets WHERE user_id=? OR expires_at<?", uid, now());
+  run("INSERT INTO password_resets VALUES(?,?,?)", sha(tok), uid, now() + 3600); return `${PUBLIC_URL || `${req.protocol}://${req.get("host")}`}/#/reset/${tok}`; };
+app.post("/api/auth/forgot", limit("auth", 12, 600), (req, res) => {
+  const email = str(req.body.email, 120).toLowerCase(), u = get("SELECT * FROM users WHERE email=? AND status='active'", email);
+  if (u && mailer) { const link = resetLink(req, u.id);
+    mailer.sendMail({ from: process.env.MAIL_FROM || "Bilal's World <no-reply@localhost>", to: u.email, subject: "Reset your Bilal's World password",
+      text: `Hi @${u.username},\n\nUse this link to choose a new password (valid for 1 hour):\n${link}\n\nIf you did not ask for it, ignore this email.` }).catch((e) => console.error("mail:", e.message)); sec("reset_requested", req, u.username); }
+  res.json({ ok: true, mail: !!mailer });   // same answer whether the email exists or not
+});
+app.post("/api/auth/reset", limit("auth", 12, 600), (req, res) => {
+  const np = String(req.body.password || ""), r = get("SELECT * FROM password_resets WHERE token_hash=? AND expires_at>?", sha(String(req.body.token || "")), now());
+  if (!r) return err(res, 400, "This reset link is invalid or has expired."); if (np.length < 8 || np.length > 200) return err(res, 400, "Password must be at least 8 characters.");
+  run("UPDATE users SET pass=? WHERE id=?", hashPass(np), r.user_id); run("DELETE FROM password_resets WHERE user_id=?", r.user_id); run("DELETE FROM sessions WHERE user_id=?", r.user_id);
+  sec("password_reset", req, String(r.user_id)); res.json({ ok: true });
+});
 app.post("/api/auth/password", auth, limit("auth", 12, 600), (req, res) => {
   const np = String(req.body.newPassword || "");
   if (!checkPass(String(req.body.password || ""), req.user.pass)) return err(res, 400, "Current password is wrong.");
@@ -383,7 +402,7 @@ app.get("/api/search", limit("search", 60, 60), (req, res) => {
     posts: all(`${POSTSEL} WHERE p.hidden=0 AND u.status='active' AND (p.title LIKE ? ESCAPE '\\' OR p.description LIKE ? ESCAPE '\\' OR EXISTS(SELECT 1 FROM post_tags t WHERE t.post_id=p.id AND t.tag LIKE ? ESCAPE '\\')) ORDER BY ${TREND} DESC LIMIT 24`, me, me, like, like, like).map(shape),
     hashtags: all("SELECT t.tag, COUNT(*) n FROM post_tags t JOIN posts p ON p.id=t.post_id WHERE p.hidden=0 AND t.tag LIKE ? ESCAPE '\\' GROUP BY t.tag ORDER BY n DESC LIMIT 12", like) });
 });
-app.get("/api/meta", (req, res) => res.json({ types: TYPES, reasons: REASONS, moments: all("SELECT * FROM moment_cats ORDER BY pos, id"), hero: setting("hero_image"), autoMax: autoMax(),
+app.get("/api/meta", (req, res) => res.json({ types: TYPES, reasons: REASONS, moments: all("SELECT * FROM moment_cats ORDER BY pos, id"), hero: setting("hero_image"), autoMax: autoMax(), mail: !!mailer, voiceRooms: VOICE_ROOMS,
   counts: { users: get("SELECT COUNT(*) n FROM users WHERE status='active'").n, posts: get("SELECT COUNT(*) n FROM posts WHERE hidden=0").n, views: get("SELECT COALESCE(SUM(tiktok_views),0) n FROM posts WHERE hidden=0").n } }));
 
 /* ================= LEADERBOARDS ================= */
@@ -536,6 +555,8 @@ app.post("/api/admin/users/:id/:action(ban|suspend|reactivate|delete|promote|dem
   if (a === "delete") { kick(u.id); run("DELETE FROM reports WHERE reporter=? OR (target_type='user' AND target_id=?)", u.id, u.id); run("DELETE FROM users WHERE id=?", u.id); }
   log(req.user.id, `admin:${a}`, `@${u.username}`, str(req.body.reason, 200)); res.json({ ok: true });
 });
+app.post("/api/admin/users/:id/reset-link", admin, (req, res) => { const u = get("SELECT * FROM users WHERE id=?", int(req.params.id)); if (!u || u.role === "ADMIN") return err(res, 403, "Not available for this account.");
+  log(req.user.id, "admin:reset_link", `@${u.username}`); res.json({ link: resetLink(req, u.id) }); });
 app.get("/api/admin/overview", admin, (req, res) => {
   const n = (sql, ...p) => get(sql, ...p).n, days = [];
   for (let i = 13; i >= 0; i--) { const a = Math.floor(new Date().setUTCHours(0, 0, 0, 0) / 1000) - i * 86400, b = a + 86400;
@@ -578,6 +599,9 @@ app.get("/api/admin/stats-history", mod, (req, res) => res.json({ rows: all("SEL
 
 /* ================= REALTIME: presence, typing, WebRTC signalling ================= */
 const online = new Map();           // userId -> socket count
+const VOICE_ROOMS = [["lounge", "🎧 Lounge"], ["editors", "🎬 Editors"], ["clips", "🎥 Clips & Lives"], ["gaming", "🎮 Gaming"]], VOICE_MAX = 8;
+const voice = new Map(VOICE_ROOMS.map(([id]) => [id, new Map()]));   // roomId -> Map<userId, {socketId, user}>  (WebRTC mesh, audio only)
+const voiceState = () => Object.fromEntries([...voice].map(([id, m]) => [id, [...m.values()].map((x) => x.user)]));
 const calls = new Map();            // callId -> { members:Set<userId>, startedBy } (a room: ready for group calls later)
 io.use((socket, next) => { const u = userFromToken(cookieOf(socket.handshake.headers.cookie).bw_s); if (!u || u.status !== "active") return next(new Error("unauthorized")); socket.user = u; next(); });
 io.on("connection", (socket) => {
@@ -598,9 +622,20 @@ io.on("connection", (socket) => {
   socket.on("call:accept", ({ callId }) => { const c = calls.get(callId); if (!c || c.invited !== me.id) return; c.members.add(me.id); socket.callId = callId; io.to(`u:${c.startedBy}`).emit("call:accepted", { callId, by: pub(me) }); });
   socket.on("call:decline", ({ callId }) => { const c = calls.get(callId); if (!c || c.invited !== me.id) return; calls.delete(callId); io.to(`u:${c.startedBy}`).emit("call:ended", { callId, reason: "Declined" }); });
   socket.on("call:signal", ({ callId, data }) => { const c = calls.get(callId); if (!c || !c.members.has(me.id)) return; [...c.members].filter((id) => id !== me.id).forEach((id) => io.to(`u:${id}`).emit("call:signal", { callId, from: me.id, data })); });
+  const leaveVoice = () => { const id = socket.voiceRoom; if (!id) return; const m = voice.get(id); socket.voiceRoom = null; if (m?.get(me.id)?.socketId !== socket.id) return;
+    m.delete(me.id); socket.leave(`v:${id}`); io.to(`v:${id}`).emit("voice:left", { id: me.id }); io.emit("voice:rooms", voiceState()); };
+  socket.on("voice:list", (cb) => cb?.(voiceState()));
+  socket.on("voice:join", ({ room }, cb) => { const m = voice.get(room); if (!m) return cb?.({ error: "Unknown room." });
+    if (me.mute_until > now()) return cb?.({ error: "You are muted." }); if (m.size >= VOICE_MAX && !m.has(me.id)) return cb?.({ error: "This room is full." });
+    if ([...calls.values()].some((c) => c.members.has(me.id))) return cb?.({ error: "You are already in a call." });
+    leaveVoice(); const peers = [...m.values()].filter((x) => x.user.id !== me.id && !blockedBetween(me.id, x.user.id)).map((x) => x.user);
+    m.set(me.id, { socketId: socket.id, user: pub(me) }); socket.voiceRoom = room; socket.join(`v:${room}`); socket.to(`v:${room}`).emit("voice:joined", { user: pub(me) }); io.emit("voice:rooms", voiceState()); cb?.({ peers }); });
+  socket.on("voice:signal", ({ to, data }) => { const m = voice.get(socket.voiceRoom), t = m?.get(to); if (t && m.get(me.id)?.socketId === socket.id) io.to(t.socketId).emit("voice:signal", { from: me.id, data }); });
+  socket.on("voice:leave", leaveVoice);
   const endCall = (callId, reason) => { const c = calls.get(callId); if (!c || (!c.members.has(me.id) && c.invited !== me.id)) return; calls.delete(callId); [...c.members, c.invited].forEach((id) => io.to(`u:${id}`).emit("call:ended", { callId, reason })); };
   socket.on("call:end", ({ callId }) => endCall(callId, "Call ended"));
   socket.on("disconnect", () => {
+    leaveVoice();
     const n = (online.get(me.id) || 1) - 1; if (n <= 0) { online.delete(me.id); io.emit("presence", { id: me.id, online: false }); for (const [id, c] of calls) if (c.members.has(me.id)) endCall(id, "Disconnected"); } else online.set(me.id, n);
   });
 });

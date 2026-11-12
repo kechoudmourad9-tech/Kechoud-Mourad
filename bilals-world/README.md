@@ -24,6 +24,9 @@ On first start the server creates the **ADMIN** account (username `ADMIN`). If `
 | `UPLOAD_DIR` | `./uploads` | uploaded images and videos |
 | `NODE_ENV=production` | – | `Secure` cookies (serve over HTTPS) |
 | `TRUST_PROXY=1` | – | when behind a reverse proxy (correct client IPs for rate limits) |
+| `SMTP_URL` | – | enables password-reset emails, e.g. `smtps://user:pass@smtp.example.com` |
+| `MAIL_FROM` | – | sender shown in those emails |
+| `PUBLIC_URL` | request host | public address used in reset links, e.g. `https://bilalsworld.example` |
 
 For production: put it behind HTTPS (required for the microphone / voice calls), back up `data/` and `uploads/`, and add a TURN server in `public/js/chat.js` (`iceServers`) so calls also work behind strict NATs.
 
@@ -45,6 +48,8 @@ docker build -t bilals-world .
 docker run -d -p 3000:3000 -v bilals-world-data:/data -e ADMIN_PASSWORD='choose-a-strong-password' bilals-world
 ```
 
+`render.yaml` (Render.com blueprint) and `fly.toml` (Fly.io) are ready to use; both keep the data on a persistent disk.
+
 Then put HTTPS in front (the host's built-in TLS, or Caddy / nginx with WebSocket upgrade enabled). HTTPS is mandatory: browsers refuse microphone access on plain HTTP, so voice calls would not work.
 
 ## What is inside
@@ -63,6 +68,9 @@ Then put HTTPS in front (the host's built-in TLS, or Caddy / nginx with WebSocke
 - **Moderation**: automatic filter (bad words with sanction levels: warning, blocked, temporary mute, temporary ban, permanent ban; spam detection), reports queue (dismiss, delete, hide, warn, mute, ban), moderation logs, security logs.
 - **Admin dashboard**: overview, users, moderators, reports, content, comments, banned users, bad words, TikTok statistics, leaderboards, analytics charts, logs, settings (hero image, anti-fraud threshold, moment categories, hashtags).
 - **Realtime**: notifications bell, private messages (text, emoji, GIF link, images, shared posts, typing, online status, delete, block, report), **1-to-1 voice calls** over WebRTC (accept / decline / mute / timer). Calls are modelled as rooms so group calls can be added later.
+- **Group voice rooms**: four rooms (Lounge, Editors, Clips & Lives, Gaming), up to 8 people each, audio mesh over WebRTC; a floating bar keeps mute / leave available on every page.
+- **Password reset**: emailed one-hour link when `SMTP_URL` is set; without email, the ADMIN generates a one-time reset link from *Admin → Users*.
+- **French / English**: the interface follows the browser language and can be switched in the footer or in Settings. User content is never translated.
 - **Security**: scrypt-hashed passwords, httpOnly SameSite session cookie, CSRF header check, rate limiting, input validation, output escaping, upload type + magic-byte + size validation, CSP and hardening headers.
 
 ## Notes

@@ -1,0 +1,15 @@
+# Fly.io:  fly launch --no-deploy --copy-config  →  fly volumes create data --size 3  →  fly secrets set ADMIN_PASSWORD=...  →  fly deploy
+app = "bilals-world"
+primary_region = "cdg"
+
+[build]
+
+[mounts]
+  source = "data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = "off"      # realtime chat and calls need the machine to stay up
+  min_machines_running = 1

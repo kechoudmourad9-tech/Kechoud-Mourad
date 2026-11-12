@@ -1,0 +1,17 @@
+# Render.com blueprint: New → Blueprint → pick this repository (root directory: bilals-world)
+services:
+  - type: web
+    name: bilals-world
+    runtime: docker
+    rootDir: bilals-world
+    plan: starter            # a paid plan is required for the persistent disk
+    healthCheckPath: /api/meta
+    envVars:
+      - key: ADMIN_PASSWORD
+        sync: false          # you type it in the dashboard; never commit it
+      - key: PUBLIC_URL
+        sync: false          # e.g. https://bilals-world.onrender.com (used in password-reset links)
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 5

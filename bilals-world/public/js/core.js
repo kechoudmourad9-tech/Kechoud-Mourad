@@ -69,7 +69,7 @@ BW.feed = (box, params) => {
 };
 
 /* ---------- navigation chrome ---------- */
-const NAV = [["explore", "Explore"], ["foryou", "For You"], ["t/edit", "Edits"], ["t/clip", "Clips"], ["t/tiktok", "TikToks"], ["watch", "Shorts"], ["moments", "Moments"], ["community", "Community"], ["leaderboard", "Leaderboard"], ["messages", "Messages"]];
+const NAV = [["explore", "Explore"], ["foryou", "For You"], ["t/edit", "Edits"], ["t/clip", "Clips"], ["t/tiktok", "TikToks"], ["watch", "Shorts"], ["moments", "Moments"], ["community", "Community"], ["leaderboard", "Leaderboard"], ["voice", "Voice"], ["messages", "Messages"]];
 BW.chrome = () => {
   const m = BW.me, cur = location.hash.slice(2).split("?")[0] || "home";
   $("#nav").innerHTML = `<div class="wrap"><a class="logo" href="#/home"><i>B</i><span>BILAL’S WORLD</span></a>
@@ -86,11 +86,11 @@ BW.chrome = () => {
     <p class="sm mut">Fan-made community platform dedicated to Bilal Fadili. Not affiliated with, managed or endorsed by Bilal Fadili.</p>
     <p>${tags(["BilalEdit", "BilalFadili", "BilalWorld"])}</p></div>
     <div><a href="#/home">Home</a><a href="#/explore">Explore</a><a href="#/community">Community</a><a href="#/leaderboard">Leaderboard</a><a href="#/hashtags">Hashtags</a><a href="#/top">Top TikToks</a></div>
-    <div><a href="#/rules">Rules</a><a href="#/about">About</a><a href="#/privacy">Privacy</a><a href="#/terms">Terms</a><a href="#/contact">Contact</a></div></div>`;
+    <div><a href="#" data-act="lang">🌐 ${BW_LANG === "fr" ? "English" : "Français"}</a><a href="#/rules">Rules</a><a href="#/about">About</a><a href="#/privacy">Privacy</a><a href="#/terms">Terms</a><a href="#/contact">Contact</a></div></div>`;
 };
 BW.acts.menu = () => { const b = $("#menu"); if (b.innerHTML) return (b.innerHTML = ""); const m = BW.me; $("#bell").innerHTML = "";
   b.innerHTML = `<div class="drop glass"><a href="#/u/${e(m.username)}">👤 <span>My profile</span></a><a href="#/notifications">🔔 <span>Notifications</span></a><a href="#/saved">🔖 <span>Saved</span></a><a href="#/liked">❤️ <span>Liked</span></a><a href="#/foryou/following">👥 <span>Following feed</span></a>
-    <a href="#/messages">💬 <span>Messages</span></a><a href="#/settings">⚙️ <span>Settings</span></a>${m.role !== "USER" ? `<a href="#/admin">🛡️ <span>${m.role === "ADMIN" ? "Admin dashboard" : "Moderation"}</span></a>` : ""}
+    <a href="#/messages">💬 <span>Messages</span></a><a href="#/voice">🎧 <span>Voice rooms</span></a><a href="#/settings">⚙️ <span>Settings</span></a>${m.role !== "USER" ? `<a href="#/admin">🛡️ <span>${m.role === "ADMIN" ? "Admin dashboard" : "Moderation"}</span></a>` : ""}
     <button class="item" data-act="logout">🚪 <span>Log out</span></button></div>`; };
 BW.acts.bell = guard(async () => { const b = $("#bell"); if (b.innerHTML) return (b.innerHTML = ""); $("#menu").innerHTML = ""; b.innerHTML = `<div class="drop glass"><div class="pad mut">Loading…</div></div>`;
   const r = await GET("/notifications"); const ic = { like: "❤️", comment: "💬", reply: "↩️", follow: "👥", message: "✉️", call: "📞", warning: "⚠️", removed: "🗑️", stats: "📊", rank: "🏆", role: "🛡️" };
@@ -125,12 +125,19 @@ BW.acts.auth = (el) => { const reg = el?.dataset?.mode === "register";
   <form data-form="${reg ? "register" : "login"}"><label class="f">Username${reg ? "" : " or email"}</label><input class="in" name="username" required maxlength="120" autocomplete="username">
   ${reg ? `<label class="f">Email</label><input class="in" type="email" name="email" required autocomplete="email">` : ""}
   <label class="f">Password</label><input class="in" type="password" name="password" required minlength="${reg ? 8 : 1}" autocomplete="${reg ? "new-password" : "current-password"}">
+  ${reg ? "" : `<p class="sm" style="margin:8px 0 0"><a href="#" class="tag" data-act="forgot">Forgot password?</a></p>`}
   ${reg ? `<p class="sm mut">By joining you accept the <a class="tag" href="#/rules">Community Rules</a> and <a class="tag" href="#/terms">Terms</a>.</p>` : ""}
   <button class="btn pri" style="width:100%;margin-top:18px">${reg ? "Create account" : "Sign in"}</button></form>
   <p class="center sm mut" style="margin:14px 0 0">${reg ? "Already a member?" : "New here?"} <a href="#" class="tag" data-act="auth" data-mode="${reg ? "login" : "register"}">${reg ? "Sign in" : "Create an account"}</a></p>`); };
 const afterAuth = async () => { await BW.boot(true); BW.closeModal(); BW.render(); };
 BW.forms.login = async (f) => { await POST("/auth/login", { username: f.username.value, password: f.password.value }); await afterAuth(); BW.toast("Welcome back!", "ok"); };
 BW.forms.register = async (f) => { await POST("/auth/register", { username: f.username.value, email: f.email.value, password: f.password.value }); await afterAuth(); BW.toast("Welcome to Bilal’s World! 🎉", "ok"); };
+BW.acts.lang = () => { localStorage.setItem("bw_lang", BW_LANG === "fr" ? "en" : "fr"); location.reload(); };
+BW.acts.forgot = () => BW.modal(`<h2>Reset your password</h2><p class="mut">Enter the email of your account. If it exists, you will receive a link valid for one hour.</p>
+  <form data-form="forgot"><label class="f">Email</label><input class="in" type="email" name="email" required autocomplete="email"><button class="btn pri" style="width:100%;margin-top:16px">Send reset link</button></form>`);
+BW.forms.forgot = async (f) => { const r = await POST("/auth/forgot", { email: f.email.value }); BW.closeModal();
+  BW.modal(r.mail ? `<h2>📧 Check your inbox</h2><p class="mut">If an account uses this email, a reset link was sent. It is valid for one hour.</p>` : `<h2>Ask the administrator</h2><p class="mut">Email is not configured on this server yet. Message <b>@ADMIN</b> (or any moderator who can reach them): the administrator can generate a one-time reset link for your account.</p>`); };
+BW.forms.reset = async (f) => { await POST("/auth/reset", { token: f.dataset.token, password: f.password.value }); BW.toast("Password updated. You can sign in now.", "ok"); BW.go("#/home"); setTimeout(() => BW.acts.auth(), 300); };
 BW.acts.logout = guard(async () => { await POST("/auth/logout"); BW.sock?.disconnect(); BW.sock = null; BW.me = null; BW.go("#/home"); });
 
 /* ---------- post actions ---------- */

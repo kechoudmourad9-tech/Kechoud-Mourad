@@ -9,7 +9,7 @@ const userRow = (u, isAdmin) => `<tr><td><a class="row" href="#/u/${e(u.username
     ${u.status === "active" ? `<button class="btn sm danger" data-act="mu" data-a="tempban" data-id="${u.id}">Temp ban</button>` : ""}
     ${isAdmin ? `${u.status === "active" ? `<button class="btn sm danger" data-act="au" data-a="suspend" data-id="${u.id}">Suspend</button><button class="btn sm danger" data-act="au" data-a="ban" data-id="${u.id}">Ban</button>` : `<button class="btn sm ok" data-act="au" data-a="reactivate" data-id="${u.id}">Reactivate</button>`}
       ${u.role === "USER" ? `<button class="btn sm ok" data-act="au" data-a="promote" data-id="${u.id}">Make Moderator</button>` : `<button class="btn sm" data-act="au" data-a="demote" data-id="${u.id}">Remove Moderator</button>`}
-      <button class="btn sm danger" data-act="au" data-a="delete" data-id="${u.id}">Delete</button>` : u.status !== "active" ? `<span class="mut sm">admin can reactivate</span>` : ""}`}</div></td></tr>`;
+      <button class="btn sm" data-act="resetlink" data-id="${u.id}">Reset link</button><button class="btn sm danger" data-act="au" data-a="delete" data-id="${u.id}">Delete</button>` : u.status !== "active" ? `<span class="mut sm">admin can reactivate</span>` : ""}`}</div></td></tr>`;
 const usersTable = (users, isAdmin) => users.length ? `<div class="tw"><table><tr><th>User</th><th>Status</th><th>Posts</th><th>Warnings</th><th>Last seen</th><th>Actions</th></tr>${users.map((u) => userRow(u, isAdmin)).join("")}</table></div>` : `<p class="mut">No users found.</p>`;
 
 BW.routes.admin = async (app, [sec = ""], q) => {
@@ -87,3 +87,4 @@ BW.acts.momdel = guard(async (el) => { if (!confirm("Delete this category?")) re
 BW.forms.tagban = async (f) => { await POST(`/admin/tags/${encodeURIComponent(f.tag.value.replace(/^#/, ""))}/ban`); BW.render(); };
 BW.acts.tagact = guard(async (el) => { await POST(`/admin/tags/${encodeURIComponent(el.dataset.tag)}/${el.dataset.a}`); BW.render(); });
 BW.acts.acdel = guard(async (el) => { if (!confirm("Delete this comment?")) return; await DEL("/comments/" + el.dataset.id); BW.toast("Comment deleted.", "ok"); BW.render(); });
+BW.acts.resetlink = guard(async (el) => { const r = await POST(`/admin/users/${el.dataset.id}/reset-link`); BW.modal(`<h2>🔑 One-time reset link</h2><p class="mut">Send this link privately to the user. It works once and expires in one hour.</p><div class="row"><input class="in" readonly id="shareLink" value="${e(r.link)}"><button class="btn pri" data-act="copy">Copy</button></div>`); });

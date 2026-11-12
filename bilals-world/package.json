@@ -2,7 +2,7 @@
   "name": "bilals-world",
   "version": "1.0.0",
   "private": true,
-  "description": "Bilal's World \u2014 fan-made community platform (posts, feeds, leaderboards, moderation, chat, voice calls)",
+  "description": "Bilal's World — fan-made community platform (posts, feeds, leaderboards, moderation, chat, voice calls)",
   "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
@@ -15,6 +15,7 @@
   "dependencies": {
     "express": "^4.21.2",
     "multer": "^2.0.2",
+    "nodemailer": "^10.5.0",
     "socket.io": "^4.8.1"
   }
 }

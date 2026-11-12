@@ -57,6 +57,7 @@ BW.connect = () => {
   s.on("presence", ({ id, online }) => { $$(`[data-dot="${id}"]`).forEach((d) => d.classList.toggle("on", online)); $$(`[data-on="${id}"]`).forEach((d) => (d.textContent = online ? "online" : "offline")); });
   s.on("session:end", () => { BW.toast("Your session ended.", "err"); BW.me = null; BW.sock = null; BW.go("#/home"); });
   s.on("modqueue", () => { if (location.hash.startsWith("#/admin")) BW.toast("🛡️ New item in the moderation queue."); });
+  BW.voiceHook?.(s);
   s.on("call:incoming", ({ callId, from }) => Call.incoming(callId, from));
   s.on("call:accepted", ({ callId }) => Call.accepted(callId));
   s.on("call:signal", ({ callId, data }) => Call.signal(callId, data));
@@ -69,13 +70,13 @@ const Call = { id: null, pc: null, stream: null, peer: null, timer: null, muted:
   ringing(title, sub, buttons) { this.ui(`<p class="mut">${title}</p>${avatar(this.peer, 110)}<h2 style="margin:16px 0 4px">@${e(this.peer.username)}</h2><p class="mut" id="callst">${sub}</p><div class="row" style="justify-content:center;margin-top:22px">${buttons}</div>`); },
   async start(el) { if (!needMe()) return; if (this.id) return BW.toast("You are already in a call.", "err"); if (!BW.sock?.connected) return BW.toast("Realtime connection lost. Reload the page.", "err");
     try { this.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); } catch { return BW.toast("Microphone access is needed to make a call.", "err"); }
-    this.peer = { id: +el.dataset.id, username: el.dataset.user }; this.caller = true;
+    if (typeof Voice !== "undefined") Voice.leave(); this.peer = { id: +el.dataset.id, username: el.dataset.user }; this.caller = true;
     BW.sock.emit("call:invite", { to: this.peer.id }, (r) => { if (r?.error) { this.cleanup(); return BW.toast(r.error, "err"); } this.id = r.callId;
       this.ringing("📞 Calling…", "Ringing…", `<button class="btn danger" data-act="callEnd">End Call</button>`); }); },
   incoming(callId, from) { if (this.id) return BW.sock.emit("call:decline", { callId }); this.id = callId; this.peer = from; this.caller = false;
     this.ringing("Incoming Call", "wants to talk with you", `<button class="btn ok" data-act="callAccept">📞 Accept</button><button class="btn danger" data-act="callDecline">Decline</button>`); },
   async accept() { try { this.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); } catch { BW.toast("Microphone access is needed to answer.", "err"); return this.decline(); }
-    this.makePc(); BW.sock.emit("call:accept", { callId: this.id }); this.live(); },
+    if (typeof Voice !== "undefined") Voice.leave(); this.makePc(); BW.sock.emit("call:accept", { callId: this.id }); this.live(); },
   decline() { BW.sock.emit("call:decline", { callId: this.id }); this.cleanup(); },
   makePc() { const pc = (this.pc = new RTCPeerConnection({ iceServers: [{ urls: "stun:stun.l.google.com:19302" }] }));
     this.stream.getTracks().forEach((t) => pc.addTrack(t, this.stream));
