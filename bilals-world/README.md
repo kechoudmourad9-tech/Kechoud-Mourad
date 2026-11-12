@@ -48,7 +48,7 @@ docker build -t bilals-world .
 docker run -d -p 3000:3000 -v bilals-world-data:/data -e ADMIN_PASSWORD='choose-a-strong-password' bilals-world
 ```
 
-`render.yaml` (Render.com blueprint) and `fly.toml` (Fly.io) are ready to use; both keep the data on a persistent disk.
+`render.yaml` at the repository root (Render.com blueprint) and `fly.toml` (Fly.io) are ready to use; both keep the data on a persistent disk.
 
 Then put HTTPS in front (the host's built-in TLS, or Caddy / nginx with WebSocket upgrade enabled). HTTPS is mandatory: browsers refuse microphone access on plain HTTP, so voice calls would not work.
 
