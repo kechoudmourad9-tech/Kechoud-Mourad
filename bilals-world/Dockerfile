@@ -9,4 +9,4 @@ ENV NODE_ENV=production PORT=3000 DATA_DIR=/data UPLOAD_DIR=/data/uploads TRUST_
 VOLUME /data
 EXPOSE 3000
 # the mounted disk belongs to root: give it to the unprivileged "node" user, then drop privileges
-CMD ["sh", "-c", "mkdir -p /data/uploads && chown -R node:node /data && exec su-exec node node server/index.js"]
+CMD ["sh", "-c", "mkdir -p /data/uploads && chown -R node:node /data && if [ \"$SEED_DEMO\" = \"1\" ]; then su-exec node node server/seed.js; fi; exec su-exec node node server/index.js"]

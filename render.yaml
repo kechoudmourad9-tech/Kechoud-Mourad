@@ -1,21 +1,22 @@
 # Render.com blueprint for Bilal's World (the app lives in ./bilals-world).
-# Render → New → Blueprint → choose this repository and this branch.
+# Free plan: no persistent disk, so accounts and uploads are reset whenever the service restarts — fine for a preview.
+# For a real launch: set `plan: starter` and uncomment the `disk` block.
 services:
   - type: web
     name: bilals-world
     runtime: docker
     branch: claude/video-animations-text-eq4m3r
+    rootDir: bilals-world
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    rootDir: bilals-world
-    plan: starter            # a paid plan is required for the persistent disk
+    plan: free
     healthCheckPath: /api/meta
     envVars:
       - key: ADMIN_PASSWORD
-        sync: false          # you type it in the dashboard; never commit it
-      - key: PUBLIC_URL
-        sync: false          # e.g. https://bilals-world.onrender.com (used in password-reset links)
-    disk:
-      name: data
-      mountPath: /data
-      sizeGB: 5
+        generateValue: true     # Render creates it; read it in the service's Environment tab
+      - key: SEED_DEMO
+        value: "1"              # fills the site with demo posts at start-up; set to 0 for a real launch
+    # disk:
+    #   name: data
+    #   mountPath: /data
+    #   sizeGB: 5
