@@ -13,7 +13,7 @@ import captions from "./captions.json";
 const FPS = 30;
 const fr = (x: number) => Math.round(x * FPS);
 export const POV_FRAMES = fr(67.6);
-const RED = "#ff2d2d", BLUE = "#2f7bff", YEL = "#ffd23f", GRN = "#27c26c";
+const PUR = "#9b5cff", RED = "#ff2d2d", BLUE = "#2f7bff", YEL = "#ffd23f", GRN = "#27c26c";
 const sat = (x: number) => Math.min(1, Math.max(0, x));
 const eo = (x: number) => 1 - Math.pow(1 - sat(x), 3);
 /** 0→1 eased progress starting at `at` (s) lasting d */
@@ -34,13 +34,36 @@ const T: React.FC<{ x: number; y: number; s?: number; c?: string; f?: string; ch
   sc <= 0.001 ? null : <text x={0} y={0} transform={`translate(${x} ${y}) rotate(${rot}) scale(${sc})`} fontFamily={f} fontSize={s} fill={c} textAnchor={anchor} dominantBaseline="central"
     fontStyle={it ? "italic" : undefined} letterSpacing={ls} style={glow ? { filter: `drop-shadow(0 0 14px ${glow})` } : undefined}>{children}</text>
 );
-const Person: React.FC<{ x: number; y: number; s?: number; ink: string; col: string; label: string; wave?: number; sc?: number }> = ({ x, y, s = 1, ink, col, label, wave = 0, sc = 1 }) => (
-  <g transform={`translate(${x} ${y}) scale(${s * sc})`}>
-    <circle cx={0} cy={-150} r={34} fill="none" stroke={ink} strokeWidth={9} />
-    <path d={`M0 -116 V-20 M0 -20 L-34 62 M0 -20 L34 62 M0 -92 L-44 ${-44} M0 -92 L44 ${-60 - wave * 50}`} fill="none" stroke={ink} strokeWidth={9} strokeLinecap="round" />
-    <circle cx={0} cy={-232} r={30} fill={col} /><text x={0} y={-230} fontFamily="Anton" fontSize={38} fill="#fff" textAnchor="middle" dominantBaseline="central">{label}</text>
-  </g>
-);
+const Person: React.FC<{ x: number; y: number; s?: number; ink: string; col: string; label: string; wave?: number; sc?: number; t?: number; look?: number; skin?: string; hair?: string; glasses?: boolean; pants?: string }> = ({
+  x, y, s = 1, col, label, wave = 0, sc = 1, t = 0, look = 0, skin = "#f2c29b", hair = "#2b1a10", glasses, pants = "#3b4270" }) => {
+  const blink = (t * 1.3 + x * 0.01) % 3.1 < 0.12 ? 0.12 : 1, bob = Math.sin(t * 2.2 + x) * 2.5;
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s * sc})`}>
+      <ellipse cx={0} cy={66} rx={52} ry={9} fill="#000" opacity={0.35} />
+      {/* legs + shoes */}
+      <rect x={-27} y={-24} width={22} height={84} rx={10} fill={pants} /><rect x={5} y={-24} width={22} height={84} rx={10} fill={pants} />
+      <ellipse cx={-19} cy={60} rx={19} ry={9} fill="#f3f5ff" /><ellipse cx={19} cy={60} rx={19} ry={9} fill="#f3f5ff" />
+      <g transform={`translate(0 ${bob})`}>
+        {/* arms (behind / in front of the shirt) */}
+        <path d={`M-30 -96 L-50 -38`} stroke={col} strokeWidth={18} strokeLinecap="round" /><circle cx={-51} cy={-32} r={10} fill={skin} />
+        <rect x={-34} y={-116} width={68} height={104} rx={24} fill={col} /><path d="M-34 -40 h68" stroke="#000" strokeOpacity={0.14} strokeWidth={10} />
+        <path d="M-12 -116 L0 -100 L12 -116" fill="none" stroke="#fff" strokeOpacity={0.55} strokeWidth={5} strokeLinecap="round" />
+        <path d={`M30 -96 L${50 + wave * 6} ${-44 - wave * 74}`} stroke={col} strokeWidth={18} strokeLinecap="round" /><circle cx={51 + wave * 7} cy={-38 - wave * 80} r={10} fill={skin} />
+        {/* head */}
+        <rect x={-9} y={-128} width={18} height={18} fill={skin} /><circle cx={0} cy={-152} r={36} fill={skin} />
+        <path d="M-37 -154 Q-38 -194 0 -192 Q40 -194 37 -152 Q26 -176 0 -174 Q-24 -176 -37 -154 Z" fill={hair} />
+        <g transform={`translate(${look * 5} 0)`}>
+          <ellipse cx={-13} cy={-150} rx={4.6} ry={6.2 * blink} fill="#14101f" /><ellipse cx={13} cy={-150} rx={4.6} ry={6.2 * blink} fill="#14101f" />
+          <circle cx={-11.5} cy={-152.5} r={1.5} fill="#fff" opacity={blink} /><circle cx={14.5} cy={-152.5} r={1.5} fill="#fff" opacity={blink} />
+          {glasses && <path d="M-25 -158 h20 v15 h-20 z M5 -158 h20 v15 h-20 z M-5 -151 h10" fill="#ffffff22" stroke="#14101f" strokeWidth={3.5} />}
+          <path d="M-11 -134 Q0 -124 11 -134" fill="none" stroke="#14101f" strokeWidth={3.6} strokeLinecap="round" />
+          <circle cx={-23} cy={-138} r={6} fill="#ff6b9a" opacity={0.4} /><circle cx={23} cy={-138} r={6} fill="#ff6b9a" opacity={0.4} />
+        </g>
+        {label && <><circle cx={0} cy={-234} r={27} fill={col} stroke="#fff" strokeWidth={4} style={{ filter: `drop-shadow(0 0 12px ${col})` }} /><text x={0} y={-232} fontFamily="Anton" fontSize={34} fill="#fff" textAnchor="middle" dominantBaseline="central">{label}</text></>}
+      </g>
+    </g>
+  );
+};
 const Basket: React.FC<{ x: number; y: number; s?: number; ink: string; fill?: string }> = ({ x, y, s = 1, ink, fill = "none" }) => (
   <g transform={`translate(${x} ${y}) scale(${s})`}>
     <path d="M-70 -30 Q0 -130 70 -30" fill="none" stroke={ink} strokeWidth={8} strokeLinecap="round" />
@@ -87,8 +110,8 @@ const cam = (keys: Key[], t: number): [number, number, number] => {
   for (let i = 0; i < keys.length - 1; i++) { const a = keys[i], b = keys[i + 1]; if (t <= b[0]) { const p = sm((t - a[0]) / (b[0] - a[0])); return [a[1] + (b[1] - a[1]) * p, a[2] + (b[2] - a[2]) * p, a[3] + (b[3] - a[3]) * p]; } }
   const l = keys[keys.length - 1]; return [l[1], l[2], l[3]];
 };
-const soft = (z: number) => (1 + (z - 1) * 0.32) * 0.7;   // keep the drawings small: the camera only leans in
-const INKC = "#f3f5ff", DIM = "#8f96b8";
+const soft = (z: number) => (1 + (z - 1) * 0.34) * 0.86;   // keep the drawings small: the camera only leans in
+const INKC = "#ffffff", DIM = "#a9b0d6";
 const Chip: React.FC<{ x: number; y: number; text: string; c?: string; fg?: string; sc?: number; s?: number }> = ({ x, y, text, c = RED, fg = "#fff", sc = 1, s = 30 }) => {
   const w = text.length * s * 0.5 + s * 1.1; return sc <= 0.001 ? null : <g transform={`translate(${x} ${y}) scale(${sc})`}><rect x={-w / 2} y={-s * 0.72} width={w} height={s * 1.44} rx={s * 0.42} fill={c} /><T x={0} y={1} s={s} c={fg}>{text}</T></g>;
 };
@@ -110,9 +133,9 @@ const Story = (t: number) => {
   const off = split * 20, spin = go * 360;
   const solid = k(t, 25.3, 0.6), rp = t > 27.2 && t < 31.3 ? sm((t - 27.6) / 3.2) : -1, [rx, ry] = onArc(...ARC, Math.max(0, rp));
   return <>
-    <line x1={60} y1={PY + 52} x2={1020} y2={PY + 52} stroke="#2b3157" strokeWidth={4} />
-    <Person x={AX} y={PY} s={0.78} ink={INKC} col={RED} label="A" sc={pp(t, 4.25)} wave={t > 17.4 && t < 21.2 ? 1 : 0} />
-    <Person x={BX} y={PY} s={0.78} ink={INKC} col={BLUE} label="B" sc={pp(t, 4.97)} wave={t > 21.3 ? Math.sin(t * 10) * 0.5 + 0.5 : 0} />
+    <line x1={60} y1={PY + 52} x2={1020} y2={PY + 52} stroke="#ffffff" strokeOpacity={0.22} strokeWidth={4} />
+    <Person x={AX} y={PY} s={0.78} ink={INKC} col={RED} label="A" t={t} look={1} hair="#1d1420" sc={pp(t, 4.25)} wave={t > 17.4 && t < 21.2 ? 1 : 0} />
+    <Person x={BX} y={PY} s={0.78} ink={INKC} col={BLUE} label="B" t={t} look={-1} skin="#c98a5e" hair="#5a3418" pants="#4a2f6b" sc={pp(t, 4.97)} wave={t > 21.3 ? Math.sin(t * 10) * 0.5 + 0.5 : 0} />
     <g opacity={k(t, 6.2, 0.3)}><Basket x={BAX} y={BY} s={0.95} ink={INKC} /></g><g opacity={k(t, 10.4, 0.3)}><Basket x={BBX} y={BY} s={0.95} ink={INKC} /></g>
     {/* the gesture: dashed first ("she wants to"), solid red once it is named */}
     <Draw d={arc(...ARC)} p={k(t, 14.8, 0.8) * (1 - solid)} c={DIM} w={5} dash="14 12" />
@@ -137,11 +160,10 @@ const STORY_CAM: Key[] = [[2.5, 540, 304, 1], [3.5, 540, 320, 1.05], [5.8, 540, 
 
 /* 3 — mathematicians → set theory → "how maths work", one image */
 const Sets = (t: number) => <>
-  {[0, 1, 2].map((i) => <g key={i} transform={`translate(${150 + i * 120} 330) scale(${pp(t, 33.7 + i * 0.15)})`}>
-    <circle r={40} fill="none" stroke={INKC} strokeWidth={6} /><path d="M-26 -5 h20 v14 h-20 z M6 -5 h20 v14 h-20 z M-6 1 h12" fill="none" stroke={INKC} strokeWidth={4} /><path d="M-13 22 q13 9 26 0" fill="none" stroke={INKC} strokeWidth={4} strokeLinecap="round" />
-    <g transform={`translate(0 ${-78 - Math.sin(t * 5 + i) * 5})`} opacity={k(t, 35.2 + i * 0.2)}><circle r={17} fill={YEL} style={{ filter: `drop-shadow(0 0 10px ${YEL})` }} /><rect x={-7} y={15} width={14} height={9} rx={2} fill={INKC} /></g></g>)}
-  <T x={270} y={430} s={30} c={DIM} sc={pp(t, 35.15)}>les mathématiciens</T>
-  <Draw d="M450 320 H560" p={k(t, 36.1, 0.4)} c={DIM} w={5} /><Head x={566} y={320} p={k(t, 36.1, 0.4)} c={DIM} s={0.6} />
+  {[0, 1, 2].map((i) => <g key={i}><Person x={150 + i * 120} y={400} s={0.52} ink={INKC} col={[PUR, GRN, "#ff8a3d"][i]} label="" t={t + i} glasses hair={["#8f96b8", "#2b1a10", "#c9a227"][i]} skin={i === 1 ? "#c98a5e" : "#f2c29b"} sc={pp(t, 33.7 + i * 0.15)} wave={t > 35.2 + i * 0.2 ? 0.8 : 0} />
+    <g transform={`translate(${150 + i * 120} ${252 - Math.sin(t * 5 + i) * 5})`} opacity={k(t, 35.2 + i * 0.2)}><circle r={17} fill={YEL} style={{ filter: `drop-shadow(0 0 12px ${YEL})` }} /><rect x={-7} y={15} width={14} height={9} rx={2} fill={INKC} /></g></g>)}
+  <T x={270} y={468} s={30} c={DIM} sc={pp(t, 35.15)}>les mathématiciens</T>
+  <Draw d="M470 330 H560" p={k(t, 36.1, 0.4)} c={DIM} w={5} /><Head x={566} y={330} p={k(t, 36.1, 0.4)} c={DIM} s={0.6} />
   <Ell cx={720} cy={300} rx={120} ry={100} p={k(t, 36.9, 0.6)} c={RED} fill="#ff2d2d1c" /><Ell cx={850} cy={300} rx={120} ry={100} p={k(t, 37.3, 0.6)} c={BLUE} fill="#2f7bff1c" />
   {[[670, 280], [700, 340], [785, 300], [880, 270], [900, 335]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r={8 * pp(t, 37.7 + i * 0.07)} fill={INKC} />)}
   <T x={785} y={440} s={34} c={INKC} sc={pp(t, 37.63)}>THÉORIE DES ENSEMBLES</T><Squig x={785} y={464} w={300} p={k(t, 38.3, 0.3)} />
@@ -191,7 +213,7 @@ const Strip: React.FC = () => {
   const beat = Math.max(0, ...BEATS.map((b) => (t >= b ? 1 - sat((t - b) / 0.18) : 0))), z = z0 * (1 + beat * 0.035);   // a tiny zoom "kick" on every beat keeps the rhythm without cutting
   const dir = i % 2 ? 1 : -1, gl = sat(1 - u / 0.14), dx = 22 * gl * dir, g = Math.floor(t * 15);
   return (
-    <div style={{ position: "absolute", left: 0, top: 640, width: 1080, height: 608, overflow: "hidden", background: "#070913" }}>
+    <div style={{ position: "absolute", left: 0, top: 640, width: 1080, height: 608, overflow: "hidden", background: "#050506" }}>
       <svg width={0} height={0} style={{ position: "absolute" }}><defs><filter id="povrgb" x="-4%" width="108%" colorInterpolationFilters="sRGB">
         <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r" /><feOffset in="r" dx={dx} result="ro" />
         <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g" />
@@ -199,9 +221,11 @@ const Strip: React.FC = () => {
         <feBlend in="ro" in2="g" mode="screen" result="rg" /><feBlend in="rg" in2="bo" mode="screen" /></filter></defs></svg>
       <div style={{ position: "absolute", inset: 0, filter: gl > 0 ? "url(#povrgb)" : undefined }}>
         {/* dark blueprint ground that moves with the camera (parallax) */}
-        <div style={{ position: "absolute", inset: -200, background: "radial-gradient(circle at 50% 45%, #171a33 0%, #070913 70%)" }} />
-        <div style={{ position: "absolute", inset: -200, opacity: 0.5, backgroundImage: "linear-gradient(#ffffff0d 1.5px, transparent 1.5px), linear-gradient(90deg, #ffffff0d 1.5px, transparent 1.5px)", backgroundSize: `${44 * z}px ${44 * z}px`,
-          backgroundPosition: `${-cx * z * 0.6}px ${-cy * z * 0.6}px` }} />
+        <div style={{ position: "absolute", inset: 0, background: "#050506" }} />
+        <div style={{ position: "absolute", width: 760, height: 760, left: -260 + Math.sin(t * 0.5) * 60 - (cx - 540) * 0.15, top: -420, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,45,120,0.55), transparent 62%)", filter: "blur(30px)" }} />
+        <div style={{ position: "absolute", width: 820, height: 820, right: -300 + Math.cos(t * 0.4) * 60 + (cx - 540) * 0.15, bottom: -480, borderRadius: "50%", background: "radial-gradient(circle, rgba(40,224,255,0.5), transparent 62%)", filter: "blur(30px)" }} />
+        <div style={{ position: "absolute", width: 600, height: 600, left: 320 + Math.sin(t * 0.3) * 120, top: 240, borderRadius: "50%", background: "radial-gradient(circle, rgba(155,92,255,0.28), transparent 60%)", filter: "blur(40px)" }} />
+        <div style={{ position: "absolute", inset: -200, opacity: 0.55, backgroundImage: "radial-gradient(rgba(255,255,255,0.5) 1.4px, transparent 1.4px)", backgroundSize: `${46 * z}px ${46 * z}px`, backgroundPosition: `${-cx * z * 0.6}px ${-cy * z * 0.6}px` }} />
         <svg width={1080} height={608} viewBox="0 0 1080 608" style={{ position: "absolute", inset: 0, overflow: "visible" }}>
           <g transform={`translate(${540 - cx * z} ${304 - cy * z}) scale(${z})`}>{sc.r(t)}</g></svg>
       </div>
