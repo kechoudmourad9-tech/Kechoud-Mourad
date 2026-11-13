@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { AbsoluteFill, Audio, Sequence, continueRender, delayRender, interpolate, staticFile, useCurrentFrame } from "remotion";
 import { useFontFaces } from "../components/FontFaces";
 import { clamp } from "../theme";
+import { Mark, Squig } from "../cx/clips";
 import captions from "./captions.json";
 
 const FPS = 30;
@@ -65,8 +66,8 @@ const onArc = (x1: number, y1: number, x2: number, y2: number, h: number, p: num
   const cx = (x1 + x2) / 2, cy = Math.min(y1, y2) - h, q = 1 - p;
   return [q * q * x1 + 2 * q * p * cx + p * p * x2, q * q * y1 + 2 * q * p * cy + p * p * y2];
 };
-const Head: React.FC<{ x: number; y: number; p: number; c: string; a?: number }> = ({ x, y, p, c, a = 0 }) => (
-  p < 0.95 ? null : <path d="M-26 -18 L8 0 L-26 18 Z" fill={c} transform={`translate(${x} ${y}) rotate(${a})`} />
+const Head: React.FC<{ x: number; y: number; p: number; c: string; a?: number; s?: number }> = ({ x, y, p, c, a = 0, s = 1 }) => (
+  p < 0.95 ? null : <path d="M-26 -18 L8 0 L-26 18 Z" fill={c} transform={`translate(${x} ${y}) rotate(${a}) scale(${s})`} />
 );
 const Ell: React.FC<{ cx: number; cy: number; rx: number; ry: number; p: number; c: string; fill?: string }> = ({ cx, cy, rx, ry, p, c, fill = "none" }) => (
   <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill={fill} stroke={c} strokeWidth={8} pathLength={1} strokeDasharray={1} strokeDashoffset={1 - p} />
@@ -78,175 +79,137 @@ const Gear: React.FC<{ x: number; y: number; r: number; a: number; c: string; n?
   </g>
 );
 
-/* ---------- the clips ---------- */
-type Clip = { a: number; bg: Bg; r: (u: number, ink: string) => React.ReactNode };
-const AX = 250, BX = 830, PY = 470;                           // person A / B positions in wide shots
-const two = (ink: string, sc = 1) => <><Person x={AX} y={PY} ink={ink} col={RED} label="A" sc={sc} /><Person x={BX} y={PY} ink={ink} col={BLUE} label="B" sc={sc} /></>;
-const CLIPS: Clip[] = [
-  { a: 0, bg: "paper", r: (u, ink) => <>
-    {["∑", "∫", "π", "√", "∞", "Δ", "÷", "≠"].map((s, i) => <T key={s} x={110 + (i % 4) * 290 + (i > 3 ? -40 : 0)} y={i > 3 ? 500 : 110} s={90} c={ink} f="KaTeX_Main" sc={pp(u, 0.05 + i * 0.05)} rot={(i - 3) * 6}>{s}</T>)}
-    <T x={540} y={310} s={380} c={RED} sc={pp(u, 0.15)} rot={-6 + Math.sin(u * 5) * 4}>?</T></> },
-  { a: 1.3, bg: "dark", r: (u) => <>
-    <T x={540} y={190} s={70} c="#9aa0b5" ls={10} sc={k(u, 0, 0.2)}>LA BASE DES</T>
-    <T x={546 + (u < 0.4 ? 10 : 2)} y={360} s={210} c={RED} sc={pp(u, 0.1)}>MATHS</T><T x={534 - (u < 0.4 ? 10 : 2)} y={360} s={210} c="#28e0ff" sc={pp(u, 0.1)}>MATHS</T>
-    <T x={540} y={360} s={210} c="#fff" sc={pp(u, 0.1)}>MATHS</T></> },
-  { a: 2.5, bg: "paper", r: (u, ink) => <>
-    <Draw d="M300 250 C240 120 420 60 500 130 C560 50 760 70 760 190 C860 200 860 340 760 350 C700 420 500 430 440 360 C340 400 250 340 300 250 Z" p={k(u, 0, 0.7)} c={ink} w={9} />
-    {[0, 1, 2].map((i) => <circle key={i} cx={300 - i * 50} cy={440 + i * 40} r={(22 - i * 6) * pp(u, 0.3 + i * 0.1)} fill="none" stroke={ink} strokeWidth={8} />)}
-    <T x={540} y={240} s={110} c={RED} sc={pp(u, 0.35)}>IMAGINE…</T></> },
-  { a: 3.6, bg: "paper", r: (u, ink) => <>{two(ink, pp(u, 0))}<T x={540} y={110} s={70} c={ink} sc={pp(u, 0.1)}>2 PERSONNES</T></> },
-  { a: 4.25, bg: "dark", r: (u, ink) => <><circle cx={540} cy={330} r={260 * k(u, 0, 0.25)} fill={RED} opacity={0.22} /><Person x={540} y={520} s={1.5} ink={ink} col={RED} label="A" wave={Math.sin(u * 12) * 0.5 + 0.5} sc={pp(u, 0)} /></> },
-  { a: 4.97, bg: "blue", r: (u, ink) => <><circle cx={540} cy={330} r={260 * k(u, 0, 0.25)} fill="#fff" opacity={0.12} /><Person x={540} y={520} s={1.5} ink={ink} col={BLUE} label="B" wave={Math.sin(u * 12) * 0.5 + 0.5} sc={pp(u, 0)} /></> },
-  { a: 5.79, bg: "paper", r: (u, ink) => { const d = k(u, 1.9, 0.35); return <>
-    <Person x={330} y={PY} ink={ink} col={RED} label="A" /><Basket x={620} y={470} s={1.5} ink={ink} fill="#f1d9a8" />
-    <Apple x={620} y={-60 + d * 490 - Math.sin(sat((u - 2.25) / 0.3) * Math.PI) * 26} r={52} rot={(1 - d) * -120} />
-    <T x={850} y={170} s={64} c={RED} sc={pp(u, 2.2)} rot={-6}>1 POMME</T></>; } },
-  { a: 8.35, bg: "dark", r: (u, ink) => <>
-    <Basket x={540} y={390} s={2.3} ink={ink} /><Apple x={540} y={330 + Math.sin(u * 4) * 6} r={86} glow />
-    <T x={200} y={130} s={54} c="#9aa0b5" sc={k(u, 0.1)}>dans son panier</T></> },
-  { a: 10.01, bg: "paper", r: (u, ink) => <>
-    <Person x={330} y={PY} ink={ink} col={BLUE} label="B" sc={pp(u, 0)} /><Basket x={640} y={470} s={1.5} ink={ink} fill="#f1d9a8" />
-    <T x={640} y={250} s={150} c={ink} f="KaTeX_Main" sc={pp(u, 1.3)}>∅</T></> },
-  { a: 11.55, bg: "dark", r: (u, ink) => <>
-    <Basket x={540} y={400} s={2.3} ink={ink} /><T x={540} y={150} s={130} c={RED} sc={pp(u, 0.05)} rot={-4}>VIDE</T>
-    <T x={540} y={400} s={90} c="#9aa0b5" f="KaTeX_Main" sc={pp(u, 0.2)}>0</T></> },
-  { a: 12.33, bg: "dark", r: (u) => { const c = k(u, 1.05, 0.3); return <>
-    <Apple x={540} y={320} r={150} glow rot={Math.sin(u * 3) * 4} />
-    <Draw d="M540 90 V550" p={c} c="#fff" w={10} dash="22 18" /><path d={`M${520} ${90 + c * 430} l40 0 l-20 46 z`} fill="#fff" opacity={c > 0 && c < 1 ? 1 : 0} />
-    <T x={220} y={150} s={60} c="#fff" sc={pp(u, 1.05)} rot={-6}>couper</T><T x={860} y={480} s={70} c={YEL} f="KaTeX_Main" sc={pp(u, 1.7)}>÷ 2</T></>; } },
-  { a: 14.41, bg: "paper", r: (u, ink) => <>{two(ink)}<Apple x={AX + 120} y={420} r={34} />
-    <Draw d={arc(AX + 150, 330, BX - 150, 330, 190)} p={k(u, 0.3, 0.9)} c={RED} w={10} dash="26 20" />
-    <T x={540} y={110} s={110} c={RED} sc={pp(u, 0.5)}>→ B ?</T></> },
-  { a: 16.59, bg: "red", r: (u) => <><T x={540} y={250} s={200} c="#fff" sc={pp(u, 0)} rot={-4}>ACTION</T><T x={540} y={450} s={60} c="#ffd9d9" sc={k(u, 0.2)}>c'est ce qu'elle va faire</T></> },
-  { a: 17.45, bg: "paper", r: (u, ink) => { const l = k(u, 0.15, 0.45); return <>
-    <Basket x={540} y={470} s={1.6} ink={ink} fill="#f1d9a8" /><Apple x={540} y={430 - l * 230} r={62} rot={l * 20} />
-    <Draw d="M440 150 q100 -70 200 0" p={l} c={ink} w={8} /><T x={170} y={110} s={70} c={RED}>1.</T><T x={320} y={110} s={70} c={ink} sc={pp(u, 0.1)}>PRENDRE</T></>; } },
-  { a: 18.29, bg: "dark", r: (u) => { const s = k(u, 0.12, 0.3); return <>
-    <rect x={0} y={0} width={1080} height={608} fill="#fff" opacity={sat(1 - Math.abs(u - 0.15) * 9) * 0.7} />
-    <Half x={540 - 14 - s * 120} y={320} r={130} side={1} rot={-s * 14} glow /><Half x={540 + 14 + s * 120} y={320} r={130} side={-1} rot={s * 14} glow />
-    <T x={150} y={110} s={70} c={RED}>2.</T><T x={290} y={110} s={70} c="#fff" sc={pp(u, 0.1)}>COUPER</T></>; } },
-  { a: 19.3, bg: "paper", r: (u, ink) => { const p = k(u, 0.75, 1.0), [x, y] = onArc(AX + 130, 400, BX - 130, 400, 260, p); return <>
-    {two(ink)}<Draw d={arc(AX + 130, 400, BX - 130, 400, 260)} p={k(u, 0.2, 0.6)} c={RED} w={8} dash="22 18" />
-    <Half x={x - 22} y={y} r={44} side={1} rot={p * 360} /><Half x={x + 22} y={y} r={44} side={-1} rot={p * 360} />
-    <T x={410} y={560} s={64} c={RED}>3.</T><T x={570} y={560} s={64} c={ink} sc={pp(u, 0.1)}>DONNER</T></>; } },
-  { a: 21.39, bg: "paper", r: (u, ink) => <>
-    <Person x={330} y={PY} ink={ink} col={BLUE} label="B" wave={1} /><Basket x={640} y={470} s={1.5} ink={ink} fill="#f1d9a8" />
-    <Half x={604} y={404} r={46} side={1} rot={-12} /><Half x={676} y={404} r={46} side={-1} rot={12} />
-    <T x={860} y={170} s={64} c={BLUE} sc={pp(u, 1.3)} rot={6}>POUR B !</T></> },
-  { a: 23.2, bg: "dark", r: (u) => <>
-    <Half x={300} y={300} r={110} side={1} glow /><T x={470} y={300} s={130} c="#fff" f="KaTeX_Main" sc={pp(u, 0.1)}>+</T><Half x={640} y={300} r={110} side={-1} glow />
-    <T x={850} y={300} s={130} c={YEL} f="KaTeX_Main" sc={pp(u, 0.75)}>= 1</T><T x={540} y={520} s={56} c="#9aa0b5" sc={k(u, 0.4)}>une pomme coupée en deux</T></> },
-  { a: 24.83, bg: "paper", r: (u, ink) => { const p = k(u, 0.3, 0.55); return <>
-    {two(ink)}<Draw d={arc(AX + 110, 300, BX - 130, 300, 150)} p={p} c={RED} w={22} /><Head x={BX - 122} y={296} p={p} c={RED} a={52} />
-    <T x={540} y={110} s={70} c={RED} sc={pp(u, 0.5)} rot={-3}>CETTE FLÈCHE</T></>; } },
-  { a: 26.3, bg: "dark", r: (u) => <>
-    {"APPLICATION".split("").map((ch, i) => <T key={i} x={128 + i * 82.5} y={300} s={150} c={i % 2 ? "#fff" : "#fff"} sc={pp(u, 0.2 + i * 0.03)}>{ch}</T>)}
-    <Draw d="M90 410 H990" p={k(u, 0.6, 0.35)} c={RED} w={16} glow /></> },
-  { a: 27.39, bg: "blue", r: (u, ink) => { const s1 = u > 1.2, s2 = u > 3.2; return <>
-    <g opacity={s1 || s2 ? 0.45 : 1}><Apple x={180} y={300} r={74} /></g><Draw d="M290 300 H420" p={k(u, 0.5)} c={ink} w={10} /><Head x={430} y={300} p={k(u, 0.5)} c={ink} />
-    <g opacity={s2 ? 0.45 : 1} transform={`translate(540 300) scale(${s1 ? 1.15 : 1})`}><Half x={-44} y={0} r={66} side={1} /><Half x={44} y={0} r={66} side={-1} /></g>
-    <Draw d="M650 300 H780" p={k(u, 2.6)} c={ink} w={10} /><Head x={790} y={300} p={k(u, 2.6)} c={ink} />
-    <g transform={`translate(900 310) scale(${s2 ? 1.2 : 1})`}><Basket x={0} y={0} s={1.2} ink={ink} /><circle cx={56} cy={-110} r={28} fill={BLUE} stroke="#fff" strokeWidth={4} /><text x={56} y={-108} fontFamily="Anton" fontSize={34} fill="#fff" textAnchor="middle" dominantBaseline="central">B</text></g>
-    <T x={540} y={540} s={60} c={YEL} sc={pp(u, 0.1)}>{s2 ? "…PUIS DONNER" : s1 ? "COUPER…" : "LE GESTE"}</T></>; } },
-  { a: 31.59, bg: "dark", r: (u) => <>
-    <T x={540} y={270} s={230} c="#fff" f="KaTeX_Main" sc={pp(u, 0.1)} glow={BLUE}>f : A → B</T>
-    <rect x={250} y={440} width={580 * k(u, 0.8, 0.3)} height={86} rx={16} fill={RED} /><T x={540} y={484} s={60} c="#fff" sc={k(u, 0.9, 0.2)}>une application</T></> },
-  { a: 33.49, bg: "paper", r: (u, ink) => <>
-    {[0, 1, 2].map((i) => <g key={i} transform={`translate(${250 + i * 290} ${360}) scale(${pp(u, 0.1 + i * 0.15)})`}>
-      <circle cx={0} cy={0} r={70} fill="none" stroke={ink} strokeWidth={9} /><path d="M-46 -8 h34 v24 h-34 z M12 -8 h34 v24 h-34 z M-12 2 h24" fill="none" stroke={ink} strokeWidth={7} />
-      <path d="M-22 38 q22 14 44 0" fill="none" stroke={ink} strokeWidth={7} strokeLinecap="round" />
-      <g transform={`translate(0 ${-150 - Math.sin(u * 5 + i) * 8})`} opacity={k(u, 1.5 + i * 0.2)}><circle r={34} fill={YEL} /><rect x={-14} y={30} width={28} height={18} rx={4} fill={ink} /></g></g>)}
-    <T x={540} y={540} s={64} c={RED} sc={pp(u, 1.5)}>LES MATHÉMATICIENS</T></> },
-  { a: 36.2, bg: "dark", r: (u) => <>
-    {["x ∈ E", "A ∪ B", "A ∩ B", "∀x ∃y", "E × F", "∅ ⊂ E", "f(x) = y", "A ⊆ B"].map((s, i) => <T key={s} x={180 + (i % 3) * 360} y={640 - ((u * 190 + i * 150) % 760)} s={78} c={i % 3 === 1 ? YEL : "#e9ecff"} f="KaTeX_Main">{s}</T>)}</> },
-  { a: 37.3, bg: "paper", r: (u, ink) => <>
-    <Ell cx={420} cy={320} rx={250} ry={190} p={k(u, 0, 0.5)} c={RED} fill="#ff2d2d22" /><Ell cx={660} cy={320} rx={250} ry={190} p={k(u, 0.2, 0.5)} c={BLUE} fill="#2f7bff22" />
-    {[[300, 280], [360, 400], [540, 320], [720, 260], [770, 390]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r={15 * pp(u, 0.5 + i * 0.07)} fill={ink} />)}
-    <T x={540} y={70} s={64} c={ink} sc={pp(u, 0.4)}>THÉORIE DES ENSEMBLES</T></> },
-  { a: 38.73, bg: "dark", r: (u) => <>
-    <Gear x={390} y={320} r={150} a={u * 90} c="#e9ecff" n={12} /><Gear x={705} y={250} r={105} a={-u * 128 + 14} c={RED} n={9} /><Gear x={760} y={470} r={70} a={u * 190} c={YEL} n={7} />
-    <T x={390} y={320} s={90} c="#fff" f="KaTeX_Main">π</T></> },
-  { a: 40.3, bg: "paper", r: (u, ink) => <>
-    {["+", "−", "×", "÷"].map((s, i) => { const on = Math.floor(u * 6) % 4 === i; return <g key={s}><rect x={110 + i * 225} y={190} width={190} height={190} rx={34} fill={on ? RED : "none"} stroke={ink} strokeWidth={9} />
-      <T x={205 + i * 225} y={285} s={150} c={on ? "#fff" : ink} f="KaTeX_Main">{s}</T></g>; })}
-    <T x={540} y={500} s={60} c={ink} sc={pp(u, 0.1)}>COMMENT ÇA MARCHE ?</T></> },
-  { a: 41.93, bg: "paper", r: (u, ink) => <>
-    <Ell cx={540} cy={330} rx={300} ry={215} p={k(u, 0.3, 0.9)} c={RED} fill="#ff2d2d18" />
-    {[[420, 260], [600, 230], [690, 350], [520, 400], [400, 380]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r={17 * pp(u, 2.3 + i * 0.12)} fill={ink} />)}
-    <T x={540} y={62} s={62} c={ink} sc={pp(u, 3.2)}>ENSEMBLE DE DÉPART</T><T x={880} y={170} s={120} c={RED} f="KaTeX_Math" it sc={pp(u, 1.2)}>E</T></> },
-  { a: 45.75, bg: "dark", r: (u) => <>
-    {[["x₁", 250, 230], ["x₂", 540, 380], ["x₃", 820, 220]].map(([s, x, y], i) => <g key={i} transform={`translate(${x} ${y}) scale(${pp(u, 0.05 + i * 0.12)})`}>
-      <circle r={62} fill="none" stroke={YEL} strokeWidth={8} style={{ filter: `drop-shadow(0 0 14px ${YEL})` }} /><text fontFamily="KaTeX_Math" fontStyle="italic" fontSize={70} fill="#fff" textAnchor="middle" dominantBaseline="central">{s}</text></g>)}
-    <T x={540} y={540} s={56} c="#9aa0b5" sc={k(u, 0.3)}>des éléments</T></> },
-  { a: 46.69, bg: "dark", r: (u) => <><T x={540} y={290} s={460} c="#fff" f="KaTeX_AMS" sc={pp(u, 0.9)} glow={RED}>ℝ</T><T x={540} y={545} s={58} c={RED} sc={pp(u, 1.1)}>LES RÉELS</T>
-    {u < 0.9 && <T x={540} y={300} s={90} c="#9aa0b5" sc={k(u, 0.05)}>par exemple…</T>}</> },
-  { a: 48.53, bg: "paper", r: (u, ink) => <><T x={540} y={290} s={460} c={ink} f="KaTeX_AMS" sc={pp(u, 0)}>ℕ</T><T x={540} y={545} s={58} c={RED} sc={pp(u, 0.1)}>LES ENTIERS</T></> },
-  { a: 49.13, bg: "blue", r: (u, ink) => <><T x={540} y={290} s={460} c={ink} f="KaTeX_AMS" sc={pp(u, 0)}>ℤ</T>
-    {u > 0.45 && ["ℚ", "ℂ", "…"].map((s, i) => <T key={s} x={170 + i * 370} y={i === 1 ? 110 : 500} s={120} c={YEL} f="KaTeX_AMS" sc={pp(u, 0.45 + i * 0.1)}>{s}</T>)}</> },
-  { a: 50.29, bg: "paper", r: (u, ink) => { const p = k(u, 0.6, 0.7); return <>
-    <Ell cx={260} cy={320} rx={190} ry={215} p={1} c={RED} fill="#ff2d2d18" /><Ell cx={820} cy={320} rx={190} ry={215} p={k(u, 1.3, 0.7)} c={BLUE} fill="#2f7bff18" />
-    {[230, 320, 410].map((y, i) => <g key={y}><circle cx={270} cy={y} r={15} fill={ink} /><Draw d={`M300 ${y} C460 ${y - 70} 620 ${y + 40 - i * 40} 770 ${y + (i - 1) * -20}`} p={k(u, 0.5 + i * 0.25, 0.6)} c={ink} w={7} />
-      <circle cx={800} cy={y + (i - 1) * -20} r={15 * pp(u, 1.1 + i * 0.25)} fill={ink} /></g>)}
-    <T x={260} y={62} s={54} c={RED}>DÉPART</T><T x={820} y={62} s={54} c={BLUE} sc={pp(u, 2.2)}>ARRIVÉE</T><g opacity={p * 0}></g></>; } },
-  { a: 53.21, bg: "dark", r: (u) => <>
-    <T x={300} y={300} s={330} c="#fff" f="KaTeX_AMS" sc={pp(u, 0.8)} glow={BLUE}>ℕ</T><T x={780} y={300} s={330} c="#fff" f="KaTeX_AMS" sc={pp(u, 1.35)} glow={RED}>ℝ</T>
-    <T x={540} y={550} s={52} c="#9aa0b5" sc={k(u, 0.1)}>l'ensemble d'arrivée</T></> },
-  { a: 55.5, bg: "red", r: (u) => <><T x={540} y={270} s={420} c="#fff" f="KaTeX_Math" it sc={pp(u, 0.15)} rot={-4}>f</T><T x={540} y={530} s={64} c="#ffd9d9" sc={pp(u, 0.9)}>UNE FONCTION</T></> },
-  { a: 57.01, bg: "paper", r: (u, ink) => { const p = k(u, 1.0, 0.7); return <>
-    <rect x={400} y={190} width={280} height={240} rx={30} fill={ink} /><T x={540} y={305} s={170} c="#fff" f="KaTeX_Math" it>f</T>
-    <Draw d="M90 310 H380" p={k(u, 0.2, 0.5)} c={ink} w={9} /><Head x={392} y={310} p={k(u, 0.2, 0.5)} c={ink} /><Draw d="M700 310 H960" p={1} c={ink} w={9} dash="16 16" />
-    <g transform={`translate(${120 + p * 240} 250)`} opacity={p < 1 ? 1 : 0}><circle r={48} fill={RED} /><text fontFamily="KaTeX_Math" fontStyle="italic" fontSize={70} fill="#fff" textAnchor="middle" dominantBaseline="central">x</text></g>
-    <T x={220} y={520} s={56} c={RED} sc={pp(u, 0.9)}>une variable x</T></>; } },
-  { a: 59.29, bg: "dark", r: (u) => { const p = k(u, 1.5, 0.6); return <>
-    <rect x={150} y={180} width={300} height={250} rx={30} fill="none" stroke="#fff" strokeWidth={9} /><T x={300} y={302} s={180} c="#fff" f="KaTeX_Math" it>f</T>
-    {[0, 1, 2].map((i) => <circle key={i} cx={300 + Math.cos(u * 9 + i * 2.1) * 190} cy={305 + Math.sin(u * 9 + i * 2.1) * 160} r={9} fill={YEL} />)}
-    <Draw d="M470 305 H640" p={p} c={YEL} w={10} glow /><Head x={652} y={305} p={p} c={YEL} />
-    <T x={850} y={300} s={150} c={YEL} f="KaTeX_Math" it sc={pp(u, 1.7)} glow={YEL}>f(x)</T></>; } },
-  { a: 61.69, bg: "paper", r: (u, ink) => { const p = k(u, 0.25, 1.1), xs = 620, ys = 213; return <>
-    <Draw d="M160 520 H960 M220 570 V60" p={k(u, 0, 0.35)} c={ink} w={8} />
-    <Draw d="M220 500 C420 490 540 380 660 180 C690 130 720 100 760 70" p={p} c={RED} w={12} />
-    <Draw d={`M${xs} 520 V${ys}`} p={k(u, 1.3, 0.3)} c={BLUE} w={6} dash="12 12" /><Draw d={`M${xs} ${ys} H220`} p={k(u, 1.55, 0.3)} c={BLUE} w={6} dash="12 12" />
-    <circle cx={xs} cy={ys} r={16 * pp(u, 1.35)} fill={BLUE} /><T x={xs} y={565} s={64} c={ink} f="KaTeX_Math" it sc={pp(u, 1.3)}>x</T><T x={130} y={ys} s={58} c={ink} f="KaTeX_Math" it sc={pp(u, 1.6)}>f(x)</T></>; } },
-  { a: 63.3, bg: "dark", r: (u) => { const n = Math.min(4, 1 + Math.floor(u * 3)); return <>
-    <T x={270} y={290} s={230} c="#fff" f="KaTeX_Main" sc={pp(u, 0)}>{n}</T><Draw d="M420 300 H640" p={1} c={RED} w={14} glow /><Head x={654} y={300} p={1} c={RED} />
-    <T x={850} y={290} s={230} c={YEL} f="KaTeX_Main" glow={YEL}>{n * n}</T><T x={530} y={235} s={64} c={RED} f="KaTeX_Math" it>f</T>
-    <T x={540} y={540} s={54} c="#9aa0b5">elle change la variable</T></>; } },
-  { a: 64.9, bg: "dark", r: (u) => <>
-    {Array.from({ length: 14 }).map((_, i) => <Draw key={i} d={`M540 304 L${540 + Math.cos(i * 0.449) * 900} ${304 + Math.sin(i * 0.449) * 900}`} p={k(u, 0, 0.5)} c={i % 2 ? RED : "#28324f"} w={3} />)}
-    <rect x={250} y={170} width={580} height={180} rx={30} fill={RED} transform={`rotate(-3 540 260) scale(${pp(u, 0.1)})`} style={{ transformOrigin: "540px 260px" }} />
-    <T x={540} y={262} s={130} c="#fff" sc={pp(u, 0.1)} rot={-3}>ABONNE-TOI</T><T x={540} y={450} s={58} c="#e9ecff" sc={pp(u, 0.6)}>pour la suite des maths ↗</T></> },
-];
-
-const Paper: React.FC = () => (
-  <svg width={1080} height={608} style={{ position: "absolute", inset: 0 }}>
-    <rect width={1080} height={608} fill="#f3f1ea" />
-    {Array.from({ length: 28 }).map((_, i) => <line key={`v${i}`} x1={i * 40} x2={i * 40} y1={0} y2={608} stroke="#9bb4d6" strokeWidth={i % 5 ? 1 : 2.4} opacity={0.5} />)}
-    {Array.from({ length: 16 }).map((_, i) => <line key={`h${i}`} y1={i * 40 + 4} y2={i * 40 + 4} x1={0} x2={1080} stroke="#9bb4d6" strokeWidth={i % 5 ? 1 : 2.4} opacity={0.5} />)}
-  </svg>
-);
-const BG: Record<Bg, React.ReactNode> = {
-  paper: <Paper />,
-  dark: <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 45%, #1b1d2e 0%, #07070c 75%)" }} />,
-  blue: <div style={{ position: "absolute", inset: 0, background: "#0f3fa8", backgroundImage: "linear-gradient(#ffffff22 2px, transparent 2px), linear-gradient(90deg, #ffffff22 2px, transparent 2px)", backgroundSize: "54px 54px" }} />,
-  red: <div style={{ position: "absolute", inset: 0, background: `radial-gradient(circle at 50% 45%, #ff4a4a 0%, #c70f0f 80%)` }} />,
+/* ---------- the scenes: ONE dark image per idea; every animation happens inside it, the camera travels ---------- */
+const sm = (x: number) => { const v = sat(x); return v * v * (3 - 2 * v); };
+type Key = [number, number, number, number];                    // time, centre x, centre y, zoom
+const cam = (keys: Key[], t: number): [number, number, number] => {
+  if (t <= keys[0][0]) return [keys[0][1], keys[0][2], keys[0][3]];
+  for (let i = 0; i < keys.length - 1; i++) { const a = keys[i], b = keys[i + 1]; if (t <= b[0]) { const p = sm((t - a[0]) / (b[0] - a[0])); return [a[1] + (b[1] - a[1]) * p, a[2] + (b[2] - a[2]) * p, a[3] + (b[3] - a[3]) * p]; } }
+  const l = keys[keys.length - 1]; return [l[1], l[2], l[3]];
 };
+const soft = (z: number) => 1 + (z - 1) * 0.55;   // keep the drawings small: the camera only leans in
+const INKC = "#f3f5ff", DIM = "#8f96b8";
+const Chip: React.FC<{ x: number; y: number; text: string; c?: string; fg?: string; sc?: number; s?: number }> = ({ x, y, text, c = RED, fg = "#fff", sc = 1, s = 30 }) => {
+  const w = text.length * s * 0.5 + s * 1.1; return sc <= 0.001 ? null : <g transform={`translate(${x} ${y}) scale(${sc})`}><rect x={-w / 2} y={-s * 0.72} width={w} height={s * 1.44} rx={s * 0.42} fill={c} /><T x={0} y={1} s={s} c={fg}>{text}</T></g>;
+};
+const AX = 170, BX = 910, PY = 480, BAX = 320, BBX = 760, BY = 462;      // persons / baskets in the story image
+const ARC: [number, number, number, number, number] = [BAX, 372, BBX, 372, 170];
+
+/* 1 — hook */
+const Hook = (t: number) => <>
+  {["∑", "∫", "π", "√", "∞", "Δ", "÷", "≠"].map((s, i) => { const a = i * 0.785 + t * 0.5; return <T key={s} x={540 + Math.cos(a) * 330} y={304 + Math.sin(a) * 190} s={46} c={DIM} f="KaTeX_Main" sc={pp(t, 0.05 + i * 0.05)}>{s}</T>; })}
+  <T x={540} y={250} s={150} c={RED} sc={pp(t, 0.15)} rot={Math.sin(t * 5) * 4}>?</T>
+  <T x={540} y={390} s={64} c={INKC} sc={pp(t, 1.3)}>LA BASE DES MATHS</T><Squig x={540} y={432} w={420} p={k(t, 1.6, 0.35)} c={YEL} />
+</>;
+
+/* 2 — the whole apple story in one image: A, B, two baskets, one apple, the arrow, then "application" */
+const Story = (t: number) => {
+  const drop = k(t, 7.5, 0.4), lift = sm((t - 17.63) / 0.5), split = sm((t - 18.39) / 0.4), go = sm((t - 19.75) / 1.3);
+  const [gx, gy] = onArc(...ARC, go);
+  const ax = go > 0 ? gx : BAX, ay = go > 0 ? gy + (go >= 1 ? 50 : 0) : -60 + drop * 487 - lift * 55 - Math.sin(sat((t - 7.9) / 0.3) * Math.PI) * 14;
+  const off = split * 20, spin = go * 360;
+  const solid = k(t, 25.3, 0.6), rp = t > 27.2 && t < 31.3 ? sm((t - 27.6) / 3.2) : -1, [rx, ry] = onArc(...ARC, Math.max(0, rp));
+  return <>
+    <line x1={60} y1={PY + 52} x2={1020} y2={PY + 52} stroke="#2b3157" strokeWidth={4} />
+    <Person x={AX} y={PY} s={0.78} ink={INKC} col={RED} label="A" sc={pp(t, 4.25)} wave={t > 17.4 && t < 21.2 ? 1 : 0} />
+    <Person x={BX} y={PY} s={0.78} ink={INKC} col={BLUE} label="B" sc={pp(t, 4.97)} wave={t > 21.3 ? Math.sin(t * 10) * 0.5 + 0.5 : 0} />
+    <g opacity={k(t, 6.2, 0.3)}><Basket x={BAX} y={BY} s={0.95} ink={INKC} /></g><g opacity={k(t, 10.4, 0.3)}><Basket x={BBX} y={BY} s={0.95} ink={INKC} /></g>
+    {/* the gesture: dashed first ("she wants to"), solid red once it is named */}
+    <Draw d={arc(...ARC)} p={k(t, 14.8, 0.8) * (1 - solid)} c={DIM} w={5} dash="14 12" />
+    <Draw d={arc(...ARC)} p={solid} c={RED} w={12} glow /><Head x={BBX - 2} y={366} p={solid} c={RED} a={62} />
+    {/* the apple */}
+    {t >= 7.4 && (split <= 0 ? <Apple x={ax} y={ay} r={30} rot={(1 - drop) * -120} glow /> : <><Half x={ax - off} y={ay} r={30} side={1} rot={spin} glow /><Half x={ax + off} y={ay} r={30} side={-1} rot={spin} glow /></>)}
+    {t > 13.3 && t < 18.4 && <Draw d={`M${BAX} ${ay - 52} V${ay + 52}`} p={k(t, 13.41, 0.3)} c="#fff" w={4} dash="9 8" />}
+    {rp >= 0 && (rp < 0.45 ? <Apple x={rx} y={ry} r={20} /> : <><Half x={rx - 13} y={ry} r={20} side={1} rot={rp * 360} /><Half x={rx + 13} y={ry} r={20} side={-1} rot={rp * 360} /></>)}
+    {/* small labels, each tied to a word */}
+    {t < 12.3 && <Chip x={BAX} y={548} text="1 pomme" sc={pp(t, 7.9)} />}
+    {t < 19.7 && <><T x={BBX} y={400} s={54} c={DIM} f="KaTeX_Main" sc={pp(t, 11.57)}>∅</T><Chip x={BBX} y={548} text="vide" c="#2b3157" sc={pp(t, 11.93)} /></>}
+    {t > 13.3 && t < 16.5 && <T x={BAX + 86} y={372} s={32} c={YEL} f="KaTeX_Main" sc={pp(t, 13.5)}>÷ 2</T>}
+    {t > 14.7 && t < 16.6 && <T x={540} y={176} s={56} c={DIM} sc={pp(t, 15.1)}>?</T>}
+    {t >= 16.6 && t < 24.8 && [["1 prendre", 17.63], ["2 couper", 18.39], ["3 donner", 20.23]].map(([s, at], i) => <Chip key={i} x={330 + i * 210} y={585} text={s as string} c={t >= (at as number) ? RED : "#2b3157"} sc={pp(t, 16.7 + i * 0.12)} s={26} />)}
+    {t >= 22.4 && t < 24.8 && <T x={BBX} y={330} s={40} c={YEL} f="KaTeX_Main" sc={pp(t, 22.45)}>½ + ½</T>}
+    <T x={540} y={150} s={58} c="#fff" sc={pp(t, 26.63)}>APPLICATION</T><Squig x={540} y={186} w={330} p={k(t, 27.0, 0.3)} />
+    <T x={540} y={578} s={62} c={INKC} f="KaTeX_Main" sc={pp(t, 31.7)} glow={BLUE}>f : A → B</T><Mark x={540} y={580} rx={190} ry={44} p={k(t, 32.5, 0.45)} c={YEL} w={6} seed={3} />
+  </>;
+};
+const STORY_CAM: Key[] = [[2.5, 540, 304, 1], [3.5, 540, 320, 1.05], [5.8, 540, 320, 1.05], [6.8, 270, 380, 1.75], [9.7, 280, 380, 1.8], [10.5, 800, 380, 1.75], [12.2, 800, 380, 1.8], [12.9, 330, 380, 2.0], [14.3, 330, 380, 2.05],
+  [15.2, 540, 320, 1.1], [16.6, 540, 320, 1.14], [17.5, 320, 370, 1.9], [19.3, 320, 360, 1.95], [20.1, 540, 320, 1.25], [21.3, 770, 380, 1.8], [24.6, 780, 380, 1.9], [25.4, 540, 290, 1.25], [27.0, 540, 280, 1.3], [31.4, 540, 290, 1.38], [32.0, 540, 340, 1.08], [33.4, 540, 340, 1.12]];
+
+/* 3 — mathematicians → set theory → "how maths work", one image */
+const Sets = (t: number) => <>
+  {[0, 1, 2].map((i) => <g key={i} transform={`translate(${150 + i * 120} 330) scale(${pp(t, 33.7 + i * 0.15)})`}>
+    <circle r={40} fill="none" stroke={INKC} strokeWidth={6} /><path d="M-26 -5 h20 v14 h-20 z M6 -5 h20 v14 h-20 z M-6 1 h12" fill="none" stroke={INKC} strokeWidth={4} /><path d="M-13 22 q13 9 26 0" fill="none" stroke={INKC} strokeWidth={4} strokeLinecap="round" />
+    <g transform={`translate(0 ${-78 - Math.sin(t * 5 + i) * 5})`} opacity={k(t, 35.2 + i * 0.2)}><circle r={17} fill={YEL} style={{ filter: `drop-shadow(0 0 10px ${YEL})` }} /><rect x={-7} y={15} width={14} height={9} rx={2} fill={INKC} /></g></g>)}
+  <T x={270} y={430} s={30} c={DIM} sc={pp(t, 35.15)}>les mathématiciens</T>
+  <Draw d="M450 320 H560" p={k(t, 36.1, 0.4)} c={DIM} w={5} /><Head x={566} y={320} p={k(t, 36.1, 0.4)} c={DIM} s={0.6} />
+  <Ell cx={720} cy={300} rx={120} ry={100} p={k(t, 36.9, 0.6)} c={RED} fill="#ff2d2d1c" /><Ell cx={850} cy={300} rx={120} ry={100} p={k(t, 37.3, 0.6)} c={BLUE} fill="#2f7bff1c" />
+  {[[670, 280], [700, 340], [785, 300], [880, 270], [900, 335]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r={8 * pp(t, 37.7 + i * 0.07)} fill={INKC} />)}
+  <T x={785} y={440} s={34} c={INKC} sc={pp(t, 37.63)}>THÉORIE DES ENSEMBLES</T><Squig x={785} y={464} w={300} p={k(t, 38.3, 0.3)} />
+  <g opacity={k(t, 38.9, 0.3)}><Gear x={500} y={545} r={34} a={t * 90} c={INKC} n={9} /><Gear x={566} y={520} r={24} a={-t * 128 + 14} c={RED} n={7} /></g>
+  <T x={690} y={540} s={30} c={DIM} anchor="start" sc={pp(t, 40.1)}>comment ça fonctionne ?</T>
+</>;
+const SETS_CAM: Key[] = [[33.4, 540, 320, 1.05], [34.3, 280, 330, 1.7], [36.2, 290, 330, 1.78], [37.1, 780, 320, 1.6], [38.6, 785, 340, 1.68], [39.3, 640, 470, 1.6], [41.8, 650, 470, 1.7]];
+
+/* 4 — départ → f → arrivée, x ↦ f(x): one mapping diagram that fills in as the voice goes */
+const MY = [235, 320, 405];
+const Mapping = (t: number) => { const go = sm((t - 59.3) / 1.6), mid = `M318 320 C450 270 630 370 762 320`;
+  const q = 1 - go, px = q * q * q * 318 + 3 * q * q * go * 450 + 3 * q * go * go * 630 + go * go * go * 762, py = q * q * q * 320 + 3 * q * q * go * 270 + 3 * q * go * go * 370 + go * go * go * 320;
+  const ex = Math.min(3, Math.floor((t - 61.9) / 0.85)), X = [2, 3, 5, 10][Math.max(0, ex)];
+  return <>
+    <Ell cx={300} cy={320} rx={130} ry={170} p={k(t, 42.2, 0.9)} c={RED} fill="#ff2d2d1a" />
+    {MY.map((y, i) => <circle key={i} cx={300} cy={y} r={9 * pp(t, 44.39 + i * 0.12)} fill={i === 1 && t > 58 ? YEL : INKC} style={i === 1 && t > 58 ? { filter: `drop-shadow(0 0 10px ${YEL})` } : undefined} />)}
+    <Chip x={300} y={122} text="départ" sc={pp(t, 45.29)} s={28} />
+    {[["ℝ", 47.91], ["ℕ", 48.53], ["ℤ", 49.13]].map(([s, at], i) => <T key={i} x={96} y={235 + i * 85} s={62} c={t - (at as number) < 0.5 ? YEL : INKC} f="KaTeX_AMS" sc={pp(t, at as number)}>{s}</T>)}
+    <Ell cx={780} cy={320} rx={130} ry={170} p={k(t, 50.4, 0.9)} c={BLUE} fill="#2f7bff1a" />
+    {MY.map((y, i) => <g key={y}><Draw d={i === 1 ? mid : `M318 ${y} C450 ${y - 50} 630 ${y + 50} 762 ${y}`} p={k(t, 50.9 + i * 0.3, 0.7)} c={i === 1 && t > 58.5 ? YEL : DIM} w={i === 1 && t > 58.5 ? 6 : 4} />
+      <Head x={768} y={y} p={k(t, 50.9 + i * 0.3, 0.7)} c={i === 1 && t > 58.5 ? YEL : DIM} s={0.5} a={-8} /><circle cx={780} cy={y} r={9 * pp(t, 51.6 + i * 0.3)} fill={i === 1 && t > 60.9 ? YEL : INKC} /></g>)}
+    <Chip x={780} y={122} text="arrivée" c={BLUE} sc={pp(t, 52.77)} s={28} />
+    {[["ℕ", 54.03], ["ℝ", 54.57]].map(([s, at], i) => <T key={i} x={984} y={278 + i * 85} s={62} c={t - (at as number) < 0.5 ? YEL : INKC} f="KaTeX_AMS" sc={pp(t, at as number)}>{s}</T>)}
+    <g transform={`translate(540 250) scale(${pp(t, 56.47)})`}><circle r={34} fill={RED} style={{ filter: `drop-shadow(0 0 14px ${RED})` }} /><text fontFamily="KaTeX_Math" fontStyle="italic" fontSize={44} fill="#fff" textAnchor="middle" dominantBaseline="central">f</text></g>
+    <T x={262} y={320} s={38} c={YEL} f="KaTeX_Math" it sc={pp(t, 58.05)}>x</T>
+    {go > 0 && go < 1 && <circle cx={px} cy={py} r={11} fill={YEL} style={{ filter: `drop-shadow(0 0 12px ${YEL})` }} />}
+    <T x={842} y={320} s={34} c={YEL} f="KaTeX_Math" it sc={pp(t, 60.95)}>f(x)</T>
+    {ex >= 0 && <T x={540} y={560} s={46} c={INKC} f="KaTeX_Main" sc={pp(t, 61.9 + ex * 0.85, 0.2)}>{`x = ${X}   →   f(x) = ${X * X}`}</T>}
+  </>; };
+const MAP_CAM: Key[] = [[41.8, 300, 320, 1.55], [46.6, 300, 320, 1.62], [47.3, 220, 320, 1.8], [49.9, 215, 320, 1.86], [50.6, 540, 320, 1.05], [53.0, 540, 320, 1.08], [53.7, 860, 320, 1.75], [55.3, 865, 320, 1.8],
+  [56.1, 540, 290, 1.4], [57.0, 540, 290, 1.44], [57.8, 330, 320, 1.85], [59.2, 335, 320, 1.9], [60.9, 740, 320, 1.8], [61.6, 745, 320, 1.84], [62.2, 540, 345, 1.08], [64.8, 540, 345, 1.14]];
+
+const End = (t: number) => <>
+  {Array.from({ length: 14 }).map((_, i) => <Draw key={i} d={`M540 304 L${540 + Math.cos(i * 0.449) * 900} ${304 + Math.sin(i * 0.449) * 900}`} p={k(t, 64.9, 0.5)} c={i % 2 ? RED : "#28324f"} w={3} />)}
+  <rect x={300} y={196} width={480} height={130} rx={26} fill={RED} transform={`rotate(-3 540 260) scale(${pp(t, 65.0)})`} style={{ transformOrigin: "540px 260px" }} />
+  <T x={540} y={262} s={96} c="#fff" sc={pp(t, 65.0)} rot={-3}>ABONNE-TOI</T><T x={540} y={420} s={44} c="#e9ecff" sc={pp(t, 65.5)}>pour la suite des maths ↗</T></>;
+
+type Scene = { a: number; r: (t: number) => React.ReactNode; cam: Key[] };
+const SCENES: Scene[] = [{ a: 0, r: Hook, cam: [[0, 540, 304, 1], [2.5, 540, 304, 1.12]] }, { a: 2.5, r: Story, cam: STORY_CAM }, { a: 33.4, r: Sets, cam: SETS_CAM }, { a: 41.8, r: Mapping, cam: MAP_CAM }, { a: 64.9, r: End, cam: [[64.9, 540, 304, 1], [67.6, 540, 304, 1.06]] }];
+/* every moment something appears (pop) — also used for the sound design */
+const BEATS = [0.15, 1.3, 4.25, 4.97, 7.9, 11.57, 11.93, 13.41, 15.1, 17.63, 18.39, 20.23, 22.45, 25.3, 26.63, 31.7, 33.7, 35.2, 36.9, 37.63, 38.9, 40.1, 44.39, 45.29, 47.91, 48.53, 49.13, 50.9, 52.77, 54.03, 54.57, 56.47, 58.05, 60.95, 61.9, 62.75, 63.6, 65.0];
 
 const Strip: React.FC = () => {
   const f = useCurrentFrame(), t = f / FPS;
-  let i = 0; for (let j = 0; j < CLIPS.length; j++) if (t >= CLIPS[j].a) i = j;
-  const c = CLIPS[i], u = t - c.a, dur = (CLIPS[i + 1]?.a ?? 67.6) - c.a;
-  const punch = 1.14 - 0.14 * eo(u / 0.22) + 0.045 * (u / dur);
-  const dir = i % 2 ? 1 : -1, sx = (1 - eo(u / 0.18)) * 26 * dir;
+  let i = 0; for (let j = 0; j < SCENES.length; j++) if (t >= SCENES[j].a) i = j;
+  const sc = SCENES[i], u = t - sc.a, [cx, cy, zr] = cam(sc.cam, t), z0 = soft(zr);
+  const beat = Math.max(0, ...BEATS.map((b) => (t >= b ? 1 - sat((t - b) / 0.18) : 0))), z = z0 * (1 + beat * 0.035);   // a tiny zoom "kick" on every beat keeps the rhythm without cutting
+  const dir = i % 2 ? 1 : -1, gl = sat(1 - u / 0.14), dx = 22 * gl * dir, g = Math.floor(t * 15);
   return (
-    <div style={{ position: "absolute", left: 0, top: 640, width: 1080, height: 608, overflow: "hidden", background: "#000" }}>
-      <div style={{ position: "absolute", inset: 0, transform: `translateX(${sx}px) scale(${punch}) rotate(${(1 - eo(u / 0.2)) * 1.2 * dir}deg)` }}>
-        {BG[c.bg]}
-        <svg width={1080} height={608} viewBox="0 0 1080 608" style={{ position: "absolute", inset: 0 }}>{c.r(u, INK[c.bg])}</svg>
+    <div style={{ position: "absolute", left: 0, top: 640, width: 1080, height: 608, overflow: "hidden", background: "#070913" }}>
+      <svg width={0} height={0} style={{ position: "absolute" }}><defs><filter id="povrgb" x="-4%" width="108%" colorInterpolationFilters="sRGB">
+        <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r" /><feOffset in="r" dx={dx} result="ro" />
+        <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g" />
+        <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b" /><feOffset in="b" dx={-dx} result="bo" />
+        <feBlend in="ro" in2="g" mode="screen" result="rg" /><feBlend in="rg" in2="bo" mode="screen" /></filter></defs></svg>
+      <div style={{ position: "absolute", inset: 0, filter: gl > 0 ? "url(#povrgb)" : undefined }}>
+        {/* dark blueprint ground that moves with the camera (parallax) */}
+        <div style={{ position: "absolute", inset: -200, background: "radial-gradient(circle at 50% 45%, #171a33 0%, #070913 70%)" }} />
+        <div style={{ position: "absolute", inset: -200, opacity: 0.5, backgroundImage: "linear-gradient(#ffffff0d 1.5px, transparent 1.5px), linear-gradient(90deg, #ffffff0d 1.5px, transparent 1.5px)", backgroundSize: `${44 * z}px ${44 * z}px`,
+          backgroundPosition: `${-cx * z * 0.6}px ${-cy * z * 0.6}px` }} />
+        <svg width={1080} height={608} viewBox="0 0 1080 608" style={{ position: "absolute", inset: 0, overflow: "visible" }}>
+          <g transform={`translate(${540 - cx * z} ${304 - cy * z}) scale(${z})`}>{sc.r(t)}</g></svg>
       </div>
-      {/* cut flash + scanline + vignette */}
-      <div style={{ position: "absolute", inset: 0, background: "#fff", opacity: sat(1 - u * 11) * 0.75 }} />
-      <div style={{ position: "absolute", inset: 0, boxShadow: "inset 0 0 120px rgba(0,0,0,0.45)" }} />
-      <div style={{ position: "absolute", left: 0, right: 0, top: ((f * 9) % 700) - 60, height: 60, background: "linear-gradient(transparent, rgba(255,255,255,0.05), transparent)" }} />
+      <div style={{ position: "absolute", inset: 0, background: "#fff", opacity: sat(1 - u * 13) * 0.4 }} />
+      {gl > 0.3 ? [0, 1].map((b) => <div key={b} style={{ position: "absolute", left: 0, right: 0, top: (g * 131 + b * 311) % 560, height: 18 + ((g * 17 + b * 29) % 40),
+        background: b ? "rgba(40,224,255,0.25)" : "rgba(255,45,45,0.25)", transform: `translateX(${((g * 53 + b * 97) % 60) - 30}px)` }} />) : null}
+      <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${staticFile("pov/grain.png")})`, backgroundPosition: `${(g * 173) % 512}px ${(g * 311) % 512}px`, opacity: 0.14, mixBlendMode: "overlay" }} />
+      <div style={{ position: "absolute", inset: 0, boxShadow: "inset 0 0 120px rgba(0,0,0,0.55)" }} />
     </div>
   );
 };
@@ -290,9 +253,8 @@ export const PovEdit: React.FC = () => {
       <AbsoluteFill style={{ background: "#000", opacity: interpolate(f, [POV_FRAMES - 10, POV_FRAMES - 1], [0, 1], clamp) }} />
       <Audio src={staticFile("pov/voice.m4a")} />
       <Audio src={staticFile("pov/bed.wav")} volume={(x) => interpolate(x, [0, 15, fr(64.9), fr(65.2), POV_FRAMES - 3], [0, 0.07, 0.07, 0.22, 0], clamp)} />
-      {CLIPS.slice(1).map((c, i) => <Sfx key={i} at={c.a - 0.03} src={i % 3 === 0 ? "whoosh" : i % 3 === 1 ? "swipe" : "tick"} v={i % 3 === 2 ? 0.28 : 0.2} />)}
-      {[7.75, 18.4, 26.5, 32.4, 55.65, 60.99, 65.0].map((x) => <Sfx key={`b${x}`} at={x} src="bass" v={0.35} />)}
-      {[4.3, 5.0, 11.3, 20.9, 25.4, 47.6, 54.0, 54.6, 63.0].map((x) => <Sfx key={`p${x}`} at={x} src="pop" v={0.25} />)}
+      {SCENES.slice(1).map((x, i) => <Sfx key={`c${i}`} at={x.a - 0.03} src="whoosh" v={0.3} />)}
+      {BEATS.map((x, i) => <Sfx key={`b${i}`} at={x - 0.02} src={i % 3 === 0 ? "pop" : i % 3 === 1 ? "tick" : "swipe"} v={0.2} />)}
     </AbsoluteFill>
   );
 };
