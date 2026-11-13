@@ -70,7 +70,7 @@ const Head: React.FC<{ x: number; y: number; p: number; c: string; a?: number; s
   p < 0.95 ? null : <path d="M-26 -18 L8 0 L-26 18 Z" fill={c} transform={`translate(${x} ${y}) rotate(${a}) scale(${s})`} />
 );
 const Ell: React.FC<{ cx: number; cy: number; rx: number; ry: number; p: number; c: string; fill?: string }> = ({ cx, cy, rx, ry, p, c, fill = "none" }) => (
-  <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill={fill} stroke={c} strokeWidth={8} pathLength={1} strokeDasharray={1} strokeDashoffset={1 - p} />
+  <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill={fill} fillOpacity={p} stroke={c} strokeWidth={8} pathLength={1} strokeDasharray={1} strokeDashoffset={1 - p} />
 );
 const Gear: React.FC<{ x: number; y: number; r: number; a: number; c: string; n?: number }> = ({ x, y, r, a, c, n = 10 }) => (
   <g transform={`translate(${x} ${y}) rotate(${a})`}>
@@ -87,7 +87,7 @@ const cam = (keys: Key[], t: number): [number, number, number] => {
   for (let i = 0; i < keys.length - 1; i++) { const a = keys[i], b = keys[i + 1]; if (t <= b[0]) { const p = sm((t - a[0]) / (b[0] - a[0])); return [a[1] + (b[1] - a[1]) * p, a[2] + (b[2] - a[2]) * p, a[3] + (b[3] - a[3]) * p]; } }
   const l = keys[keys.length - 1]; return [l[1], l[2], l[3]];
 };
-const soft = (z: number) => 1 + (z - 1) * 0.55;   // keep the drawings small: the camera only leans in
+const soft = (z: number) => (1 + (z - 1) * 0.32) * 0.7;   // keep the drawings small: the camera only leans in
 const INKC = "#f3f5ff", DIM = "#8f96b8";
 const Chip: React.FC<{ x: number; y: number; text: string; c?: string; fg?: string; sc?: number; s?: number }> = ({ x, y, text, c = RED, fg = "#fff", sc = 1, s = 30 }) => {
   const w = text.length * s * 0.5 + s * 1.1; return sc <= 0.001 ? null : <g transform={`translate(${x} ${y}) scale(${sc})`}><rect x={-w / 2} y={-s * 0.72} width={w} height={s * 1.44} rx={s * 0.42} fill={c} /><T x={0} y={1} s={s} c={fg}>{text}</T></g>;
