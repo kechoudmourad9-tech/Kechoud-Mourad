@@ -1,3 +1,4 @@
+import { SERIES_FRAMES, SeriesEdit } from "./series/SeriesEdit";
 import { CX_FRAMES, CX_SHEETS, CxEdit, CxSheet } from "./cx/CxEdit";
 import { POV_FRAMES, PovEdit } from "./pov/PovEdit";
 import { INFO_FRAMES, InfoEdit } from "./info/InfoEdit";
@@ -50,5 +51,6 @@ export const RemotionRoot: React.FC = () => (
   <Composition id="Pov" component={PovEdit} durationInFrames={POV_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="Cx" component={CxEdit} durationInFrames={CX_FRAMES} fps={30} width={1920} height={1080} />
   <Composition id="CxSheet" component={CxSheet} durationInFrames={CX_SHEETS} fps={30} width={1920} height={1080} />
+  <Composition id="Series" component={SeriesEdit} durationInFrames={SERIES_FRAMES} fps={30} width={1080} height={1920} />
   </>
 );
