@@ -1,0 +1,423 @@
+1
+00:00:00,600 --> 00:00:07,880
+This is IntelliRoute: dynamic network routing, and multi-criteria path optimization.
+
+2
+00:00:08,260 --> 00:00:10,084
+We will build it with classical
+
+3
+00:00:10,084 --> 00:00:13,380
+algorithms, graph theory, and mathematical optimization.
+
+4
+00:00:13,760 --> 00:00:16,470
+And we will understand it from scratch, so that
+
+5
+00:00:16,470 --> 00:00:19,410
+when the professor asks, we can explain every line.
+
+6
+00:00:20,590 --> 00:00:23,716
+First: what is routing? When your computer sends a
+
+7
+00:00:23,716 --> 00:00:26,780
+message to a server, it does not travel directly.
+
+8
+00:00:27,160 --> 00:00:30,523
+It hops through devices called routers. Each router receives
+
+9
+00:00:30,523 --> 00:00:33,270
+the packet, and decides where to forward it next.
+
+10
+00:00:33,650 --> 00:00:38,595
+Three words to remember. A router forwards packets. A link connects
+
+11
+00:00:38,595 --> 00:00:41,990
+two routers. A packet is a small unit of data.
+
+12
+00:00:42,370 --> 00:00:44,224
+Think of routers as cities, links
+
+13
+00:00:44,224 --> 00:00:45,910
+as roads, and packets as cars.
+
+14
+00:00:46,290 --> 00:00:48,930
+Routing is simply deciding which roads the data should take.
+
+15
+00:00:50,110 --> 00:00:53,585
+Now, the real problem. A packet must travel from router
+
+16
+00:00:53,585 --> 00:00:56,870
+A to router F, and there are several possible paths.
+
+17
+00:00:57,250 --> 00:01:00,274
+The obvious choice is the shortest one. But the shortest
+
+18
+00:01:00,274 --> 00:01:03,190
+route is not always the fastest, or the most reliable.
+
+19
+00:01:03,570 --> 00:01:06,523
+One path has three links, but one of them
+
+20
+00:01:06,523 --> 00:01:10,483
+is heavily congested. Another has four links, all fast.
+
+21
+00:01:10,483 --> 00:01:13,580
+A third has only two, but it loses packets.
+
+22
+00:01:13,960 --> 00:01:16,404
+So which path is best? That depends
+
+23
+00:01:16,404 --> 00:01:18,360
+on what we want to optimize.
+
+24
+00:01:18,740 --> 00:01:23,367
+Our research question: how can we dynamically select the most efficient
+
+25
+00:01:23,367 --> 00:01:28,580
+route, using several performance parameters, instead of the shortest path alone?
+
+26
+00:01:29,760 --> 00:01:33,125
+Our foundation is Dijkstra's algorithm, developed
+
+27
+00:01:33,125 --> 00:01:35,940
+by Edsger Dijkstra in nineteen fifty-six.
+
+28
+00:01:36,320 --> 00:01:39,588
+Its job is simple: find the path with the lowest
+
+29
+00:01:39,588 --> 00:01:43,060
+total cost, between a start node and a destination.
+
+30
+00:01:43,440 --> 00:01:47,908
+Take this small network. Each number is the cost of crossing
+
+31
+00:01:47,908 --> 00:01:50,440
+a link. We want to go from A to F.
+
+32
+00:01:50,820 --> 00:01:55,209
+Through B and D, the cost is eleven. Through B
+
+33
+00:01:55,209 --> 00:01:59,789
+and E, fourteen. Through C and E, only seven. So
+
+34
+00:01:59,789 --> 00:02:02,460
+the best path is A, C, E, F.
+
+35
+00:02:02,840 --> 00:02:05,954
+But Dijkstra does not list every path. It starts
+
+36
+00:02:05,954 --> 00:02:08,614
+at A with distance zero, and looks at its
+
+37
+00:02:08,614 --> 00:02:11,080
+neighbours: B costs four, C costs two.
+
+38
+00:02:11,460 --> 00:02:15,172
+Then it always picks the unvisited node with the smallest known
+
+39
+00:02:15,172 --> 00:02:19,120
+cost, and updates its neighbours. This update is called relaxation.
+
+40
+00:02:19,500 --> 00:02:21,665
+The result is guaranteed optimal, as
+
+41
+00:02:21,665 --> 00:02:23,470
+long as no weight is negative.
+
+42
+00:02:24,650 --> 00:02:29,101
+Here is the limitation. Suppose congestion raises the link
+
+43
+00:02:29,101 --> 00:02:31,710
+from A to C, from two, to fifteen.
+
+44
+00:02:32,090 --> 00:02:34,415
+The old route is no longer optimal. Dijkstra
+
+45
+00:02:34,415 --> 00:02:36,159
+can find the new one, but only if
+
+46
+00:02:36,159 --> 00:02:38,590
+someone updates the weights and runs it again.
+
+47
+00:02:38,970 --> 00:02:42,747
+It does not monitor the network, and it does not decide
+
+48
+00:02:42,747 --> 00:02:46,180
+how to model it. That is where our project begins.
+
+49
+00:02:47,360 --> 00:02:50,576
+Our idea: give every link a cost built from
+
+50
+00:02:50,576 --> 00:02:56,560
+several measurements. Latency, packet loss, available bandwidth, and congestion.
+
+51
+00:02:56,940 --> 00:02:59,968
+The weights of this formula express what we want to
+
+52
+00:02:59,968 --> 00:03:03,470
+optimize, and the costs are refreshed as conditions change.
+
+53
+00:03:03,850 --> 00:03:06,465
+To avoid switching routes too often, the system
+
+54
+00:03:06,465 --> 00:03:09,080
+only changes path when the gain is significant.
+
+55
+00:03:10,260 --> 00:03:13,168
+What will we build? Not real internet
+
+56
+00:03:13,168 --> 00:03:16,940
+routers. A network simulator, written in Python.
+
+57
+00:03:17,320 --> 00:03:20,893
+Part A: a topology editor, to create routers, connect
+
+58
+00:03:20,893 --> 00:03:23,860
+them, and choose a source and a destination.
+
+59
+00:03:24,240 --> 00:03:27,869
+Part B: a condition simulator, to add congestion,
+
+60
+00:03:27,869 --> 00:03:31,350
+latency, packet loss, and even router failures.
+
+61
+00:03:31,730 --> 00:03:36,745
+Part C: the routing engine, with three strategies. Static Dijkstra,
+
+62
+00:03:36,745 --> 00:03:42,060
+Dijkstra with updated weights, and our multi-criteria adaptive routing.
+
+63
+00:03:42,440 --> 00:03:46,863
+Part D: a results dashboard, showing the selected route, its
+
+64
+00:03:46,863 --> 00:03:51,360
+cost, the latency, the delivery ratio, and the route changes.
+
+65
+00:03:52,540 --> 00:03:54,439
+How do we prove that it is
+
+66
+00:03:54,439 --> 00:03:57,800
+better? With experiments, not with adjectives.
+
+67
+00:03:58,180 --> 00:04:00,478
+We run one hundred simulated scenarios, and
+
+68
+00:04:00,478 --> 00:04:03,150
+compare the algorithms under identical conditions.
+
+69
+00:04:03,530 --> 00:04:07,936
+We measure average latency, packet delivery ratio, throughput,
+
+70
+00:04:07,936 --> 00:04:11,490
+computation time, and the number of route changes.
+
+71
+00:04:11,870 --> 00:04:14,606
+And we keep the comparison honest. We also
+
+72
+00:04:14,606 --> 00:04:18,188
+test against Dijkstra using updated latency weights, to
+
+73
+00:04:18,188 --> 00:04:21,250
+see whether multiple criteria really add value.
+
+74
+00:04:22,430 --> 00:04:24,751
+We build this in six stages, instead of
+
+75
+00:04:24,751 --> 00:04:27,250
+writing hundreds of lines of code at once.
+
+76
+00:04:27,630 --> 00:04:32,996
+Stage one: networking fundamentals. Stage two: classical algorithms,
+
+77
+00:04:32,996 --> 00:04:37,020
+with Dijkstra, its complexity, and its limitations.
+
+78
+00:04:37,400 --> 00:04:40,593
+Stage three: the network cost model, where we design
+
+79
+00:04:40,593 --> 00:04:44,400
+and normalize latency, congestion, bandwidth, and packet loss.
+
+80
+00:04:44,780 --> 00:04:47,855
+Stage four: dynamic routing, with automatic
+
+81
+00:04:47,855 --> 00:04:51,430
+cost updates, route recalculation, and hysteresis.
+
+82
+00:04:51,810 --> 00:04:55,717
+Stage five: simulation and interface. Stage six:
+
+83
+00:04:55,717 --> 00:04:59,950
+experiments, where we compare, analyze, and improve.
+
+84
+00:05:00,330 --> 00:05:03,649
+We must also be honest about the limits. Our weighted
+
+85
+00:05:03,649 --> 00:05:07,157
+cost is a compromise. The chosen route is not guaranteed
+
+86
+00:05:07,157 --> 00:05:10,476
+to be the fastest, the most reliable, and the highest
+
+87
+00:05:10,476 --> 00:05:14,610
+bandwidth, all at once. We decide which trade-offs are acceptable.
+
+88
+00:05:14,990 --> 00:05:18,139
+And our simulator demonstrates an algorithm. It will not
+
+89
+00:05:18,139 --> 00:05:21,120
+change the routing tables of real internet providers.
+
+90
+00:05:22,300 --> 00:05:26,620
+Now, who does what? Three teammates, plus an AI assistant.
+
+91
+00:05:27,000 --> 00:05:30,236
+Member one leads the algorithms: the graph model,
+
+92
+00:05:30,236 --> 00:05:34,330
+both Dijkstra baselines, and the multi-criteria cost function.
+
+93
+00:05:34,710 --> 00:05:37,476
+Member two leads the simulator: the topology
+
+94
+00:05:37,476 --> 00:05:40,620
+editor, the network conditions, and the dashboard.
+
+95
+00:05:41,000 --> 00:05:44,165
+Member three leads the experiments and the report:
+
+96
+00:05:44,165 --> 00:05:47,330
+scenarios, metrics, plots, and the LaTeX document.
+
+97
+00:05:47,710 --> 00:05:52,165
+The AI drafts code skeletons, tests, LaTeX, and diagrams, and
+
+98
+00:05:52,165 --> 00:05:55,597
+it explains concepts. It is fast, but it can be
+
+99
+00:05:55,597 --> 00:05:59,540
+confidently wrong, and it cannot see our real results.
+
+100
+00:05:59,920 --> 00:06:02,298
+So every AI output has a human owner, who
+
+101
+00:06:02,298 --> 00:06:04,850
+checks it, and can explain it without notes.
+
+102
+00:06:05,230 --> 00:06:09,070
+Humans own the research question, the experiments, and every final claim.
+
+103
+00:06:10,250 --> 00:06:13,171
+The final report is written in LaTeX, with the
+
+104
+00:06:13,171 --> 00:06:16,600
+algorithms, the model, the experiments, and this plan.
+
+105
+00:06:16,980 --> 00:06:20,291
+IntelliRoute. Not just the shortest path. The
+
+106
+00:06:20,291 --> 00:06:23,160
+best one, for the conditions right now.
