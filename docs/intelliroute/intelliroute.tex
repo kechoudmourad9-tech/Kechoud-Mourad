@@ -37,6 +37,23 @@ delegation of work between the three team members and the AI assistant.
 
 \tableofcontents
 
+\section*{Project summary}
+\addcontentsline{toc}{section}{Project summary}
+\begin{center}
+\fbox{\begin{minipage}{0.94\textwidth}
+\textbf{Problem.} Traditional shortest-path calculations based on fixed or limited routing metrics
+may not adequately reflect changing network conditions.\\[4pt]
+\textbf{Proposed solution.} A software-based routing system that dynamically evaluates network
+connections using multiple performance parameters and selects an efficient route through graph
+algorithms.\\[4pt]
+\textbf{Core technologies.} Graph theory; Dijkstra's algorithm; multi-criteria optimization;
+dynamic edge-weight calculation; Python network simulation.\\[4pt]
+\textbf{Expected outcome.} A working application that demonstrates how adaptive multi-criteria
+routing behaves under changing network conditions and whether it improves performance over
+conventional approaches.
+\end{minipage}}
+\end{center}
+
 \section{What is routing?}
 A computer network is a set of \emph{routers} joined by \emph{links}. Data does not travel in one
 piece: it is cut into small units called \emph{packets}. When a computer sends a packet to a
@@ -317,21 +334,43 @@ a function \texttt{route(graph, source, destination)} that every strategy implem
 reviews one other member's work (1 reviews 2, 2 reviews 3, 3 reviews 1), and the whole team rehearses
 the oral explanation.
 
-\subsection{Suggested timeline}
+\section{Development roadmap}
+The project is built in stages rather than by writing hundreds of lines of code at once. Each stage
+ends with something that works and that the whole team understands.
+
 \begin{center}
-\begin{tabularx}{\textwidth}{clLLL}
+\begin{tabularx}{\textwidth}{c>{\raggedright\arraybackslash}p{3.3cm}Lp{2.6cm}}
 \toprule
-Phase & Goal & Member 1 & Member 2 & Member 3 \\
+Stage & Name & Content & Lead \\
 \midrule
-1 & Foundations & graph model, static Dijkstra & topology editor & report skeleton, metric
-definitions \\
-2 & Dynamics & updated-weight Dijkstra & condition simulator & scenario generator \\
-3 & Proposal & multi-criteria routing & dashboard & metric collection \\
-4 & Evidence & tuning, bug fixes & integration, bug fixes & 100 scenarios, plots \\
-5 & Delivery & \multicolumn{3}{l}{final report, slides, rehearsal (all)} \\
+1 & Networking fundamentals & Routers, packets, topology, routing tables, links and graph
+representation & all \\
+2 & Classical algorithms & Implement Dijkstra; understand its complexity and limitations &
+Member 1 \\
+3 & Network cost model & Design and normalise the latency, congestion, bandwidth and packet-loss
+measurements & Member 1, with Member 3 \\
+4 & Dynamic routing & Automatic cost updates, route recalculation and hysteresis & Member 1, with
+Member 2 \\
+5 & Simulation and interface & Build the network topology, introduce changing conditions and
+visualise packet routes & Member 2 \\
+6 & Experiments & Compare the algorithm with conventional approaches, analyse the results and
+identify improvements & Member 3 \\
 \bottomrule
 \end{tabularx}
 \end{center}
+The report is written in \LaTeX{} throughout the project (Member 3), not at the end.
+
+\section{Limitations}
+\begin{itemize}[leftmargin=*]
+\item \textbf{The weighted cost is a compromise.} Minimising \eqref{eq:cost} does not guarantee
+that the selected route is simultaneously the fastest, the most reliable and the highest-bandwidth
+route. The weights encode which trade-offs the team considers acceptable, and this choice must be
+stated and justified.
+\item \textbf{The simulator demonstrates an algorithmic solution.} It does not change the routing
+tables of real ISP routers; that would require additional networking protocols and infrastructure.
+\item \textbf{Results hold for the simulated scenarios.} Conclusions are limited to the topologies
+and condition models that were tested.
+\end{itemize}
 
 \section{Conclusion}
 Dijkstra's algorithm gives the optimal path for a given set of weights, but a real network changes

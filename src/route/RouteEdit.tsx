@@ -108,7 +108,7 @@ const cam = (keys: Key[], t: number): [number, number, number] => {
   for (let i = 0; i < keys.length - 1; i++) { const a = keys[i], b = keys[i + 1]; if (t <= b[0]) { const p = sm((t - a[0]) / (b[0] - a[0])); return [a[1] + (b[1] - a[1]) * p, a[2] + (b[2] - a[2]) * p, a[3] + (b[3] - a[3]) * p]; } }
   const l = keys[keys.length - 1]; return [l[1], l[2], l[3]];
 };
-const soft = (z: number) => (1 + (z - 1) * 0.26) * 0.84;   // keep the drawings small: the camera only leans in
+const soft = (z: number) => (1 + (z - 1) * 0.4) * 0.84;   // keep the drawings small: the camera only leans in
 const INKC = "#ffffff", DIM = "#a9b0d6";
 const Chip: React.FC<{ x: number; y: number; text: string; c?: string; fg?: string; sc?: number; s?: number }> = ({ x, y, text, c = RED, fg = "#fff", sc = 1, s = 30 }) => {
   const w = text.length * s * 0.5 + s * 1.1; return sc <= 0.001 ? null : <g transform={`translate(${x} ${y}) scale(${sc})`}><rect x={-w / 2} y={-s * 0.72} width={w} height={s * 1.44} rx={s * 0.42} fill={c} /><T x={0} y={1} s={s} c={fg}>{text}</T></g>;
@@ -225,7 +225,7 @@ const Dijk = (t: number) => { const lim = t >= S(20), newW = t >= mid(20, 0.62);
       <T x={30} y={52 + i * 72} s={38} c="#fff" f="KaTeX_Main" anchor="start">{p}</T><T x={350} y={52 + i * 72} s={46} c={c === 7 ? GRN : YEL} anchor="end">{c}</T></g>)}</Card>}
     <Chip x={960} y={1010} text="best path: A → C → E → F   (cost 7)" c={GRN} sc={t >= mid(16, 0.78) && !lim ? pp(t, mid(16, 0.78)) : 0} s={42} />
     <Chip x={960} y={560} text="relaxation" c={ORG} sc={t >= mid(18, 0.72) && t < S(19) ? pp(t, mid(18, 0.72)) : 0} s={40} />
-    <Chip x={960} y={560} text="optimal when all weights ≥ 0" c={PUR} sc={t >= S(19) && !lim ? pp(t, S(19) + 0.8) : 0} s={38} />
+    <Chip x={960} y={690} text="optimal when all weights ≥ 0" c={PUR} sc={t >= S(19) && !lim ? pp(t, S(19) + 0.8) : 0} s={38} />
     {lim && <><T x={400} y={810} s={40} c={RED} f="InterX" sc={pp(t, mid(20, 0.45))}>congestion: 2 → 15</T>
       <Chip x={960} y={1010} text={t >= mid(21, 0.35) ? "re-run with new weights → A → B → D → F  (cost 11)" : "old route A → C → E → F now costs 20"} c={t >= mid(21, 0.35) ? GRN : RED} sc={pp(t, S(21) + 0.2)} s={40} />
       <Card x={1420} y={130} w={460} h={230} c={RED} p={pp(t, S(22) + 0.2)}><T x={230} y={56} s={38} c={RED}>DIJKSTRA ALONE</T><T x={230} y={118} s={36} c="#fff" f="InterX">✗ does not monitor</T><T x={230} y={172} s={36} c="#fff" f="InterX">✗ does not model</T></Card>
@@ -284,34 +284,60 @@ const Proof = (t: number) => { const n = Math.floor(sm((t - S(32) - 0.2) / (E(32
     <Chip x={960} y={930} text="fair baseline: does multi-criteria really add value?" c={YEL} fg="#14101f" sc={pp(t, mid(34, 0.45))} s={40} />
   </>; };
 
-/* 8 — delegation: three teammates + the AI */
+/* 8 — roadmap in six stages + honest limits (same image) */
+const STG: [string, string, string, number][] = [["Networking fundamentals", "routers · packets · topology", "routing tables · graphs", S(36) + 0.2], ["Classical algorithms", "implement Dijkstra", "complexity · limitations", mid(36, 0.45)],
+  ["Network cost model", "normalize latency, congestion,", "bandwidth, packet loss", S(37) + 0.2], ["Dynamic routing", "cost updates · recalculation", "hysteresis", S(38) + 0.2],
+  ["Simulation & interface", "topology · changing conditions", "visualize packet routes", S(39) + 0.2], ["Experiments", "compare · analyze", "identify improvements", mid(39, 0.42)]];
+const SX = (i: number) => 210 + i * 300;
+const Road = (t: number) => { const cur = STG.filter((x) => t >= x[3]).length - 1, px = cur < 0 ? SX(0) - 120 : SX(cur) - 300 * (1 - sm((t - STG[cur][3]) / 0.5)) * (cur > 0 ? 1 : 0.4);
+  const w = [0.5 + 0.3 * Math.sin(t * 1.3), 0.5 + 0.3 * Math.sin(t * 1.1 + 2)];
+  return <>
+    <T x={960} y={70} s={74} c="#fff" sc={pp(t, S(35) + 0.2)}>Our roadmap: six stages</T>
+    <Edge a={[SX(0), 300]} b={[SX(5), 300]} p={k(t, S(35) + 0.6, 1.2)} c="#5b6078" w={10} /><Edge a={[SX(0), 300]} b={[Math.max(SX(0), px), 300]} p={cur >= 0 ? 1 : 0} c={GRN} w={10} glow />
+    {STG.map(([title, l1, l2, at], i) => { const on = t >= at, c = [BLUE, PUR, ORG, RED, CYAN, GRN][i];
+      return <g key={i}><Router x={SX(i)} y={300} label={`${i + 1}`} sc={pp(t, S(35) + 0.8 + i * 0.15) * (i === cur ? 1.15 : 0.9)} c={on ? c : "#2c3460"} r={50} hot={i === cur} />
+        <T x={SX(i)} y={i % 2 ? 150 : 205} s={30} c={on ? c : DIM} sc={pp(t, at)}>{title.toUpperCase()}</T>
+        <T x={SX(i)} y={i % 2 ? 458 : 392} s={24} c="#fff" f="InterX" sc={pp(t, at + 0.25)}>{l1}</T><T x={SX(i)} y={i % 2 ? 490 : 424} s={24} c="#fff" f="InterX" sc={pp(t, at + 0.35)}>{l2}</T></g>; })}
+    {cur >= 0 && t < S(40) && <Packet x={px} y={236} />}
+    <Card x={150} y={540} w={780} h={440} c={YEL} p={pp(t, S(40) + 0.4)}><T x={390} y={44} s={38} c={YEL}>A COMPROMISE</T>
+      <path d="M390 120 L160 370 L620 370 Z" fill="#ffd23f14" stroke="#fff" strokeWidth={4} strokeLinejoin="round" />
+      <T x={390} y={98} s={28} c={RED} f="InterX">fastest</T><T x={150} y={402} s={28} c={GRN} f="InterX">most reliable</T><T x={630} y={402} s={28} c={CYAN} f="InterX">highest bandwidth</T>
+      <circle cx={390 + (w[0] - 0.5) * 300} cy={290 - (w[1] - 0.5) * 160} r={18} fill={YEL} style={{ filter: `drop-shadow(0 0 14px ${YEL})` }} />
+      <T x={390} y={318} s={26} c={DIM} f="InterX" sc={pp(t, mid(40, 0.75))}>we choose the trade-off</T></Card>
+    <Card x={990} y={540} w={780} h={440} c={RED} p={pp(t, S(41) + 0.3)}><T x={390} y={56} s={44} c={RED}>A SIMULATOR, NOT THE INTERNET</T>
+      <Router x={230} y={230} sc={1} c={GRN} r={54} /><T x={230} y={320} s={28} c="#fff" f="InterX">our simulator</T><Tick x={230} y={372} ok sc={pp(t, S(41) + 0.9)} />
+      <Router x={550} y={230} sc={1} c="#5b6078" r={54} /><T x={550} y={320} s={28} c="#fff" f="InterX">real ISP routing tables</T><Tick x={550} y={372} ok={false} sc={pp(t, mid(41, 0.55))} />
+      <Mark x={550} y={230} rx={84} ry={76} p={k(t, mid(41, 0.55), 0.5)} c={RED} w={7} seed={3} /></Card>
+  </>; };
+
+/* 9 — delegation: three teammates + the AI */
 const TEAM: [string, string, string, string[], number, string, string][] = [
-  ["MEMBER 1", "Algorithms lead", RED, ["graph model", "2 Dijkstra baselines", "multi-criteria cost"], 36, "#1d1420", "#f2c29b"],
-  ["MEMBER 2", "Simulator lead", BLUE, ["topology editor", "network conditions", "dashboard"], 37, "#5a3418", "#c98a5e"],
-  ["MEMBER 3", "Experiments & report", GRN, ["scenarios & metrics", "plots & statistics", "LaTeX document"], 38, "#c9a227", "#f2c29b"]];
+  ["MEMBER 1", "Algorithms lead", RED, ["graph model", "2 Dijkstra baselines", "multi-criteria cost"], 43, "#1d1420", "#f2c29b"],
+  ["MEMBER 2", "Simulator lead", BLUE, ["topology editor", "network conditions", "dashboard"], 44, "#5a3418", "#c98a5e"],
+  ["MEMBER 3", "Experiments & report", GRN, ["scenarios & metrics", "plots & statistics", "LaTeX document"], 45, "#c9a227", "#f2c29b"]];
 const Team = (t: number) => <>
-  <T x={960} y={90} s={74} c="#fff" sc={pp(t, S(35) + 0.2)}>Who does what?</T>
+  <T x={960} y={90} s={74} c="#fff" sc={pp(t, S(42) + 0.2)}>Who does what?</T>
   {TEAM.map(([name, role, c, tasks, si, hair, skin], i) => { const x = 250 + i * 430, on = t >= S(si);
-    return <g key={name}><Person x={x} y={520} s={0.95} ink="#fff" col={c} label="" t={t + i} hair={hair} skin={skin} sc={pp(t, S(35) + 0.5 + i * 0.3)} wave={on && t < E(si) ? Math.sin(t * 8) * 0.3 + 0.6 : 0} glasses={i === 0} />
-      <T x={x} y={620} s={46} c={c} sc={pp(t, S(35) + 0.7 + i * 0.3)}>{name}</T><T x={x} y={672} s={32} c="#fff" f="InterX" sc={pp(t, S(si) + 0.2)}>{role}</T>
+    return <g key={name}><Person x={x} y={520} s={0.95} ink="#fff" col={c} label="" t={t + i} hair={hair} skin={skin} sc={pp(t, S(42) + 0.5 + i * 0.3)} wave={on && t < E(si) ? Math.sin(t * 8) * 0.3 + 0.6 : 0} glasses={i === 0} />
+      <T x={x} y={620} s={46} c={c} sc={pp(t, S(42) + 0.7 + i * 0.3)}>{name}</T><T x={x} y={672} s={32} c="#fff" f="InterX" sc={pp(t, S(si) + 0.2)}>{role}</T>
       {tasks.map((k2, j) => <Chip key={k2} x={x} y={740 + j * 66} text={k2} c="#1b2140" sc={pp(t, mid(si, 0.3 + j * 0.2))} s={30} />)}
-      {t >= S(40) && <Draw d={`M1500 ${330 + i * 14} Q${(1500 + x) / 2} ${150 - i * 30} ${x + 30} 215`} p={k(t, S(40) + 0.4 + i * 0.25, 0.5)} c={YEL} w={5} dash="14 12" />}</g>; })}
-  <Robot x={1580} y={440} s={1.25} sc={pp(t, S(35) + 1.6)} t={t} /><T x={1580} y={620} s={46} c={CYAN} sc={pp(t, S(35) + 1.8)}>AI ASSISTANT</T>
-  {["drafts code & tests", "LaTeX & diagrams", "explains concepts"].map((x, j) => <Chip key={x} x={1580} y={690 + j * 62} text={x} c="#1b2140" sc={pp(t, mid(39, 0.1 + j * 0.12))} s={30} />)}
-  <Chip x={1580} y={890} text="⚠ can be confidently wrong" c={RED} sc={pp(t, mid(39, 0.6))} s={30} /><Chip x={1580} y={952} text="✗ cannot see our real results" c={RED} sc={pp(t, mid(39, 0.8))} s={30} />
-  <Chip x={870} y={175} text="every AI output has a human owner who checks it and can explain it" c={YEL} fg="#14101f" sc={t >= S(40) && t < S(41) ? pp(t, S(40) + 0.9) : 0} s={34} />
-  <Chip x={690} y={985} text="humans own: research question · experiments · final claims" c={GRN} sc={pp(t, S(41) + 0.4)} s={36} />
+      {t >= S(47) && <Draw d={`M1500 ${330 + i * 14} Q${(1500 + x) / 2} ${150 - i * 30} ${x + 30} 215`} p={k(t, S(47) + 0.4 + i * 0.25, 0.5)} c={YEL} w={5} dash="14 12" />}</g>; })}
+  <Robot x={1580} y={440} s={1.25} sc={pp(t, S(42) + 1.6)} t={t} /><T x={1580} y={620} s={46} c={CYAN} sc={pp(t, S(42) + 1.8)}>AI ASSISTANT</T>
+  {["drafts code & tests", "LaTeX & diagrams", "explains concepts"].map((x, j) => <Chip key={x} x={1580} y={690 + j * 62} text={x} c="#1b2140" sc={pp(t, mid(46, 0.1 + j * 0.12))} s={30} />)}
+  <Chip x={1580} y={890} text="⚠ can be confidently wrong" c={RED} sc={pp(t, mid(46, 0.6))} s={30} /><Chip x={1580} y={952} text="✗ cannot see our real results" c={RED} sc={pp(t, mid(46, 0.8))} s={30} />
+  <Chip x={870} y={175} text="every AI output has a human owner who checks it and can explain it" c={YEL} fg="#14101f" sc={t >= S(47) && t < S(48) ? pp(t, S(47) + 0.9) : 0} s={34} />
+  <Chip x={690} y={985} text="humans own: research question · experiments · final claims" c={GRN} sc={pp(t, S(48) + 0.4)} s={36} />
 </>;
 
-/* 9 — LaTeX report + closing line */
+/* 10 — LaTeX report + closing line */
 const Outro = (t: number) => <>
-  <g transform={`translate(430 560) rotate(-4) scale(${pp(t, S(42) + 0.2)})`}><rect x={-250} y={-340} width={500} height={680} rx={14} fill="#fbfaf5" style={{ filter: "drop-shadow(0 30px 60px #000)" }} />
+  <g transform={`translate(430 560) rotate(-4) scale(${pp(t, S(49) + 0.2)})`}><rect x={-250} y={-340} width={500} height={680} rx={14} fill="#fbfaf5" style={{ filter: "drop-shadow(0 30px 60px #000)" }} />
     <text x={0} y={-270} fontFamily="KaTeX_Main" fontSize={40} fill="#14101f" textAnchor="middle">IntelliRoute</text><text x={0} y={-232} fontFamily="KaTeX_Main" fontSize={20} fill="#555" textAnchor="middle">Dynamic Network Routing</text>
-    {["1  Introduction", "2  Dijkstra’s algorithm", "3  Multi-criteria model", "4  Simulator", "5  Experiments", "6  Delegation plan"].map((x, i) => <g key={x} opacity={k(t, mid(42, 0.25 + i * 0.1), 0.25)}><text x={-200} y={-170 + i * 78} fontFamily="KaTeX_Main" fontSize={26} fill="#14101f">{x}</text>
+    {["1  Introduction", "2  Dijkstra’s algorithm", "3  Multi-criteria model", "4  Simulator", "5  Experiments", "6  Delegation plan"].map((x, i) => <g key={x} opacity={k(t, mid(49, 0.25 + i * 0.1), 0.25)}><text x={-200} y={-170 + i * 78} fontFamily="KaTeX_Main" fontSize={26} fill="#14101f">{x}</text>
       <rect x={-200} y={-152 + i * 78} width={380 - (i % 3) * 60} height={7} rx={3} fill="#c9cbd6" /><rect x={-200} y={-136 + i * 78} width={300 - (i % 2) * 70} height={7} rx={3} fill="#c9cbd6" /></g>)}</g>
-  <T x={430} y={960} s={64} c="#fff" f="KaTeX_Main" sc={pp(t, S(42) + 0.8)}>L<tspan dy="-0.18em" fontSize="74%">A</tspan><tspan dy="0.18em">T</tspan><tspan dy="0.2em">E</tspan><tspan dy="-0.2em">X</tspan> report</T>
-  <T x={1260} y={360} s={150} c="#fff" sc={pp(t, S(43) + 0.1)} glow={BLUE}>IntelliRoute</T><Squig x={1260} y={452} w={640} p={k(t, S(43) + 0.7, 0.4)} c={YEL} />
-  <T x={1260} y={560} s={52} c={DIM} f="InterX" sc={pp(t, mid(43, 0.3))}>not just the shortest path</T><T x={1260} y={650} s={64} c={YEL} f="InterX" sc={pp(t, mid(43, 0.55))}>the best one, right now</T>
+  <T x={430} y={960} s={64} c="#fff" f="KaTeX_Main" sc={pp(t, S(49) + 0.8)}>L<tspan dy="-0.18em" fontSize="74%">A</tspan><tspan dy="0.18em">T</tspan><tspan dy="0.2em">E</tspan><tspan dy="-0.2em">X</tspan> report</T>
+  <T x={1260} y={360} s={150} c="#fff" sc={pp(t, S(50) + 0.1)} glow={BLUE}>IntelliRoute</T><Squig x={1260} y={452} w={640} p={k(t, S(50) + 0.7, 0.4)} c={YEL} />
+  <T x={1260} y={560} s={52} c={DIM} f="InterX" sc={pp(t, mid(50, 0.3))}>not just the shortest path</T><T x={1260} y={650} s={64} c={YEL} f="InterX" sc={pp(t, mid(50, 0.55))}>the best one, right now</T>
 </>;
 
 type Scene = { a: number; r: (t: number) => React.ReactNode; cam: Key[] };
@@ -323,8 +349,9 @@ const SCENES: Scene[] = [
   { a: st0(23), r: Idea, cam: [[S(23), 960, 420, 1.1], [mid(23, 0.35), 960, 560, 1.0], [E(24), 960, 600, 1.05], [S(25) + 0.6, 960, 760, 1.2], [E(25), 960, 770, 1.24]] },
   { a: st0(26), r: Build, cam: [[S(26), 960, 540, 1.0], [S(27) + 0.5, 520, 400, 1.5], [E(27), 520, 400, 1.55], [S(28) + 0.5, 1400, 400, 1.5], [E(28), 1400, 400, 1.55], [S(29) + 0.5, 520, 820, 1.5], [E(29), 520, 820, 1.55], [S(30) + 0.5, 1400, 820, 1.5], [E(30) - 0.8, 1400, 820, 1.55], [E(30), 960, 560, 1.0]] },
   { a: st0(31), r: Proof, cam: [[S(31), 960, 420, 1.12], [S(32), 960, 560, 1.0], [S(32) + 0.7, 520, 560, 1.4], [E(32), 540, 560, 1.44], [S(33) + 0.6, 1500, 560, 1.4], [E(33), 1500, 560, 1.44], [S(34) + 0.6, 1030, 600, 1.3], [E(34), 1030, 620, 1.34]] },
-  { a: st0(35), r: Team, cam: [[S(35), 960, 540, 1.0], [S(36) + 0.5, 300, 620, 1.5], [E(36), 300, 630, 1.55], [S(37) + 0.5, 700, 620, 1.5], [E(37), 700, 630, 1.55], [S(38) + 0.5, 1110, 620, 1.5], [E(38), 1110, 630, 1.55], [S(39) + 0.6, 1540, 660, 1.5], [E(39), 1540, 680, 1.55], [S(40) + 0.6, 960, 480, 1.0], [E(41), 960, 560, 1.05]] },
-  { a: st0(42), r: Outro, cam: [[S(42), 700, 560, 1.15], [E(42), 760, 560, 1.2], [S(43) + 0.6, 1100, 520, 1.1], [TM.total, 1130, 520, 1.16]] },
+  { a: st0(35), r: Road, cam: [[S(35), 960, 420, 1.05], [S(36), 400, 320, 1.6], [E(36), 560, 320, 1.6], [E(37), 840, 320, 1.6], [E(38), 1110, 320, 1.6], [E(39), 1500, 320, 1.6], [S(40) + 0.7, 700, 700, 1.35], [E(40), 720, 720, 1.4], [S(41) + 0.6, 1300, 720, 1.35], [E(41), 960, 560, 1.0]] },
+  { a: st0(42), r: Team, cam: [[S(42), 960, 540, 1.0], [S(43) + 0.5, 300, 620, 1.5], [E(43), 300, 630, 1.55], [S(44) + 0.5, 700, 620, 1.5], [E(44), 700, 630, 1.55], [S(45) + 0.5, 1110, 620, 1.5], [E(45), 1110, 630, 1.55], [S(46) + 0.6, 1540, 660, 1.5], [E(46), 1540, 680, 1.55], [S(47) + 0.6, 960, 480, 1.0], [E(48), 960, 560, 1.05]] },
+  { a: st0(49), r: Outro, cam: [[S(49), 700, 560, 1.15], [E(49), 760, 560, 1.2], [S(50) + 0.6, 1100, 520, 1.1], [TM.total, 1130, 520, 1.16]] },
 ];
 
 /* ---------- stage: black vivid ground, travelling camera, glitch only at scene changes ---------- */
@@ -332,7 +359,7 @@ const W = 1920, H = 1080, CY = 492;
 const Stage: React.FC = () => {
   const f = useCurrentFrame(), t = f / FPS;
   let i = 0; for (let j = 0; j < SCENES.length; j++) if (t >= SCENES[j].a) i = j;
-  const sc = SCENES[i], u = t - sc.a, [cx, cy, zr] = cam(sc.cam, t), z = soft(zr);
+  const sc = SCENES[i], u = t - sc.a, [cx0, cy0, zr] = cam(sc.cam, t), z = soft(zr), cx = 960 + (cx0 - 960) * 0.3, cy = 540 + (cy0 - 540) * 0.3;   // the camera only leans towards its target
   const dir = i % 2 ? 1 : -1, gl = i === 0 ? 0 : sat(1 - u / 0.16), dx = 30 * gl * dir, g = Math.floor(t * 15);
   return (
     <AbsoluteFill style={{ overflow: "hidden", background: "#050506" }}>
@@ -373,7 +400,7 @@ const Subs: React.FC = () => {
     </div>
   );
 };
-const CHAPS: [number, string][] = [[0, "INTRO"], [3, "1 · WHAT IS ROUTING"], [8, "2 · THE PROBLEM"], [13, "3 · DIJKSTRA"], [20, "4 · THE LIMITATION"], [23, "5 · OUR IDEA"], [26, "6 · WHAT WE BUILD"], [31, "7 · THE PROOF"], [35, "8 · DELEGATION PLAN"], [42, "9 · REPORT"]];
+const CHAPS: [number, string][] = [[0, "INTRO"], [3, "1 · WHAT IS ROUTING"], [8, "2 · THE PROBLEM"], [13, "3 · DIJKSTRA"], [20, "4 · THE LIMITATION"], [23, "5 · OUR IDEA"], [26, "6 · WHAT WE BUILD"], [31, "7 · THE PROOF"], [35, "8 · ROADMAP & LIMITS"], [42, "9 · DELEGATION PLAN"], [49, "10 · REPORT"]];
 
 export const RouteEdit: React.FC = () => {
   useFontFaces([["Anton", "fonts/anton.woff2", "400"], ["InterX", "fonts/inter-600.woff2", "600"], ["InterX", "fonts/inter-800.woff2", "800"]]);
