@@ -8,7 +8,17 @@ import { Mark, Squig } from "../cx/clips";
 
 const FPS = 30;
 const fr = (x: number) => Math.round(x * FPS);
-export const MONT2_FRAMES = fr(49.66);
+import KEEP from "./keep.json";
+// pauses are cut out: KEEP lists the kept [from, to[ frame ranges of the original take
+const SEG = (KEEP as number[][]).reduce<{ a: number; b: number; o: number }[]>((acc, [a, b]) => { const o = acc.length ? acc[acc.length - 1].o + acc[acc.length - 1].b - acc[acc.length - 1].a : 0; return [...acc, { a, b, o }]; }, []);
+export const MONT2_FRAMES = SEG[SEG.length - 1].o + SEG[SEG.length - 1].b - SEG[SEG.length - 1].a;
+/** output frame -> time (s) in the original take */
+const orig = (f: number) => { const g = [...SEG].reverse().find((x) => f >= x.o) ?? SEG[0]; return (g.a + Math.min(f - g.o, g.b - g.a - 1)) / 30; };
+/** original time (s) -> output time (s) */
+const outT = (t: number) => { const fo = t * 30; for (const g of SEG) { if (fo < g.a) return g.o / 30; if (fo < g.b) return (g.o + fo - g.a) / 30; } return MONT2_FRAMES / 30; };
+// the speaker is only shown on a few key moments (original times); everything else is full-screen animation
+const FACE: [number, number][] = [[0, 2.45], [15.8, 17.2], [22.0, 24.4], [43.75, 44.9]];
+const faceOn = (t: number) => FACE.some(([a, b]) => t >= a && t < b);
 const CYAN = "#28e0ff", PUR = "#9b5cff", RED = "#ff2d2d", BLUE = "#2f7bff", YEL = "#ffd23f", GRN = "#27c26c";
 const sat = (x: number) => Math.min(1, Math.max(0, x));
 const eo = (x: number) => 1 - Math.pow(1 - sat(x), 3);
@@ -209,30 +219,30 @@ const SUBS: [number, number, string][] = [[0.1, 2.4, "*Suis-moi* bien."], [2.5, 
   [30.7, 33.8, "Les mathématiciens ont créé un ensemble : *ℝ barre*."], [33.9, 38.3, "ℝ *union* moins l’infini, plus l’infini."], [38.3, 40.4, "Ils ont *ajouté* moins l’infini et plus l’infini…"], [40.4, 43.7, "…ça donne l’intervalle *fermé*."],
   [43.8, 46.4, "Donc pour les *limites*…"], [46.4, 49.4, "…on travaille dans *ℝ barre*."]];
 
-const SH = 900;
+const SH = 900, TOP = 430;
 const Strip: React.FC = () => {
-  const f = useCurrentFrame(), t = f / FPS;
+  const f = useCurrentFrame(), t = orig(f);
   let i = 0; for (let j = 0; j < SCENES.length; j++) if (t >= SCENES[j].a) i = j;
   const sc = SCENES[i], u = t - sc.a, [cx0, cy0, zr] = cam(sc.cam, t), z0 = soft(zr), cx = 540 + (cx0 - 540) * 0.45, cy = 450 + (cy0 - 450) * 0.45;
   const beat = Math.max(0, ...BEATS.map((b) => (t >= b ? 1 - sat((t - b) / 0.18) : 0))), z = z0 * (1 + beat * 0.03);
   const dir = i % 2 ? 1 : -1, gl = i === 0 ? 0 : sat(1 - u / 0.14), dx = 22 * gl * dir, g = Math.floor(t * 15);
   return (
-    <div style={{ position: "absolute", left: 0, top: 0, width: 1080, height: SH, overflow: "hidden", background: "#050506" }}>
+    <div style={{ position: "absolute", inset: 0, overflow: "hidden", background: "#050506" }}>
       <svg width={0} height={0} style={{ position: "absolute" }}><defs><filter id="m2rgb" x="-4%" width="108%" colorInterpolationFilters="sRGB">
         <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r" /><feOffset in="r" dx={dx} result="ro" />
         <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g" />
         <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b" /><feOffset in="b" dx={-dx} result="bo" />
         <feBlend in="ro" in2="g" mode="screen" result="rg" /><feBlend in="rg" in2="bo" mode="screen" /></filter></defs></svg>
       <div style={{ position: "absolute", inset: 0, filter: gl > 0 ? "url(#m2rgb)" : undefined }}>
-        <div style={{ position: "absolute", width: 900, height: 900, left: -330 + Math.sin(t * 0.5) * 60 - (cx - 540) * 0.15, top: -520, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,45,120,0.55), transparent 62%)", filter: "blur(30px)" }} />
-        <div style={{ position: "absolute", width: 950, height: 950, right: -360 + Math.cos(t * 0.4) * 60 + (cx - 540) * 0.15, bottom: -560, borderRadius: "50%", background: "radial-gradient(circle, rgba(40,224,255,0.5), transparent 62%)", filter: "blur(30px)" }} />
-        <div style={{ position: "absolute", width: 700, height: 700, left: 260 + Math.sin(t * 0.3) * 120, top: 320, borderRadius: "50%", background: "radial-gradient(circle, rgba(155,92,255,0.26), transparent 60%)", filter: "blur(40px)" }} />
+        <div style={{ position: "absolute", width: 900, height: 900, left: -330 + Math.sin(t * 0.5) * 60 - (cx - 540) * 0.15, top: -360, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,45,120,0.55), transparent 62%)", filter: "blur(30px)" }} />
+        <div style={{ position: "absolute", width: 950, height: 950, right: -360 + Math.cos(t * 0.4) * 60 + (cx - 540) * 0.15, bottom: -300, borderRadius: "50%", background: "radial-gradient(circle, rgba(40,224,255,0.5), transparent 62%)", filter: "blur(30px)" }} />
+        <div style={{ position: "absolute", width: 700, height: 700, left: 220 + Math.sin(t * 0.3) * 120, top: 760, borderRadius: "50%", background: "radial-gradient(circle, rgba(155,92,255,0.26), transparent 60%)", filter: "blur(40px)" }} />
         <div style={{ position: "absolute", inset: -200, opacity: 0.5, backgroundImage: "radial-gradient(rgba(255,255,255,0.5) 1.4px, transparent 1.4px)", backgroundSize: `${50 * z}px ${50 * z}px`, backgroundPosition: `${-cx * z * 0.6}px ${-cy * z * 0.6}px` }} />
-        <svg width={1080} height={SH} viewBox={`0 0 1080 ${SH}`} style={{ position: "absolute", inset: 0, overflow: "visible" }}>
+        <svg width={1080} height={SH} viewBox={`0 0 1080 ${SH}`} style={{ position: "absolute", left: 0, top: TOP, overflow: "visible" }}>
           <g transform={`translate(${540 - cx * z} ${450 - cy * z}) scale(${z})`}>{sc.r(t)}</g></svg>
       </div>
       <div style={{ position: "absolute", inset: 0, background: "#fff", opacity: i === 0 ? 0 : sat(1 - u * 13) * 0.4 }} />
-      {gl > 0.3 ? [0, 1].map((b) => <div key={b} style={{ position: "absolute", left: 0, right: 0, top: (g * 131 + b * 311) % 840, height: 18 + ((g * 17 + b * 29) % 40),
+      {gl > 0.3 ? [0, 1].map((b) => <div key={b} style={{ position: "absolute", left: 0, right: 0, top: (g * 131 + b * 311) % 1800, height: 18 + ((g * 17 + b * 29) % 40),
         background: b ? "rgba(40,224,255,0.25)" : "rgba(255,45,45,0.25)", transform: `translateX(${((g * 53 + b * 97) % 60) - 30}px)` }} />) : null}
       <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${staticFile("series/grain.png")})`, backgroundPosition: `${(g * 173) % 512}px ${(g * 311) % 512}px`, opacity: 0.14, mixBlendMode: "overlay" }} />
       <div style={{ position: "absolute", inset: 0, boxShadow: "inset 0 0 120px rgba(0,0,0,0.55)" }} />
@@ -240,10 +250,10 @@ const Strip: React.FC = () => {
   );
 };
 const Subs: React.FC = () => {
-  const t = useCurrentFrame() / FPS, s = SUBS.find((x) => t >= x[0] && t < x[1]); if (!s) return null;
+  const t = orig(useCurrentFrame()), s = SUBS.find((x) => t >= x[0] && t < x[1]); if (!s) return null;
   const p = eo((t - s[0]) / 0.2);
   return (
-    <div style={{ position: "absolute", left: 50, right: 50, top: 1560, textAlign: "center", fontFamily: "InterX", fontWeight: 800, fontSize: 60, lineHeight: 1.25, color: "#fff", opacity: p, transform: `scale(${0.92 + 0.08 * p})`,
+    <div style={{ position: "absolute", left: 50, right: 50, top: 1470, textAlign: "center", fontFamily: "InterX", fontWeight: 800, fontSize: 60, lineHeight: 1.25, color: "#fff", opacity: p, transform: `scale(${0.92 + 0.08 * p})`,
       textShadow: "0 0 18px #000, 0 4px 10px #000, 0 0 4px #000" }}>
       {s[2].split("*").map((part, i) => (i % 2 ? <span key={i} style={{ color: YEL }}>{part}</span> : <span key={i}>{part}</span>))}
     </div>
@@ -254,30 +264,33 @@ const Sfx: React.FC<{ at: number; src: string; v?: number }> = ({ at, src, v = 0
 );
 export const Mont2: React.FC = () => {
   useFontFaces([["Anton", "fonts/anton.woff2", "400"], ["InterX", "fonts/inter-600.woff2", "600"], ["InterX", "fonts/inter-800.woff2", "800"]]);
-  const f = useCurrentFrame(), t = f / FPS;
+  const f = useCurrentFrame();
   const [h] = useState(() => delayRender("katex + display fonts"));
   useEffect(() => {
     Promise.all(["400 40px KaTeX_Main", "italic 40px KaTeX_Math", "40px KaTeX_AMS", "40px Anton"].map((x) => document.fonts.load(x, "fRx∞∪∈∉")))
       .catch(() => null).then(() => document.fonts.ready).then(() => continueRender(h));
   }, [h]);
-  const punch = 1 + 0.05 * Math.max(0, ...[2.45, 10.05, 15.9, 22.0, 30.6, 43.75].map((b) => (t >= b ? 1 - sat((t - b) / 0.5) : 0))) + 0.03 * sat(t / 49.66);
+  const to = orig(f), face = faceOn(to), fw = FACE.find(([a, b]) => to >= a && to < b), fu = fw ? to - fw[0] : 0, cut = fw ? sat(1 - fu / 0.14) : 0, gi = SEG.findIndex((x, i) => f >= x.o && (i === SEG.length - 1 || f < SEG[i + 1].o));
   return (
     <AbsoluteFill style={{ background: "#000" }}>
-      {/* the speaker: lower part of the frame, slow push-in + a small punch at each new idea */}
-      <div style={{ position: "absolute", left: 0, top: SH, width: 1080, height: 1920 - SH, overflow: "hidden" }}>
-        <OffthreadVideo src={staticFile("mont2/src.mp4")} muted style={{ position: "absolute", left: 0, top: -560, width: 1080, height: 1920, transform: `scale(${punch})`, transformOrigin: "50% 55%", filter: "contrast(1.06) saturate(1.12)" }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(rgba(5,5,6,0.9), transparent 14%, transparent 52%, rgba(0,0,0,0.78))" }} />
-      </div>
       <Strip />
-      <div style={{ position: "absolute", left: 0, top: SH - 3, height: 6, width: 1080 * sat(t / 49.66), background: RED, boxShadow: `0 0 16px ${RED}` }} />
-      <div style={{ position: "absolute", left: 36, top: SH + 26, fontFamily: "InterX", fontWeight: 800, fontSize: 28, letterSpacing: 4, color: "rgba(255,255,255,0.8)", background: "rgba(0,0,0,0.45)", padding: "10px 20px", borderRadius: 14, border: "2px solid rgba(255,255,255,0.18)" }}>ANALYSE · LA DROITE RÉELLE ACHEVÉE</div>
+      {/* the speaker, full screen, only on the key moments; every jump cut gets a slightly different framing */}
+      {face ? <AbsoluteFill style={{ overflow: "hidden" }}>
+        {SEG.map((g, i) => <Sequence key={i} from={g.o} durationInFrames={g.b - g.a} layout="none">
+          <OffthreadVideo src={staticFile("mont2/src.mp4")} muted startFrom={g.a} style={{ position: "absolute", left: 0, top: 0, width: 1080, height: 1920, transform: `scale(${1.1 + (i % 2) * 0.07 + 0.04 * sat(fu / 2.4)}) translateX(${cut * 14}px)`, transformOrigin: "50% 48%", filter: "contrast(1.06) saturate(1.12)" }} />
+        </Sequence>)}
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(rgba(0,0,0,0.45), transparent 22%, transparent 55%, rgba(0,0,0,0.8))" }} />
+        <div style={{ position: "absolute", inset: 0, background: "#fff", opacity: cut * 0.45 }} />
+      </AbsoluteFill> : null}
+      <div style={{ position: "absolute", left: 0, top: 0, height: 8, width: 1080 * sat(f / MONT2_FRAMES), background: RED, boxShadow: `0 0 16px ${RED}` }} />
+      <div style={{ position: "absolute", left: 0, right: 0, top: 150, textAlign: "center", fontFamily: "InterX", fontWeight: 800, fontSize: 30, letterSpacing: 5, color: "rgba(255,255,255,0.7)" }}>ANALYSE · LA DROITE RÉELLE ACHEVÉE</div>
       <Subs />
       <AbsoluteFill style={{ background: "#000", opacity: interpolate(f, [MONT2_FRAMES - 8, MONT2_FRAMES - 1], [0, 1], clamp) }} />
-      <Audio src={staticFile("mont2/voice.m4a")} />
+      <Audio src={staticFile("mont2/voice_cut.m4a")} />
       <Audio src={staticFile("mont2/bed.wav")} volume={(x) => interpolate(x, [0, 15, MONT2_FRAMES - 30, MONT2_FRAMES - 2], [0, 0.07, 0.07, 0], clamp)} />
-      {SCENES.slice(1).map((x, i) => <Sfx key={`c${i}`} at={x.a - 0.03} src="whoosh" v={0.26} />)}
-      {BEATS.map((x, i) => <Sfx key={`b${i}`} at={x - 0.02} src={i % 3 === 0 ? "pop" : i % 3 === 1 ? "tick" : "swipe"} v={0.16} />)}
-      {[7.4, 34.0, 41.6, 46.6].map((x) => <Sfx key={`d${x}`} at={x} src="ding" v={0.22} />)}
+      {[...SCENES.slice(1).map((x) => x.a), ...FACE.flat().filter((x) => x > 0)].map((x, i) => <Sfx key={`c${i}`} at={outT(x) - 0.03} src="whoosh" v={0.24} />)}
+      {BEATS.filter((x) => !faceOn(x)).map((x, i) => <Sfx key={`b${i}`} at={outT(x) - 0.02} src={i % 3 === 0 ? "pop" : i % 3 === 1 ? "tick" : "swipe"} v={0.16} />)}
+      {[7.4, 34.0, 41.6, 46.6].map((x) => <Sfx key={`d${x}`} at={outT(x)} src="ding" v={0.22} />)}
     </AbsoluteFill>
   );
 };
