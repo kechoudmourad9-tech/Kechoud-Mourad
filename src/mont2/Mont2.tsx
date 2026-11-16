@@ -19,7 +19,8 @@ const outT = (t: number) => { const fo = t * 30; for (const g of SEG) { if (fo <
 // the speaker is only shown on a few key moments (original times); everything else is full-screen animation
 const FACE: [number, number][] = [[0, 2.45], [15.8, 17.2], [22.0, 24.4], [43.75, 44.9]];
 const faceOn = (t: number) => FACE.some(([a, b]) => t >= a && t < b);
-const CYAN = "#28e0ff", PUR = "#9b5cff", RED = "#ff2d2d", BLUE = "#2f7bff", YEL = "#ffd23f", GRN = "#27c26c";
+// restrained palette: white drawings, one yellow accent, red only for the problem, green only for the fix
+const CYAN = "#f2f4ff", PUR = "#9b5cff", RED = "#ff4d4d", BLUE = "#3d6fd6", YEL = "#ffd23f", GRN = "#3ecf82";
 const sat = (x: number) => Math.min(1, Math.max(0, x));
 const eo = (x: number) => 1 - Math.pow(1 - sat(x), 3);
 /** 0→1 eased progress starting at `at` (s) lasting d */
@@ -116,7 +117,7 @@ const cam = (keys: Key[], t: number): [number, number, number] => {
   for (let i = 0; i < keys.length - 1; i++) { const a = keys[i], b = keys[i + 1]; if (t <= b[0]) { const p = sm((t - a[0]) / (b[0] - a[0])); return [a[1] + (b[1] - a[1]) * p, a[2] + (b[2] - a[2]) * p, a[3] + (b[3] - a[3]) * p]; } }
   const l = keys[keys.length - 1]; return [l[1], l[2], l[3]];
 };
-const soft = (z: number) => (1 + (z - 1) * 0.34) * 0.9;   // keep the drawings small: the camera only leans in
+const soft = (z: number) => (1 + (z - 1) * 0.24) * 0.95;   // keep the drawings small: the camera only leans in
 const INKC = "#ffffff", DIM = "#a9b0d6";
 const Chip: React.FC<{ x: number; y: number; text: string; c?: string; fg?: string; sc?: number; s?: number }> = ({ x, y, text, c = RED, fg = "#fff", sc = 1, s = 30 }) => {
   const w = text.length * s * 0.5 + s * 1.1; return sc <= 0.001 ? null : <g transform={`translate(${x} ${y}) scale(${sc})`}><rect x={-w / 2} y={-s * 0.72} width={w} height={s * 1.44} rx={s * 0.42} fill={c} /><T x={0} y={1} s={s} c={fg}>{text}</T></g>;
@@ -223,9 +224,9 @@ const SH = 900, TOP = 430;
 const Strip: React.FC = () => {
   const f = useCurrentFrame(), t = orig(f);
   let i = 0; for (let j = 0; j < SCENES.length; j++) if (t >= SCENES[j].a) i = j;
-  const sc = SCENES[i], u = t - sc.a, [cx0, cy0, zr] = cam(sc.cam, t), z0 = soft(zr), cx = 540 + (cx0 - 540) * 0.45, cy = 450 + (cy0 - 450) * 0.45;
-  const beat = Math.max(0, ...BEATS.map((b) => (t >= b ? 1 - sat((t - b) / 0.18) : 0))), z = z0 * (1 + beat * 0.03);
-  const dir = i % 2 ? 1 : -1, gl = i === 0 ? 0 : sat(1 - u / 0.14), dx = 22 * gl * dir, g = Math.floor(t * 15);
+  const sc = SCENES[i], u = t - sc.a, [cx0, cy0, zr] = cam(sc.cam, t), z0 = soft(zr), cx = 540 + (cx0 - 540) * 0.28, cy = 450 + (cy0 - 450) * 0.28;   // gentle camera: it leans, it does not chase
+  const beat = Math.max(0, ...BEATS.map((b) => (t >= b ? 1 - sat((t - b) / 0.18) : 0))), z = z0 * (1 + beat * 0.012);
+  const dir = i % 2 ? 1 : -1, gl = i === 0 ? 0 : sat(1 - u / 0.14), dx = 8 * gl * dir, g = Math.floor(t * 15);
   return (
     <div style={{ position: "absolute", inset: 0, overflow: "hidden", background: "#050506" }}>
       <svg width={0} height={0} style={{ position: "absolute" }}><defs><filter id="m2rgb" x="-4%" width="108%" colorInterpolationFilters="sRGB">
@@ -234,16 +235,16 @@ const Strip: React.FC = () => {
         <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b" /><feOffset in="b" dx={-dx} result="bo" />
         <feBlend in="ro" in2="g" mode="screen" result="rg" /><feBlend in="rg" in2="bo" mode="screen" /></filter></defs></svg>
       <div style={{ position: "absolute", inset: 0, filter: gl > 0 ? "url(#m2rgb)" : undefined }}>
-        <div style={{ position: "absolute", width: 900, height: 900, left: -330 + Math.sin(t * 0.5) * 60 - (cx - 540) * 0.15, top: -360, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,45,120,0.55), transparent 62%)", filter: "blur(30px)" }} />
-        <div style={{ position: "absolute", width: 950, height: 950, right: -360 + Math.cos(t * 0.4) * 60 + (cx - 540) * 0.15, bottom: -300, borderRadius: "50%", background: "radial-gradient(circle, rgba(40,224,255,0.5), transparent 62%)", filter: "blur(30px)" }} />
-        <div style={{ position: "absolute", width: 700, height: 700, left: 220 + Math.sin(t * 0.3) * 120, top: 760, borderRadius: "50%", background: "radial-gradient(circle, rgba(155,92,255,0.26), transparent 60%)", filter: "blur(40px)" }} />
+        <div style={{ position: "absolute", width: 900, height: 900, left: -330 + Math.sin(t * 0.5) * 60 - (cx - 540) * 0.15, top: -360, borderRadius: "50%", background: "radial-gradient(circle, rgba(70,110,255,0.22), transparent 62%)", filter: "blur(30px)" }} />
+        <div style={{ position: "absolute", width: 950, height: 950, right: -360 + Math.cos(t * 0.4) * 60 + (cx - 540) * 0.15, bottom: -300, borderRadius: "50%", background: "radial-gradient(circle, rgba(70,110,255,0.2), transparent 62%)", filter: "blur(30px)" }} />
+        <div style={{ position: "absolute", width: 700, height: 700, left: 220 + Math.sin(t * 0.3) * 120, top: 760, borderRadius: "50%", background: "radial-gradient(circle, rgba(70,110,255,0.08), transparent 60%)", filter: "blur(40px)" }} />
         <div style={{ position: "absolute", inset: -200, opacity: 0.5, backgroundImage: "radial-gradient(rgba(255,255,255,0.5) 1.4px, transparent 1.4px)", backgroundSize: `${50 * z}px ${50 * z}px`, backgroundPosition: `${-cx * z * 0.6}px ${-cy * z * 0.6}px` }} />
         <svg width={1080} height={SH} viewBox={`0 0 1080 ${SH}`} style={{ position: "absolute", left: 0, top: TOP, overflow: "visible" }}>
           <g transform={`translate(${540 - cx * z} ${450 - cy * z}) scale(${z})`}>{sc.r(t)}</g></svg>
       </div>
       <div style={{ position: "absolute", inset: 0, background: "#fff", opacity: i === 0 ? 0 : sat(1 - u * 13) * 0.4 }} />
       {gl > 0.3 ? [0, 1].map((b) => <div key={b} style={{ position: "absolute", left: 0, right: 0, top: (g * 131 + b * 311) % 1800, height: 18 + ((g * 17 + b * 29) % 40),
-        background: b ? "rgba(40,224,255,0.25)" : "rgba(255,45,45,0.25)", transform: `translateX(${((g * 53 + b * 97) % 60) - 30}px)` }} />) : null}
+        background: "rgba(255,255,255,0.12)", transform: `translateX(${((g * 53 + b * 97) % 60) - 30}px)` }} />) : null}
       <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${staticFile("series/grain.png")})`, backgroundPosition: `${(g * 173) % 512}px ${(g * 311) % 512}px`, opacity: 0.14, mixBlendMode: "overlay" }} />
       <div style={{ position: "absolute", inset: 0, boxShadow: "inset 0 0 120px rgba(0,0,0,0.55)" }} />
     </div>
