@@ -1,3 +1,4 @@
+import { TuringEdit, TURING_FRAMES } from "./turing/TuringEdit";
 import { Mont2, MONT2_FRAMES } from "./mont2/Mont2";
 import { RouteEdit, ROUTE_FRAMES } from "./route/RouteEdit";
 import { SERIES_FRAMES, SeriesEdit } from "./series/SeriesEdit";
@@ -56,5 +57,6 @@ export const RemotionRoot: React.FC = () => (
   <Composition id="Series" component={SeriesEdit} durationInFrames={SERIES_FRAMES} fps={30} width={1080} height={1920} />
     <Composition id="Route" component={RouteEdit} durationInFrames={ROUTE_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="Mont2" component={Mont2} durationInFrames={MONT2_FRAMES} fps={30} width={1080} height={1920} />
+    <Composition id="Turing" component={TuringEdit} durationInFrames={TURING_FRAMES} fps={30} width={1920} height={1080} />
   </>
 );

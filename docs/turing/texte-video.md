@@ -1,0 +1,103 @@
+# La machine de Turing — texte à lire sur la vidéo
+
+Durée de la vidéo : 14:12. Chaque phrase commence au minutage indiqué ; le rythme prévu est celui d'une lecture posée à voix haute.
+Au début de chaque chapitre, un écran titre s'affiche environ deux secondes : tu peux commencer la phrase dessus.
+
+
+## Introduction générale  ·  00:01
+
+**[00:01]** Une bande, une tête qui lit et qui écrit, et quelques règles. C'est tout. Et pourtant, cette machine imaginaire définit ce que n'importe quel ordinateur peut calculer.  
+**[00:13]** Dans cette vidéo, on présente la machine de Turing : ce qu'elle est, comment elle fonctionne, et pourquoi elle est au cœur de l'informatique.  
+**[00:23]** En 1936, avant même l'existence des ordinateurs, un jeune mathématicien anglais, Alan Turing, imagine cette machine pour répondre à une question purement mathématique.  
+**[00:34]** Notre problématique : comment un modèle aussi simple peut-il décider de ce qu'un ordinateur peut calculer, et en combien de temps ?  
+**[00:44]** Nos objectifs : comprendre sa structure, ses différents types, son lien avec la calculabilité et avec la complexité, puis la voir fonctionner sur des exemples concrets.  
+**[00:55]** Le travail est organisé en sept chapitres, de l'histoire de la machine jusqu'à ses limites et ses perspectives.  
+
+## Chapitre 1 — Généralités et historique  ·  01:05
+
+**[01:05]** Chapitre 1. Qui était Alan Turing ? Né à Londres en 1912, c'est un mathématicien et logicien britannique, considéré comme l'un des pères de l'informatique.  
+**[01:16]** Pendant la Seconde Guerre mondiale, il aide à casser le code Enigma, à Bletchley Park. Il meurt en 1954, à 41 ans.  
+**[01:26]** En 1928, le mathématicien David Hilbert pose une question : existe-t-il une méthode mécanique capable de décider si n'importe quel énoncé logique est démontrable ?  
+**[01:38]** En 1936, dans son article sur les nombres calculables, Turing répond. Mais pour cela, il doit d'abord définir précisément ce qu'est une méthode mécanique. C'est la naissance de la machine de Turing.  
+**[01:52]** Définition : une machine de Turing est un modèle mathématique de calcul. Elle lit et écrit des symboles sur une bande infinie, en suivant une table de règles finie.  
+**[02:04]** Pourquoi l'a-t-il inventée ? Pour modéliser un humain qui calcule avec un crayon et du papier : regarder un symbole, l'écrire ou l'effacer, se déplacer, et changer d'état d'esprit.  
+**[02:17]** Son importance est immense : elle donne une définition rigoureuse de l'algorithme, et elle prouve que certains problèmes n'ont aucune solution mécanique. La réponse à Hilbert est donc non.  
+**[02:30]** Elle a ensuite inspiré l'idée du programme enregistré, l'architecture de von Neumann, puis tous nos ordinateurs. Aujourd'hui encore, un langage est dit Turing-complet s'il peut simuler cette machine.  
+
+## Chapitre 2 — Structure et fonctionnement  ·  02:44
+
+**[02:44]** Chapitre 2 : structure et fonctionnement. Une machine de Turing repose sur cinq composants fondamentaux.  
+**[02:51]** D'abord, la bande : une suite infinie de cases. Chaque case contient un symbole, ou un blanc.  
+**[02:59]** Ensuite, la tête de lecture et d'écriture. Placée sur une case, elle lit le symbole, peut le remplacer, puis se déplace d'une case vers la gauche ou vers la droite.  
+**[03:12]** Troisième composant : l'ensemble des états. C'est la mémoire interne de la machine. Il est fini, et à chaque instant, la machine se trouve dans un seul état.  
+**[03:25]** Quatrième : l'alphabet. L'alphabet d'entrée contient les symboles du mot à traiter. L'alphabet de bande contient, en plus, le symbole blanc.  
+**[03:34]** Enfin, la fonction de transition, le cœur de la machine. Selon l'état actuel et le symbole lu, elle indique quoi écrire, où aller, et dans quel état passer.  
+**[03:47]** Mathématiquement, une machine de Turing est un septuplet : l'ensemble des états Q, l'alphabet d'entrée sigma, l'alphabet de bande gamma, la fonction de transition delta, l'état initial, l'état d'acceptation, et l'état de rejet.  
+**[04:01]** La fonction delta associe, à un état et à un symbole lu, trois choses : un nouvel état, un symbole à écrire, et une direction, gauche ou droite.  
+**[04:13]** On la représente souvent par un diagramme d'états. Chaque cercle est un état, et chaque flèche est une transition, notée avec le symbole lu, le symbole écrit, et la direction.  
+**[04:27]** Le fonctionnement est simple. Au départ, le mot est écrit sur la bande, la tête est placée sur la première lettre, et la machine est dans l'état initial.  
+**[04:39]** À chaque étape, elle lit le symbole, applique la règle correspondante, écrit, se déplace, et change d'état. Puis elle recommence.  
+**[04:48]** L'état initial est unique : c'est là que tout commence. Les états finaux sont l'état d'acceptation et l'état de rejet. Dès qu'elle en atteint un, la machine s'arrête.  
+**[05:01]** Un mot est accepté si la machine s'arrête dans l'état d'acceptation, et rejeté si elle s'arrête dans l'état de rejet. Mais attention : elle peut aussi ne jamais s'arrêter.  
+**[05:13]** Exemple : une machine qui inverse chaque bit. Sur le mot un, zéro, un, elle écrit zéro, un, zéro, avance jusqu'au blanc, puis accepte.  
+
+## Chapitre 3 — Les différents types de machines de Turing  ·  05:26
+
+**[05:26]** Chapitre 3 : les différents types. D'abord, la machine déterministe : pour chaque état et chaque symbole, il existe au plus une règle. Le calcul suit donc un chemin unique.  
+**[05:39]** La machine non déterministe, elle, peut avoir plusieurs choix. Le calcul devient un arbre, et le mot est accepté si au moins une branche mène à l'acceptation.  
+**[05:51]** La machine à plusieurs bandes possède plusieurs bandes, chacune avec sa propre tête. Elle est plus pratique, mais une machine à une seule bande peut la simuler, avec un temps au plus quadratique.  
+**[06:05]** La machine à plusieurs têtes, elle, utilise plusieurs têtes sur une même bande, qui lisent et écrivent à des positions différentes.  
+**[06:15]** Et la plus importante : la machine universelle. Elle reçoit la description d'une autre machine et un mot, puis simule son exécution. C'est l'idée du programme stocké en mémoire.  
+**[06:28]** En comparaison, tous ces modèles ont exactement la même puissance : ils reconnaissent les mêmes langages. Ce qui change, c'est leur efficacité.  
+**[06:38]** La simulation connue d'une machine non déterministe par une machine déterministe coûte un temps exponentiel. C'est là que naît la question P contre NP.  
+
+## Chapitre 4 — Machine de Turing et calculabilité  ·  06:50
+
+**[06:50]** Chapitre 4 : la calculabilité. Une fonction est calculable s'il existe une machine de Turing qui, pour toute entrée, s'arrête et donne le bon résultat.  
+**[07:01]** Un problème est décidable si une machine répond toujours oui ou non, en s'arrêtant à chaque fois. Sinon, il est indécidable.  
+**[07:11]** Un langage est reconnaissable si une machine accepte tous ses mots, mais peut tourner à l'infini sur les autres. Il est décidable si la machine s'arrête toujours. Tout langage décidable est donc reconnaissable.  
+**[07:25]** Selon la thèse de Church et Turing, tout ce qui est calculable par un algorithme est calculable par une machine de Turing. Un algorithme, c'est une machine de Turing qui s'arrête toujours.  
+**[07:39]** Le problème de l'arrêt demande : étant donné un programme et une entrée, ce programme va-t-il s'arrêter ? Turing prouve qu'aucune machine ne peut répondre correctement dans tous les cas.  
+**[07:52]** Supposons qu'une machine H le décide. On construit une machine D qui fait l'inverse de ce que prédit H sur elle-même. Si D s'arrête, elle boucle. Si elle boucle, elle s'arrête. Contradiction : H n'existe pas.  
+**[08:08]** C'est une limite fondamentale : même avec un temps et une mémoire illimités, certains problèmes restent impossibles à résoudre mécaniquement.  
+
+## Chapitre 5 — Machine de Turing et théorie de la complexité  ·  08:18
+
+**[08:18]** Chapitre 5 : la complexité. On ne demande plus seulement si un problème est résoluble, mais à quel coût.  
+**[08:27]** La complexité algorithmique mesure les ressources utilisées par un algorithme, en fonction de la taille n de l'entrée.  
+**[08:36]** Sur une machine de Turing, la complexité temporelle est le nombre de transitions effectuées avant l'arrêt, dans le pire des cas.  
+**[08:45]** La complexité spatiale, elle, est le nombre de cases de la bande utilisées pendant le calcul.  
+**[08:53]** Ce nombre d'étapes est une mesure abstraite du temps d'exécution : il ne dépend ni du processeur, ni du langage, mais seulement de l'algorithme.  
+**[09:04]** On range alors les problèmes en classes. La classe P contient les problèmes résolus en temps polynomial par une machine déterministe.  
+**[09:13]** La classe NP contient les problèmes dont une solution se vérifie en temps polynomial. Autrement dit, ceux résolus en temps polynomial par une machine non déterministe.  
+**[09:25]** PSPACE contient les problèmes résolus avec une mémoire polynomiale, et EXPTIME ceux résolus en temps exponentiel. Et chaque classe est incluse dans la suivante.  
+**[09:36]** La différence entre P et NP, c'est trouver contre vérifier. Résoudre un sudoku géant peut être très long, mais vérifier une grille remplie est rapide. Et personne ne sait si P est égal à NP.  
+**[09:51]** Un algorithme polynomial, en n² par exemple, reste utilisable quand n grandit. Un algorithme exponentiel, en 2ⁿ, devient vite impossible : chaque élément de plus double le temps.  
+**[10:03]** Une réduction transforme un problème A en un problème B : savoir résoudre B permet de résoudre A. Un problème est NP-complet s'il est dans NP, et si tout problème de NP s'y réduit, comme le problème SAT.  
+**[10:20]** La machine de Turing est l'étalon de toute cette théorie : grâce à elle, le temps et l'espace ont une définition précise, indépendante de la technologie.  
+
+## Chapitre 6 — Applications et exemples pratiques  ·  10:33
+
+**[10:33]** Chapitre 6 : les applications. Simuler une machine de Turing, c'est exécuter sa table de transitions pas à pas, sur une bande représentée en mémoire.  
+**[10:44]** Premier exemple : reconnaître un mot contenant un nombre pair de un. Deux états suffisent, pair et impair. Chaque un fait changer d'état, et chaque zéro ne change rien.  
+**[10:57]** Sur le mot 1, 0, 1, 1 : pair, impair, impair, pair, impair. Au blanc, la machine est dans l'état impair. Le mot est rejeté.  
+**[11:08]** Deuxième exemple : reconnaître un palindrome. La machine efface la première lettre, court jusqu'à la dernière, vérifie qu'elle est identique, l'efface, puis revient. Elle recommence jusqu'à ce que le mot soit vide.  
+**[11:22]** Troisième exemple : une addition en unaire. 2 + 3 s'écrit 11 + 111. La machine remplace le + par un 1, puis efface le dernier 1. Résultat : cinq 1.  
+**[11:35]** Un simulateur informatique permet de saisir les transitions, d'écrire le mot sur la bande, puis d'exécuter la machine étape par étape, en voyant la tête, l'état, et la bande.  
+**[11:48]** Analyse : le nombre pair de un se décide en un seul passage, donc en temps linéaire, avec une mémoire constante en plus de l'entrée.  
+**[11:59]** Le palindrome demande environ n allers-retours de longueur n : un temps quadratique sur une bande. Avec deux bandes, il devient linéaire. Et l'addition unaire se fait en temps linéaire.  
+
+## Chapitre 7 — Avantages, limites et perspectives  ·  12:14
+
+**[12:14]** Chapitre 7 : avantages, limites et perspectives. Son grand avantage, c'est sa simplicité : quelques règles suffisent pour représenter n'importe quel algorithme, et raisonner dessus avec rigueur.  
+**[12:26]** Ses limites théoriques sont celles de tout calcul : elle ne résout pas les problèmes indécidables, et elle ne rend pas rapides les problèmes intrinsèquement difficiles.  
+**[12:38]** Elle diffère d'un ordinateur réel : sa bande est infinie, alors que la mémoire d'un ordinateur est finie. Et elle parcourt les cases une par une, alors qu'un ordinateur accède directement à n'importe quelle adresse.  
+**[12:53]** Mais son influence est partout : le programme enregistré, les langages Turing-complets, les compilateurs, et même la question de savoir si une machine peut penser.  
+**[13:04]** En recherche, elle reste la référence pour définir la calculabilité et les classes de complexité, et pour étudier de nouveaux modèles, comme le calcul quantique.  
+
+## Conclusion générale  ·  13:17
+
+**[13:17]** Pour conclure : une machine de Turing, c'est une bande, une tête, des états, et une fonction de transition. Ses variantes ont toutes la même puissance, mais pas la même efficacité.  
+**[13:30]** Notre réponse à la problématique : ce modèle simple suffit, parce qu'il capture l'essence du calcul mécanique. Ce qu'il ne peut pas faire, aucun ordinateur ne peut le faire.  
+**[13:43]** En complexité, c'est l'outil qui définit le temps et l'espace, et qui donne un sens précis aux classes P et NP, et à la question : P est-il égal à NP ?  
+**[13:57]** Cette question, ouverte depuis plus de cinquante ans, reste l'un des grands défis des mathématiques. Et tout a commencé avec une bande, une tête, et quelques règles.  
