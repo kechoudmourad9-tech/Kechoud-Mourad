@@ -28,3 +28,4 @@ out/*
 !out/machine-de-turing.mp4
 public/mont3/src.mp4
 !out/jeton-pirate.mp4
+public/patate/*.png
