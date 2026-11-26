@@ -93,6 +93,7 @@ h2 { font-size: 24px; } h3 { font-size: 18px; }
 .btn.ghost { background: #efe6fb; color: var(--ink); box-shadow: 0 5px 0 #cdbfe6; }
 .btn.red { background: var(--rose); color: #fff; box-shadow: 0 5px 0 #b83a5c; }
 .btn[disabled] { filter: grayscale(.8); opacity: .6; }
+#itBtn .btn, .panel > .btn { width: 100%; }
 .row { display: flex; gap: 10px; } .row > * { flex: 1; }
 .speaker { display: flex; gap: 12px; align-items: flex-start; }
 .speaker svg { flex: none; width: 74px; height: 74px; }
@@ -169,6 +170,50 @@ h2 { font-size: 24px; } h3 { font-size: 18px; }
 .result-stars span.on { filter: none; transform: scale(1); }
 .lines { display: flex; flex-direction: column; gap: 6px; font-weight: 800; }
 .lines div { display: flex; justify-content: space-between; } .lines div:last-child { border-top: 2px dashed #e4d8f5; padding-top: 6px; font-size: 18px; color: #7a4fd6; }
+
+/* treasures */
+.chip.treasure { background: linear-gradient(160deg, #ffe9a6, #ffc94a); }
+.chip.treasure.got { background: linear-gradient(160deg, #fff3c4, #ffd23f); color: var(--ink); }
+.chip.treasure.got::after { content: "✨"; background: none; font-size: 16px; inset: auto 4px 2px auto; }
+.treasureline { margin: 0; text-align: center; font-weight: 800; color: #9a6214; }
+.sets { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
+.tset .slots { display: flex; gap: 6px; margin: 6px 0; font-size: 26px; }
+.tset .slots .q { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--night); font-size: 16px; color: var(--mute); }
+.tset.full { border-color: var(--gold); }
+.kbd { display: none; font: 800 11px var(--body); border: 1.5px solid currentColor; border-radius: 5px; padding: 0 5px; opacity: .65; }
+.keyhelp { display: none; margin: 0; font-size: 12.5px; color: var(--mute); text-align: center; }
+.dgrid, .dcol { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+@media (hover: hover) { .task:hover, .ztab:hover, .nav button:hover, .boost:hover, .card .buy:hover, .style:hover, .playbtn:hover { filter: brightness(1.12); } .viewport { cursor: zoom-in; } }
+
+/* computer: wide layout with a side column, scene and list side by side in the game */
+@media (min-width: 900px) {
+  body { font-size: 16px; }
+  #app { max-width: 1320px; display: grid; grid-template-columns: 250px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); column-gap: 18px; }
+  .topbar { grid-column: 1 / -1; padding-block: 16px 10px; }
+  main { grid-column: 2; grid-row: 2; padding-block: 6px 32px; padding-left: 0; }
+  .playbar { position: static; grid-column: 1; grid-row: 2; background: none; padding: 6px 0 24px max(16px, env(safe-area-inset-left, 0px)); justify-content: flex-start; gap: 12px; }
+  .playbtn { flex-direction: column; gap: 2px; font-size: 26px; padding: 18px 12px; }
+  .nav { grid-template-columns: 1fr; gap: 8px; }
+  .nav button { flex-direction: row; justify-content: flex-start; gap: 12px; padding: 12px 16px; font-size: 15px; }
+  .dot { top: 50%; right: 14px; transform: translateY(-50%); }
+  .dgrid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+  .tasks { grid-template-columns: 1fr 1fr; }
+  .album { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); }
+  .sheet { align-items: center; }
+  .panel { border-radius: 26px; width: min(600px, calc(100% - 48px)); }
+  .styles { gap: 14px; }
+  #game { display: grid; grid-template-columns: minmax(0, 1fr) 380px; grid-template-rows: auto minmax(0, 1fr); background: #0c0818; }
+  .ghead { grid-column: 2; grid-row: 1; flex-wrap: wrap; padding: 16px 18px 8px; }
+  .ghead .timer { flex-basis: 100%; order: 5; }
+  .viewport { grid-column: 1; grid-row: 1 / span 2; background: radial-gradient(circle at 50% 40%, #2a1f45, #0c0818 70%); }
+  .gfoot { grid-column: 2; grid-row: 2; overflow-y: auto; justify-content: flex-start; gap: 14px; padding: 8px 18px 18px; }
+  .targets { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .chip { min-height: 70px; font-size: 13.5px; } .chip .e { font-size: 30px; }
+  .boosters { grid-template-columns: 1fr; }
+  .boost { justify-content: flex-start; padding: 10px 14px; font-size: 15px; }
+  .kbd { display: inline-block; margin-left: auto; margin-right: 18px; }
+  .keyhelp { display: block; }
+}
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
 </style>
 <div id="app">
@@ -197,6 +242,7 @@ h2 { font-size: 24px; } h3 { font-size: 18px; }
 const OBJ = {
   maison: "🔑 clé|🕯️ bougie|☂️ parapluie|🎩 chapeau haut-de-forme|👓 lunettes|⏰ réveil|🖼️ tableau|🧸 ours en peluche|🎈 ballon|🪀 yoyo|🎲 dé|🧩 pièce de puzzle|📷 appareil photo|📱 téléphone|💡 ampoule|🔦 lampe torche|🧲 aimant|✂️ ciseaux|📎 trombone|🖊️ stylo|✏️ crayon|📌 punaise|🧵 bobine de fil|🧶 pelote de laine|👑 couronne|💍 bague|💎 diamant|🪙 pièce d'or|🧭 boussole|⌛ sablier|🗝️ vieille clé|📜 parchemin|✉️ lettre|🎁 cadeau|🪞 miroir|🛎️ sonnette|🔔 cloche|🧦 chaussette|👟 basket|👢 botte|🧤 gants|🧣 écharpe|👒 chapeau de paille|🎀 ruban|👜 sac à main|💼 mallette|🧢 casquette|🕶️ lunettes de soleil|⚽ ballon de foot|🎾 balle de tennis|🪁 cerf-volant|🎸 guitare|🎺 trompette|🥁 tambour|🎻 violon|📻 radio|🕰️ pendule|🧳 valise|🪆 poupée russe|🎭 masques|🎨 palette|🖌️ pinceau|🪶 plume|🏺 amphore|🧯 extincteur|🐭 souris|🕷️ araignée|🦉 hibou|🧹 balai|🧼 savon|🪥 brosse à dents|🧽 éponge|💄 rouge à lèvres|🧴 flacon de crème|🪒 rasoir|🛏️ lit|🪑 chaise|🧺 panier|📦 carton|🎮 manette|🕹️ joystick|💾 disquette|📀 disque|🎞️ pellicule|🧮 boulier|♟️ pion d'échecs|🎓 toque de diplômé|🔭 télescope|🔬 microscope|⚗️ alambic|🌍 globe|🗺️ carte|📖 livre ouvert|📕 livre rouge|📗 livre vert|📘 livre bleu|🔍 loupe|🖋️ plume d'écrivain|📯 cor de chasse|🪕 banjo|🎷 saxophone|🪗 accordéon|🧿 amulette|🪬 main porte-bonheur|🔮 boule de cristal",
   cuisine: "🍎 pomme|🍌 banane|🍇 raisin|🍋 citron|🍓 fraise|🥕 carotte|🧀 fromage|🥐 croissant|🥖 baguette|🍪 cookie|🍩 donut|🧁 cupcake|🎂 gâteau|🍯 pot de miel|🥛 verre de lait|☕ tasse de café|🫖 théière|🍳 poêle|🥄 cuillère|🍴 couverts|🔪 couteau|🧂 salière|🥚 œuf|🍞 pain de mie|🍕 part de pizza|🍉 pastèque|🍒 cerises|🥑 avocat|🍄 champignon|🧄 ail|🧅 oignon|🌶️ piment|🧃 brique de jus|🍵 bol de thé|🥨 bretzel|🧇 gaufre|🥞 crêpes|🍔 hamburger|🌭 hot-dog|🥗 salade|🍲 marmite|🥫 conserve|🍿 pop-corn|🍫 chocolat|🍬 bonbon|🍭 sucette|🥥 noix de coco|🍍 ananas|🥝 kiwi|🍐 poire|🍑 pêche|🫐 myrtilles|🥒 concombre|🌽 épi de maïs|🥔 patate|🍆 aubergine|🫒 olive|🧈 beurre|🥜 cacahuète|🌰 châtaigne",
+  bain: "🛁 baignoire|🚿 pommeau de douche|🧻 rouleau de papier|🫧 bulles de savon|🩴 tongs|💈 enseigne de barbier|🩹 pansement|💊 gélule|🌡️ thermomètre|🪠 ventouse",
   jardin: "🌻 tournesol|🌷 tulipe|🌹 rose|🌼 marguerite|🍀 trèfle|🍁 feuille d'érable|🌵 cactus|🪴 plante en pot|🐌 escargot|🐞 coccinelle|🦋 papillon|🐝 abeille|🐦 oiseau|🐿️ écureuil|🐸 grenouille|🦔 hérisson|🐱 chat|🐶 chien|🐰 lapin|🪺 nid|🪣 seau|⛏️ pioche|🪚 scie|🔨 marteau|🪛 tournevis|🔧 clé à molette|🎃 citrouille|🏮 lanterne|🪨 caillou|🐢 tortue|🦆 canard|🐓 coq|🐛 chenille|🐜 fourmi|🦗 grillon|🐇 lièvre|🦊 renard|🌲 sapin|🌳 arbre|🍂 feuilles mortes|🌾 épi de blé|🪵 bûche|💧 goutte d'eau|☀️ soleil|🌈 arc-en-ciel|🛹 skateboard|🚲 vélo|🛞 roue|🪝 crochet|🧰 boîte à outils|🪤 tapette à souris|🐈 chat tigré|🕊️ colombe|🦜 perroquet|🐍 serpent|🌺 hibiscus|🌸 fleur de cerisier|🥀 rose fanée|☘️ trèfle à trois feuilles"
 };
 const CATALOG = {}; const POOL = {};
@@ -212,8 +258,22 @@ const THEMES = [
   { id: "chambre", name: "La chambre d'Odette", pools: ["maison", "maison", "cuisine"] },
   { id: "atelier", name: "L'atelier du jardinier", pools: ["jardin", "maison", "maison"] },
   { id: "serre", name: "La vieille serre", pools: ["jardin", "jardin", "cuisine"] },
-  { id: "biblio", name: "La bibliothèque", pools: ["maison", "maison", "maison"] }
+  { id: "biblio", name: "La bibliothèque", pools: ["maison", "maison", "maison"] },
+  { id: "bain", name: "La salle de bain", pools: ["bain", "maison", "maison"] },
+  { id: "potager", name: "Le potager", pools: ["jardin", "cuisine", "jardin"] },
+  { id: "etang", name: "L'étang", pools: ["jardin", "jardin", "maison"] },
+  { id: "jeux", name: "La salle de jeux", pools: ["maison", "maison", "cuisine"] }
 ];
+/* family treasures: one may hide in a level (not on the list); complete a set for a big reward */
+const TREASURES = [
+  { id: "bijoux", n: "Les bijoux d'Odette", e: ["📿 collier de perles", "🧧 enveloppe porte-bonheur", "👛 bourse brodée", "🏅 médaille", "🎖️ décoration"], r: 400 },
+  { id: "voyage", n: "Souvenirs de voyage", e: ["🗿 statuette", "🎎 poupées anciennes", "🛶 pirogue miniature", "🎐 carillon à vent", "🎑 estampe"], r: 500 },
+  { id: "jardin", n: "Le jardin d'antan", e: ["🌱 jeune pousse", "🍃 feuille porte-bonheur", "🌿 brin de romarin", "🪷 lotus", "🪹 nid vide"], r: 600 },
+  { id: "enfance", n: "Jouets d'enfance", e: ["🪅 piñata", "🧷 épingle à nourrice", "🎠 manège miniature", "🪃 boomerang", "🎏 carpe en papier"], r: 700 },
+  { id: "musique", n: "La boîte à musique", e: ["🎼 partition", "🎙️ vieux micro", "🎧 casque", "🪘 djembé", "🎹 petit piano"], r: 800 },
+  { id: "mystere", n: "Le coffre aux mystères", e: ["🪄 baguette magique", "🃏 joker", "🀄 tuile de mahjong", "🎴 carte fleurie", "🪐 maquette de planète"], r: 1000 }
+].map((t) => ({ ...t, e: t.e.map((x) => { const i = x.indexOf(" "); return [x.slice(0, i), x.slice(i + 1)]; }) }));
+const TREASURE_ALL = TREASURES.flatMap((t) => t.e.map(([e, n]) => ({ e, n, set: t.id })));
 /* ================= hidden-object scene backgrounds (900 x 1200), back layer + front occluders ================= */
 const SW = 900, SH = 1200;
 const rect = (x, y, w, h, f, extra = "") => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}" ${extra}/>`;
@@ -273,6 +333,29 @@ const SCENES = {
     occ: [[40, 1000, 340, 200], [740, 1040, 180, 160]]
   })
 };
+/* four more hidden-object scenes */
+Object.assign(SCENES, {
+  bain: () => ({
+    back: rect(0, 0, SW, 700, "#eaf3f1") + (() => { let s = ""; for (let y = 300; y < 700; y += 36) for (let x = (y / 36) % 2 ? -36 : 0; x < SW; x += 72) s += rect(x + 2, y + 2, 68, 32, "#d3e9e4"); return s; })() + windowAt(330, 90, 220, 170, "#bfe6ff") + boards(700, SH, "#e7ddd0", "#cfc2b2", 6) + `<rect x="60" y="560" width="440" height="170" rx="70" fill="#fbfaf7" stroke="#d8d4cc" stroke-width="6"/><rect x="85" y="575" width="390" height="60" rx="30" fill="#bfe6ff"/><rect x="620" y="500" width="220" height="200" rx="10" fill="#b98a5a"/><rect x="640" y="470" width="180" height="40" rx="20" fill="#fff"/>` + shelf(620, 260, 220, "#b98a5a"),
+    front: curtain(20, 120, 620, "#9fd0e8", -1) + leaves(840, 1180, 160, "#4caf5c") + pot(840, 1180, 48, "#e6d2a8") + `<rect x="60" y="1050" width="320" height="150" rx="20" fill="#7ac0d8"/><rect x="80" y="1065" width="280" height="30" rx="10" fill="#9fd6e8"/>`,
+    occ: [[20, 0, 120, 620], [740, 1050, 180, 150], [60, 1050, 320, 150]]
+  }),
+  potager: () => ({
+    back: rect(0, 0, SW, 420, "url(#skyg)") + `<circle cx="140" cy="100" r="54" fill="#fff3a0"/><rect y="330" width="${SW}" height="120" fill="#4f9f4a"/>` + rect(0, 420, SW, 780, "#86c46a") + (() => { let s = ""; for (const [x, y] of [[60, 480], [480, 480], [60, 820], [480, 820]]) { s += `<rect x="${x}" y="${y}" width="360" height="250" rx="12" fill="#7a5a3a"/><rect x="${x + 14}" y="${y + 14}" width="332" height="222" rx="8" fill="#5e4430"/>`; for (let i = 0; i < 12; i++) s += `<circle cx="${x + 40 + (i % 4) * 90}" cy="${y + 60 + Math.floor(i / 4) * 70}" r="22" fill="${i % 3 ? "#5fae4a" : "#7cc456"}"/>`; } return s; })() + `<rect x="660" y="230" width="220" height="140" fill="#cfeedd" stroke="#fff" stroke-width="6"/><path d="M650 235 L770 170 L890 235 Z" fill="#dff3e9" stroke="#fff" stroke-width="6"/>`,
+    front: leaves(80, 1200, 220, "#3f9a52", "#2c7a3e") + leaves(840, 1200, 220, "#46a85a", "#2c7a3e") + `<rect x="420" y="1080" width="60" height="120" fill="#8a5a33"/><path d="M380 1080 h140 l-20 -40 h-100 Z" fill="#c8643c"/>`,
+    occ: [[0, 1000, 220, 200], [700, 1000, 200, 200], [380, 1040, 140, 160]]
+  }),
+  etang: () => ({
+    back: rect(0, 0, SW, 380, "url(#skyg)") + `<path d="M0 300 Q300 220 600 300 T900 280 V420 H0 Z" fill="#5fae5a"/>` + rect(0, 380, SW, 820, "#7cc46a") + `<ellipse cx="450" cy="800" rx="400" ry="230" fill="#4aa3c8"/><ellipse cx="450" cy="790" rx="360" ry="190" fill="#6ec3e0"/>` + (() => { let s = ""; for (let i = 0; i < 9; i++) s += `<ellipse cx="${180 + (i % 5) * 140}" cy="${700 + Math.floor(i / 5) * 160}" rx="38" ry="16" fill="#3f9a52"/>`; return s; })() + `<path d="M250 700 Q450 560 650 700" stroke="#c0392b" stroke-width="22" fill="none"/><rect x="40" y="200" width="40" height="260" fill="#7a5233"/><circle cx="60" cy="180" r="110" fill="#3f9a52"/>`,
+    front: leaves(60, 1200, 240, "#3f9a52", "#2c7a3e") + leaves(860, 1200, 220, "#4caf5c", "#2c7a3e") + `<path d="M0 1200 Q120 1040 260 1200 Z" fill="#6b8f3a"/>` + (() => { let s = ""; for (let i = 0; i < 10; i++) s += `<path d="M${640 + i * 22} 1200 q8 -140 16 0" fill="#5a8a3a"/>`; return s; })(),
+    occ: [[0, 1000, 260, 200], [620, 1060, 280, 140]]
+  }),
+  jeux: () => ({
+    back: `<rect width="${SW}" height="${SH}" fill="#4a3a6a"/><path d="M450 -60 L-40 480 V1200 H940 V480 Z" fill="#7a6aa8"/>` + `<rect x="370" y="130" width="160" height="160" rx="80" fill="#bfe6ff" stroke="#f4ead8" stroke-width="14"/>` + boards(820, SH, "#c9a27a", "#a8805a", 6) + `<rect x="230" y="760" width="440" height="180" rx="18" fill="#2f8a5a" stroke="#6b4a2a" stroke-width="22"/><rect x="60" y="420" width="180" height="300" rx="20" fill="#c0392b"/><rect x="80" y="450" width="140" height="110" rx="8" fill="#1d1530"/><rect x="660" y="520" width="200" height="200" rx="20" fill="#ffc94a"/>` + shelf(560, 380, 280, "#8a5a33"),
+    front: `<circle cx="140" cy="1120" r="90" fill="#ff6f91"/><circle cx="290" cy="1150" r="70" fill="#5fd38a"/><circle cx="780" cy="1120" r="100" fill="#8fd3ff"/>` + `<path d="M0 0 H900 V40 Q450 120 0 40 Z" fill="#3a2c5e"/>`,
+    occ: [[50, 1030, 330, 170], [680, 1020, 220, 180]]
+  })
+});
 /* ================= the estate: 6 zones, 8 renovations each, 3 styles per renovation (v = -1 means still in ruins) ================= */
 const ZW = 900, ZH = 700;
 const RU = ["#8d8b86", "#6f6c66", "#a9a59c", "#5d5a55"];   // ruin greys
@@ -414,6 +497,132 @@ const ZONES = [
       d: (v) => { const c = v < 0 ? RU[0] : ["#b07a45", "#f4f2ee", "#8fb8e0"][v]; return `<rect x="690" y="240" width="190" height="130" fill="${c}"/><path d="M675 245 L785 185 L895 245 Z" fill="${v < 0 ? RU[1] : "#c8553d"}"/><rect x="760" y="290" width="50" height="80" fill="${v < 0 ? RU[3] : "#fff"}" opacity=".85"/>` + (v < 0 ? cracks(690, 240, 190, 130) : `<rect x="705" y="265" width="40" height="34" fill="#bfe6ff"/><rect x="825" y="265" width="40" height="34" fill="#bfe6ff"/>`); } }
    ] }
 ];
+/* ---- six more zones (opened one after the other) ---- */
+const wallTiles = (y0, y1, c1, c2, w = 60, h = 30) => { let s = rect(0, y0, ZW, y1 - y0, c2); for (let y = y0; y < y1; y += h) for (let x = (((y - y0) / h) % 2) ? -w / 2 : 0; x < ZW; x += w) s += rect(x + 2, y + 2, w - 4, h - 4, c1); return s; };
+const planks = (y0, y1, c, l) => rect(0, y0, ZW, y1 - y0, c) + [...Array(Math.ceil((y1 - y0) / 40))].map((_, k) => `<line x1="0" x2="${ZW}" y1="${y0 + k * 40}" y2="${y0 + k * 40}" stroke="${l}" stroke-width="3"/>`).join("");
+const chair = (x, y, c, d, kind) => kind === 2 ? `<path d="M${x} ${y} q40 -90 80 0 v50 h-80 z" fill="${c}" stroke="${d}" stroke-width="4"/>` : `<rect x="${x}" y="${y - 70}" width="80" height="80" rx="${kind ? 30 : 12}" fill="${d}"/><rect x="${x - 8}" y="${y}" width="96" height="40" rx="14" fill="${c}"/><rect x="${x + 4}" y="${y + 40}" width="8" height="26" fill="#5a3a22"/><rect x="${x + 68}" y="${y + 40}" width="8" height="26" fill="#5a3a22"/>`;
+ZONES.push(
+ { id: "bain", name: "La salle de bain", icon: "🛁",
+   base: () => `<rect width="${ZW}" height="450" fill="#efe9e0"/><rect y="450" width="${ZW}" height="250" fill="#d8cfc2"/>`,
+   items: [
+    { id: "carreaux", n: "Le carrelage mural", i: "🧱", c: 230, s: ["Zellige vert", "Métro blanc", "Rose poudré"], a: [80, 120], box: [0, 0, 900, 450],
+      d: (v) => (v < 0 ? rect(0, 0, ZW, 450, "#b8b2a8") + cracks(0, 0, 900, 450) + cracks(300, 60, 500, 300) : wallTiles(0, 450, ["#3f8f7a", "#fbfaf7", "#f2c1c9"][v], ["#2f7a66", "#d8d4cc", "#e0a3ae"][v], v === 0 ? 40 : 60, v === 0 ? 40 : 30)) + `<rect x="230" y="60" width="150" height="150" fill="#bfe6ff" stroke="#fff" stroke-width="10"/><line x1="305" x2="305" y1="60" y2="210" stroke="#fff" stroke-width="6"/>` },
+    { id: "sol", n: "Le sol", i: "🔲", c: 200, s: ["Carreaux ciment", "Bois huilé", "Tomettes"], a: [820, 660], box: [0, 450, 900, 250],
+      d: (v) => (v < 0 ? rect(0, 450, ZW, 250, "#9e968a") + cracks(0, 450, 900, 250) : v === 1 ? planks(450, 700, "#c9a27a", "#a8805a") : rect(0, 450, ZW, 250, v === 0 ? "url(#zciment)" : "url(#ztomette)")) },
+    { id: "baignoire", n: "La baignoire", i: "🛁", c: 360, s: ["Pieds de lion", "Îlot moderne", "Cuivre"], a: [280, 420], box: [90, 300, 400, 230],
+      d: (v) => { if (v < 0) return `<path d="M120 380 H460 Q460 500 380 500 H200 Q120 500 120 380 Z" fill="${RU[0]}"/>${cracks(120, 380, 340, 120)}<path d="M200 470 q20 10 40 0" stroke="#8a5a2a" stroke-width="5" fill="none"/>`; const c = ["#fbfaf7", "#f4f4f2", "#c87533"][v]; return `<path d="M120 380 H460 Q460 ${v === 1 ? 510 : 500} 380 ${v === 1 ? 510 : 500} H200 Q120 ${v === 1 ? 510 : 500} 120 380 Z" fill="${c}" stroke="#00000022" stroke-width="4"/><rect x="110" y="370" width="360" height="18" rx="9" fill="${c}" stroke="#00000022" stroke-width="3"/>` + (v === 1 ? "" : `<path d="M170 495 l-12 30 h24 Z M410 495 l12 30 h-24 Z" fill="${v === 0 ? "#d4a437" : "#8a4a1a"}"/>`) + `<rect x="430" y="320" width="10" height="52" fill="#c9ccd2"/><path d="M430 324 h-30" stroke="#c9ccd2" stroke-width="8" stroke-linecap="round"/><ellipse cx="290" cy="380" rx="150" ry="10" fill="#bfe6ff"/>`; } },
+    { id: "lavabo", n: "Le lavabo", i: "🚰", c: 240, s: ["Vasque sur marbre", "Meuble en bois", "Colonne"], a: [660, 430], box: [540, 280, 240, 200],
+      d: (v) => { if (v < 0) return `<rect x="580" y="360" width="160" height="30" fill="${RU[0]}" transform="rotate(6 660 375)"/><rect x="640" y="390" width="30" height="70" fill="${RU[1]}"/>`; if (v === 2) return `<path d="M640 460 L650 380 H670 L680 460 Z" fill="#f4f4f2" stroke="#ddd" stroke-width="3"/><ellipse cx="660" cy="372" rx="70" ry="22" fill="#f4f4f2" stroke="#ddd" stroke-width="3"/>`; return `<rect x="570" y="370" width="180" height="${v === 1 ? 100 : 26}" rx="6" fill="${v === 0 ? "#efeeea" : "#a8703a"}" stroke="#00000022" stroke-width="3"/>` + (v === 1 ? `<rect x="585" y="402" width="70" height="56" rx="4" fill="#000" opacity=".12"/><rect x="665" y="402" width="70" height="56" rx="4" fill="#000" opacity=".12"/>` : `<rect x="590" y="396" width="12" height="60" fill="#d8d4cc"/><rect x="718" y="396" width="12" height="60" fill="#d8d4cc"/>`) + `<ellipse cx="660" cy="362" rx="56" ry="16" fill="#fbfaf7" stroke="#ddd" stroke-width="3"/><rect x="656" y="330" width="8" height="26" fill="#c9ccd2"/>`; } },
+    { id: "miroir", n: "Le miroir", i: "🪞", c: 150, s: ["Rond doré", "Lumineux", "Ovale en rotin"], a: [660, 200], box: [570, 110, 180, 180],
+      d: (v) => (v < 0 ? `<rect x="620" y="150" width="80" height="100" fill="none" stroke="${RU[1]}" stroke-width="6" stroke-dasharray="8 8"/>` : v === 0 ? `<circle cx="660" cy="200" r="62" fill="#cfe8ff" stroke="#d4a437" stroke-width="10"/>` : v === 1 ? `<rect x="590" y="130" width="140" height="150" rx="14" fill="#cfe8ff" stroke="#fff6c8" stroke-width="10" style="filter:drop-shadow(0 0 10px #fff6c8)"/>` : `<ellipse cx="660" cy="200" rx="56" ry="74" fill="#cfe8ff" stroke="#c99a6a" stroke-width="14" stroke-dasharray="6 3"/>`) + (v >= 0 ? `<path d="M630 180 l22 -22" stroke="#fff" stroke-width="6" stroke-linecap="round"/>` : "") },
+    { id: "serviettes", n: "Les serviettes", i: "🧺", c: 110, s: ["Blanches", "Bleues", "Roses"], a: [840, 300], box: [780, 230, 120, 140],
+      d: (v) => `<rect x="790" y="250" width="100" height="8" rx="4" fill="#c9ccd2"/>` + (v < 0 ? `<path d="M800 258 h40 l-10 50 h-30 z" fill="${RU[2]}"/>` : [800, 846].map((x) => `<rect x="${x}" y="255" width="40" height="95" rx="6" fill="${["#fbfaf7", "#5d8fd6", "#f2a7b8"][v]}" stroke="#00000018" stroke-width="3"/><line x1="${x}" x2="${x + 40}" y1="330" y2="330" stroke="#00000022" stroke-width="4"/>`).join("")) },
+    { id: "plantes", n: "Les plantes", i: "🌿", c: 120, s: ["Fougère", "Bambou", "Pothos"], a: [840, 520], box: [770, 380, 130, 230],
+      d: (v) => (v < 0 ? pot(840, 560, 32, RU[1]) : (v === 1 ? [0, 1, 2].map((k) => `<rect x="${826 + k * 12}" y="${440 - k * 20}" width="7" height="${120 + k * 20}" fill="#7cc456"/><ellipse cx="${840 + k * 12}" cy="${440 - k * 20}" rx="18" ry="6" fill="#4caf5c"/>`).join("") : leaves(840, 555, v === 0 ? 110 : 90, v === 0 ? "#3f9a52" : "#7cc456", v === 0 ? "#2c7a3e" : "#4f9f3a")) + pot(840, 560, 32, "#e6d2a8")) },
+    { id: "luminaire", n: "Le luminaire", i: "💡", c: 160, s: ["Globe", "Laiton", "Cristal"], a: [450, 50], box: [370, 0, 160, 120],
+      d: (v) => (v < 0 ? `<line x1="450" x2="450" y1="0" y2="60" stroke="#333" stroke-width="3"/>` : `<line x1="450" x2="450" y1="0" y2="50" stroke="#555" stroke-width="3"/>` + [`<circle cx="450" cy="78" r="30" fill="#fff6c8" stroke="#e8e0b0" stroke-width="3"/>`, `<path d="M415 92 Q450 40 485 92 Z" fill="#d4a437"/><circle cx="450" cy="92" r="9" fill="#fff6c8"/>`, `<path d="M410 70 Q450 100 490 70" stroke="#e8f4ff" stroke-width="5" fill="none"/>` + [410, 430, 450, 470, 490].map((x) => `<path d="M${x} 74 l-5 12 l5 8 l5 -8 z" fill="#cfe8ff"/>`).join("")][v]) }
+   ] },
+ { id: "biblio", name: "La bibliothèque", icon: "📚",
+   base: () => `<rect width="${ZW}" height="460" fill="#5a3a2a"/><rect y="460" width="${ZW}" height="240" fill="#8a5a3a"/>`,
+   items: [
+    { id: "rayonnages", n: "Les rayonnages", i: "📚", c: 320, s: ["Chêne", "Acajou", "Laqués blancs"], a: [120, 150], box: [20, 40, 860, 430],
+      d: (v) => { const c = v < 0 ? RU[1] : ["#a8703a", "#6e2f22", "#f4f2ee"][v]; let s = ""; for (const [x0, x1] of [[30, 350], [550, 870]]) { s += rect(x0, 50, x1 - x0, 410, c); for (let k = 0; k < 4; k++) s += rect(x0 + 10, 70 + k * 98, x1 - x0 - 20, 82, "#00000033") + (v < 0 ? (k % 2 ? "" : `<rect x="${x0 + 40}" y="${110 + k * 98}" width="24" height="44" fill="${RU[2]}" transform="rotate(-25 ${x0 + 52} ${154 + k * 98})"/>`) : book(x0 + 16, 150 + k * 98, 74, ["#b23a3a", "#3a6ab2", "#3a8a5a", "#c99a2e", "#7a4fa0", "#d0763a"]) + book(x0 + 170, 150 + k * 98, 70, ["#3a8a5a", "#c99a2e", "#b23a3a", "#3a6ab2"])); } return s + (v < 0 ? cracks(30, 50, 320, 410) : ""); } },
+    { id: "fenetre", n: "La grande fenêtre", i: "🪟", c: 260, s: ["Vitrail", "En arche", "Rideaux de velours"], a: [450, 120], box: [350, 40, 200, 320],
+      d: (v) => { if (v < 0) return `<rect x="380" y="80" width="140" height="250" fill="#2a2320"/><rect x="370" y="130" width="160" height="16" fill="${RU[2]}" transform="rotate(-10 450 138)"/><rect x="370" y="230" width="160" height="16" fill="${RU[2]}" transform="rotate(8 450 238)"/>`; let s = v === 1 ? `<path d="M380 330 V150 Q450 60 520 150 V330 Z" fill="#bfe6ff" stroke="#f4ead8" stroke-width="10"/>` : `<rect x="380" y="80" width="140" height="250" fill="#bfe6ff" stroke="#f4ead8" stroke-width="10"/>`; if (v === 0) { const cols = ["#d94a4a", "#3d7cc9", "#ffd23f", "#5fae6a"]; for (let r = 0; r < 5; r++) for (let c = 0; c < 3; c++) s += rect(386 + c * 45, 86 + r * 48, 42, 45, cols[(r + c) % 4]) ; s = `<rect x="380" y="80" width="140" height="250" fill="#333"/>` + s.replace('fill="#bfe6ff"', 'fill="none"'); } if (v === 2) s += `<path d="M365 70 H420 Q400 200 420 340 H365 Z M535 70 H480 Q500 200 480 340 H535 Z" fill="#7a2f3a"/><rect x="360" y="64" width="180" height="10" fill="#c99a2e"/>`; return s; } },
+    { id: "echelle", n: "L'échelle", i: "🪜", c: 120, s: ["Bois", "Laiton", "Blanche"], a: [330, 300], box: [270, 50, 120, 420],
+      d: (v) => { const c = v < 0 ? RU[3] : ["#8a5a33", "#d4a437", "#f4f2ee"][v]; if (v < 0) return `<path d="M290 460 L330 300" stroke="${c}" stroke-width="10"/>`; let s = `<path d="M290 460 L330 70 M330 460 L370 70" stroke="${c}" stroke-width="10"/>`; for (let k = 0; k < 9; k++) { const t = k / 9; s += `<line x1="${290 + 40 * t + 5}" x2="${330 + 40 * t - 5}" y1="${440 - 370 * t}" y2="${440 - 370 * t}" stroke="${c}" stroke-width="7"/>`; } return s; } },
+    { id: "tapis", n: "Le tapis", i: "🟥", c: 180, s: ["Persan", "Rond bleu", "Berbère"], a: [700, 650], box: [100, 580, 700, 120],
+      d: (v) => (v < 0 ? `<path d="M200 620 L700 610 L720 680 L180 690 Z" fill="${RU[2]}" opacity=".6"/>` : v === 1 ? `<ellipse cx="450" cy="640" rx="300" ry="50" fill="#2f4f8e"/><ellipse cx="450" cy="640" rx="240" ry="34" fill="none" stroke="#e3b45a" stroke-width="6"/>` : `<rect x="150" y="600" width="600" height="90" rx="8" fill="${v === 0 ? "#8e2f3a" : "url(#zberber)"}"/>` + (v === 0 ? `<rect x="170" y="612" width="560" height="66" rx="6" fill="none" stroke="#e3b45a" stroke-width="7"/><circle cx="450" cy="645" r="22" fill="#2f5a7a"/>` : "")) },
+    { id: "bureau", n: "Le bureau", i: "🖋️", c: 340, s: ["Bureau ministre", "Verre et métal", "Secrétaire blanc"], a: [640, 500], box: [500, 400, 340, 220],
+      d: (v) => { if (v < 0) return `<rect x="520" y="500" width="300" height="20" fill="${RU[1]}" transform="rotate(-6 670 510)"/><rect x="540" y="518" width="16" height="80" fill="${RU[3]}"/>`; if (v === 1) return `<rect x="520" y="490" width="300" height="12" fill="#bfe6ff" opacity=".7" stroke="#9ab" stroke-width="2"/><path d="M540 502 L560 600 M800 502 L780 600" stroke="#333" stroke-width="6"/>`; const c = v === 0 ? "#6e2f22" : "#f4f2ee", d = v === 0 ? "#4a1f16" : "#d8d4cc"; return `<rect x="520" y="480" width="300" height="26" rx="4" fill="${c}" stroke="${d}" stroke-width="3"/><rect x="530" y="506" width="90" height="94" fill="${c}" stroke="${d}" stroke-width="3"/><rect x="720" y="506" width="90" height="94" fill="${c}" stroke="${d}" stroke-width="3"/>` + (v === 0 ? `<rect x="560" y="484" width="200" height="16" fill="#2f6a4a"/>` : `<rect x="540" y="400" width="260" height="80" fill="${c}" stroke="${d}" stroke-width="3"/>`) + `<circle cx="575" cy="545" r="4" fill="#d4a437"/><circle cx="765" cy="545" r="4" fill="#d4a437"/>`; } },
+    { id: "lampe", n: "La lampe de lecture", i: "🛋️", c: 150, s: ["Lampe de banquier", "Arc en laiton", "Champignon"], a: [760, 420], box: [700, 330, 120, 160],
+      d: (v) => (v < 0 ? `<rect x="750" y="440" width="8" height="40" fill="${RU[3]}" transform="rotate(30 754 480)"/>` : v === 0 ? `<rect x="752" y="440" width="8" height="40" fill="#d4a437"/><path d="M720 440 Q756 400 792 440 Z" fill="#2f8a5a"/>` : v === 1 ? `<path d="M710 480 Q700 340 800 340" stroke="#d4a437" stroke-width="7" fill="none"/><path d="M780 340 Q800 320 820 340 L812 360 H788 Z" fill="#d4a437"/>` : `<rect x="750" y="440" width="12" height="40" fill="#f4f2ee"/><path d="M720 445 Q756 380 792 445 Z" fill="#f2b705"/>`) + (v >= 0 ? `<circle cx="756" cy="452" r="6" fill="#fff6c8"/>` : "") },
+    { id: "fauteuil", n: "Le fauteuil", i: "🪑", c: 260, s: ["Chesterfield", "Velours vert", "Rotin"], a: [180, 500], box: [60, 380, 260, 260],
+      d: (v) => { const c = v < 0 ? RU[0] : ["#8a3b26", "#2f6a4a", "#c99a6a"][v], d = v < 0 ? RU[1] : ["#6a2a1a", "#1f4a34", "#a87b48"][v]; return `<rect x="90" y="430" width="200" height="120" rx="30" fill="${d}"/><rect x="80" y="520" width="220" height="70" rx="22" fill="${c}"/><rect x="66" y="480" width="44" height="110" rx="18" fill="${d}"/><rect x="270" y="480" width="44" height="110" rx="18" fill="${d}"/><rect x="96" y="590" width="12" height="26" fill="#3a2a1a"/><rect x="272" y="590" width="12" height="26" fill="#3a2a1a"/>` + (v === 0 ? [0, 1, 2, 3, 4, 5].map((k) => `<circle cx="${120 + (k % 3) * 70}" cy="${460 + Math.floor(k / 3) * 40}" r="4" fill="#4a1f16"/>`).join("") : "") + (v < 0 ? cracks(80, 430, 220, 160) : ""); } },
+    { id: "globe", n: "Le globe", i: "🌍", c: 180, s: ["Terrestre", "Céleste", "Mappemonde dorée"], a: [430, 520], box: [370, 410, 130, 220],
+      d: (v) => (v < 0 ? `<path d="M410 600 l40 -10 l-10 -30" stroke="${RU[3]}" stroke-width="8" fill="none"/>` : `<path d="M400 610 h60 M430 610 v-40" stroke="#6e4a32" stroke-width="10"/><circle cx="430" cy="520" r="52" fill="${["#4a9ad6", "#1d2a5a", "#d4a437"][v]}"/>` + (v === 0 ? `<path d="M400 500 q20 -20 40 0 q10 20 -10 30 q-20 10 -30 -30 M450 540 q14 -10 20 6 q-10 14 -20 -6" fill="#5fae6a"/>` : v === 1 ? [[410, 500], [450, 490], [440, 540], [415, 530]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3" fill="#ffd23f"/>`).join("") : `<path d="M380 520 h100 M430 470 v100" stroke="#8a5a00" stroke-width="3"/>`) + `<circle cx="430" cy="520" r="60" fill="none" stroke="#c99a2e" stroke-width="5"/>`) }
+   ] },
+ { id: "potager", name: "Le potager", icon: "🥕",
+   base: () => sky(260) + `<rect y="240" width="${ZW}" height="80" fill="#4f9f4a"/><rect y="300" width="${ZW}" height="400" fill="#86c46a"/>`,
+   items: [
+    { id: "fruitiers", n: "Les arbres fruitiers", i: "🍎", c: 220, s: ["Pommiers", "Citronniers", "Cerisiers"], a: [450, 200], box: [330, 90, 240, 240],
+      d: (v) => [[400, 230], [500, 220]].map(([x, y]) => v < 0 ? `<path d="M${x} 320 L${x} ${y} M${x} ${y + 30} l-30 -40 M${x} ${y + 20} l26 -36" stroke="#6b5a40" stroke-width="10" fill="none"/>` : `<rect x="${x - 8}" y="${y}" width="16" height="${320 - y}" fill="#6e4a32"/><circle cx="${x}" cy="${y - 20}" r="56" fill="#4caf5c"/><circle cx="${x - 26}" cy="${y}" r="30" fill="#3f9a52"/>` + [[-20, -40], [14, -30], [-6, -8], [28, -4], [-34, -20]].map(([dx, dy]) => `<circle cx="${x + dx}" cy="${y + dy}" r="8" fill="${["#e63946", "#ffd23f", "#8e1b2e"][v]}"/>`).join("")).join("") },
+    { id: "allee", n: "L'allée", i: "🪨", c: 150, s: ["Gravier", "Dalles", "Copeaux de bois"], a: [450, 620], box: [380, 300, 140, 400],
+      d: (v) => { const P = "M400 700 L440 300 H460 L500 700 Z"; if (v < 0) return `<path d="${P}" fill="#8b6a4a"/>` + tufts([[440, 500], [470, 640]]); if (v === 1) { let s = `<path d="${P}" fill="#86c46a"/>`; for (let y = 320; y < 700; y += 46) { const t = (y - 300) / 400; s += `<rect x="${447 - 30 * t}" y="${y}" width="${10 + 60 * t}" height="${16 + 14 * t}" rx="4" fill="#cfc6b6"/>`; } return s; } return `<path d="${P}" fill="${v === 0 ? "#d8d0c2" : "#b07a45"}"/>` + [...Array(40)].map((_, k) => `<circle cx="${430 + ((k * 37) % 40) + ((k * 13) % 30) * ((k % 7) / 7)}" cy="${320 + ((k * 53) % 370)}" r="3" fill="${v === 0 ? "#a89e8c" : "#7a5233"}"/>`).join(""); } },
+    { id: "cabane", n: "La cabane à outils", i: "🛖", c: 260, s: ["Bois brut", "Verte", "Bleue"], a: [130, 260], box: [30, 150, 210, 210],
+      d: (v) => { const c = v < 0 ? RU[0] : ["#a8703a", "#3f8a5a", "#3d6fb0"][v]; return `<rect x="50" y="220" width="170" height="120" fill="${c}"/><path d="M40 225 L135 165 L230 225 Z" fill="${v < 0 ? RU[1] : "#5a3a22"}"/><rect x="110" y="260" width="50" height="80" fill="#00000033"/>` + (v < 0 ? cracks(50, 220, 170, 120) : `<rect x="65" y="245" width="34" height="28" fill="#bfe6ff"/>`); } },
+    { id: "serre", n: "La serre", i: "🏡", c: 380, s: ["Verre classique", "Tunnel", "Victorienne"], a: [750, 260], box: [610, 150, 280, 220],
+      d: (v) => { if (v < 0) return `<path d="M630 350 V240 L740 190 L860 240 V350" fill="none" stroke="${RU[3]}" stroke-width="8"/><path d="M660 260 l30 30 M800 250 l-20 40" stroke="#4a4744" stroke-width="3"/>`; if (v === 1) return `<path d="M630 350 Q630 200 750 200 Q870 200 870 350 Z" fill="#dff3e9" opacity=".85" stroke="#9fc9b4" stroke-width="5"/>` + [680, 720, 760, 800, 840].map((x) => `<path d="M${x} 350 Q${x} 230 ${x + 2} 220" stroke="#9fc9b4" stroke-width="3" fill="none"/>`).join(""); const c = v === 0 ? "#f4f2ee" : "#ffffff"; return `<rect x="630" y="240" width="240" height="110" fill="#dff3e9" opacity=".85" stroke="${c}" stroke-width="6"/><path d="M620 245 L750 180 L880 245 Z" fill="#dff3e9" stroke="${c}" stroke-width="6"/>` + [670, 710, 750, 790, 830].map((x) => `<line x1="${x}" x2="${x}" y1="240" y2="350" stroke="${c}" stroke-width="4"/>`).join("") + (v === 2 ? `<circle cx="750" cy="215" r="14" fill="none" stroke="#fff" stroke-width="5"/><path d="M745 180 l5 -20 l5 20" fill="#fff"/>` : ""); } },
+    { id: "poulailler", n: "Le poulailler", i: "🐔", c: 240, s: ["Rouge", "Blanc", "Bleu"], a: [320, 300], box: [240, 220, 170, 160],
+      d: (v) => { const c = v < 0 ? RU[0] : ["#c0392b", "#f4f2ee", "#3d6fb0"][v]; return `<rect x="260" y="270" width="120" height="80" fill="${c}"/><path d="M250 275 L320 235 L390 275 Z" fill="${v < 0 ? RU[1] : "#5a3a22"}"/><rect x="305" y="305" width="30" height="45" fill="#00000044"/>` + (v < 0 ? "" : [[275, 370], [360, 372]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="16" ry="12" fill="#fff"/><circle cx="${x + 12}" cy="${y - 10}" r="8" fill="#fff"/><path d="M${x + 12} ${y - 19} l3 -6 l3 6" fill="#e63946"/><path d="M${x + 19} ${y - 10} l7 2 l-7 2" fill="#ffb703"/>`).join("")); } },
+    { id: "carres", n: "Les carrés potagers", i: "🥬", c: 300, s: ["Bois", "Pierre", "Acier corten"], a: [200, 520], box: [60, 420, 780, 210],
+      d: (v) => [[80, 430], [570, 430]].map(([x, y]) => { const c = v < 0 ? RU[1] : ["#a8703a", "#b8afa2", "#a0522d"][v]; let s = `<rect x="${x}" y="${y}" width="250" height="180" rx="8" fill="${c}"/><rect x="${x + 14}" y="${y + 14}" width="222" height="152" rx="6" fill="#5e4430"/>`; if (v < 0) return s + tufts([[x + 60, y + 120], [x + 170, y + 90]]); for (let k = 0; k < 9; k++) { const px = x + 45 + (k % 3) * 80, py = y + 50 + Math.floor(k / 3) * 46; s += Math.floor(k / 3) === 0 ? `<circle cx="${px}" cy="${py}" r="18" fill="#7cc456"/>` : Math.floor(k / 3) === 1 ? `<path d="M${px} ${py + 14} l-6 -30 M${px} ${py + 14} l6 -30" stroke="#4caf5c" stroke-width="5"/><path d="M${px - 4} ${py + 14} h8 l-4 14 z" fill="#f28c28"/>` : `<circle cx="${px}" cy="${py}" r="16" fill="#3f9a52"/><circle cx="${px - 6}" cy="${py + 4}" r="6" fill="#e63946"/><circle cx="${px + 7}" cy="${py - 2}" r="6" fill="#e63946"/>`; } return s; }).join("") },
+    { id: "puits", n: "Le puits", i: "🪣", c: 220, s: ["Pierre", "Brique", "Pompe en fonte"], a: [830, 420], box: [760, 320, 140, 160],
+      d: (v) => (v < 0 ? `<ellipse cx="830" cy="440" rx="50" ry="14" fill="${RU[1]}"/><rect x="780" y="440" width="100" height="30" fill="${RU[0]}"/>${cracks(780, 430, 100, 40)}` : v === 2 ? `<rect x="815" y="360" width="30" height="110" rx="6" fill="#2b2b33"/><path d="M845 380 h30 l-6 14" stroke="#2b2b33" stroke-width="8" fill="none"/><path d="M820 370 l-30 -20" stroke="#2b2b33" stroke-width="7"/><rect x="800" y="460" width="60" height="16" fill="#7a5a3a"/>` : `<rect x="780" y="420" width="100" height="55" fill="${v === 0 ? "#b8afa2" : "#b5543a"}"/><ellipse cx="830" cy="420" rx="50" ry="12" fill="#2a2320"/><rect x="784" y="340" width="8" height="80" fill="#6e4a32"/><rect x="868" y="340" width="8" height="80" fill="#6e4a32"/><path d="M774 345 L830 315 L886 345 Z" fill="#a0522d"/><rect x="822" y="360" width="16" height="22" fill="#8a8f9e"/>`) },
+    { id: "epouvantail", n: "L'épouvantail", i: "👒", c: 140, s: ["Chapeau de paille", "Rigolo", "Chic"], a: [470, 410], box: [410, 300, 130, 180],
+      d: (v) => (v < 0 ? `<path d="M470 470 V380 M440 400 h60" stroke="${RU[3]}" stroke-width="8"/>` : `<path d="M470 470 V360 M430 390 h80" stroke="#7a5233" stroke-width="8"/><rect x="448" y="380" width="44" height="50" rx="6" fill="${["#c0392b", "#ffd23f", "#2c3e66"][v]}"/><circle cx="470" cy="352" r="18" fill="#f1e2b8"/><circle cx="463" cy="350" r="2.5" fill="#333"/><circle cx="477" cy="350" r="2.5" fill="#333"/><path d="M463 360 q7 5 14 0" stroke="#333" stroke-width="2" fill="none"/>` + [`<ellipse cx="470" cy="338" rx="32" ry="7" fill="#e8c66a"/><path d="M455 338 q15 -26 30 0" fill="#e8c66a"/>`, `<circle cx="470" cy="330" r="8" fill="#ff6f91"/><path d="M450 336 h40" stroke="#5fd38a" stroke-width="6"/>`, `<rect x="456" y="314" width="28" height="22" fill="#222"/><rect x="448" y="334" width="44" height="5" fill="#222"/>`][v]) }
+   ] },
+ { id: "jeux", name: "La salle de jeux", icon: "🎮",
+   base: () => `<rect width="${ZW}" height="${ZH}" fill="#5a4a7a"/><rect y="470" width="${ZW}" height="230" fill="#a8805a"/>`,
+   items: [
+    { id: "murs", n: "Les murs", i: "🎨", c: 240, s: ["Bleu ciel", "Jaune soleil", "Vert d'eau"], a: [100, 130], box: [0, 0, 900, 470],
+      d: (v) => `<path d="M450 -40 L-40 330 V470 H940 V330 Z" fill="${v < 0 ? "#a39b8e" : ["#9fd0f0", "#ffe08a", "#a8e0cf"][v]}"/><path d="M450 -40 L-40 330 M450 -40 L940 330" stroke="#6e4a32" stroke-width="26"/>` + (v < 0 ? cracks(100, 120, 700, 340) : "") },
+    { id: "sol", n: "Le sol", i: "🟩", c: 200, s: ["Moquette", "Parquet", "Tapis puzzle"], a: [100, 660], box: [0, 470, 900, 230],
+      d: (v) => (v < 0 ? rect(0, 470, ZW, 230, "#8f7a64") + cracks(0, 470, 900, 230) : v === 0 ? rect(0, 470, ZW, 230, "#6f7fa8") : v === 1 ? planks(470, 700, "#d9b48a", "#b9925f") : (() => { let s = ""; const cols = ["#ff6f91", "#ffd23f", "#5fd38a", "#8fd3ff"]; for (let y = 470, r = 0; y < 700; y += 58, r++) for (let x = 0, c = 0; x < 900; x += 75, c++) s += rect(x, y, 75, 58, cols[(r + c) % 4]); return s; })()) },
+    { id: "lucarne", n: "La lucarne", i: "🪟", c: 150, s: ["Ronde", "Carrée", "En étoile"], a: [450, 150], box: [370, 60, 160, 180],
+      d: (v) => (v < 0 ? `<rect x="400" y="100" width="100" height="100" fill="#2a2320"/><rect x="390" y="140" width="120" height="14" fill="${RU[2]}" transform="rotate(-12 450 147)"/>` : v === 0 ? `<circle cx="450" cy="150" r="60" fill="#bfe6ff" stroke="#f4ead8" stroke-width="12"/><path d="M390 150 h120 M450 90 v120" stroke="#f4ead8" stroke-width="7"/>` : v === 1 ? `<rect x="395" y="95" width="110" height="110" fill="#bfe6ff" stroke="#f4ead8" stroke-width="12"/><path d="M395 150 h110 M450 95 v110" stroke="#f4ead8" stroke-width="7"/>` : `<path d="M450 82 l18 42 l46 4 l-35 30 l11 45 l-40 -24 l-40 24 l11 -45 l-35 -30 l46 -4 z" fill="#bfe6ff" stroke="#f4ead8" stroke-width="9"/>`) },
+    { id: "etageres", n: "Les étagères à jeux", i: "🎲", c: 180, s: ["Bois", "Blanches", "Métal noir"], a: [150, 260], box: [50, 170, 220, 220],
+      d: (v) => { const c = v < 0 ? RU[1] : ["#8a5a33", "#f4f2ee", "#2b2b33"][v]; let s = shelf(60, 260, 200, c) + shelf(60, 350, 200, c); if (v < 0) return s; const cols = ["#d94a4a", "#3d7cc9", "#ffd23f", "#5fae6a", "#7a4fa0"]; for (const y of [260, 350]) for (let k = 0; k < 5; k++) s += rect(72 + k * 36, y - 40 + (k % 2) * 8, 32, 40 - (k % 2) * 8, cols[(k + y / 90) % 5 | 0]); return s; } },
+    { id: "table", n: "La table de jeu", i: "🎱", c: 380, s: ["Billard", "Ping-pong", "Baby-foot"], a: [450, 470], box: [270, 400, 360, 200],
+      d: (v) => { if (v < 0) return `<rect x="290" y="450" width="320" height="20" fill="${RU[1]}" transform="rotate(5 450 460)"/><rect x="310" y="468" width="16" height="90" fill="${RU[3]}"/>`; const top = ["#2f8a5a", "#2f5fae", "#2f8a5a"][v]; let s = `<rect x="290" y="430" width="320" height="110" rx="12" fill="${top}" stroke="${v === 1 ? "#fff" : "#6b4a2a"}" stroke-width="${v === 1 ? 5 : 16}"/><rect x="305" y="540" width="20" height="60" fill="#3a2a1a"/><rect x="575" y="540" width="20" height="60" fill="#3a2a1a"/>`; if (v === 0) s += [[330, 470], [450, 480], [560, 470], [400, 500]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="10" fill="${["#fff", "#e63946", "#ffd23f", "#222"][i]}"/>`).join(""); if (v === 1) s += `<line x1="450" x2="450" y1="430" y2="540" stroke="#fff" stroke-width="4"/><rect x="446" y="418" width="8" height="24" fill="#ddd"/>`; if (v === 2) s += [330, 380, 430, 480, 530, 580].map((x, i) => `<line x1="${x}" x2="${x}" y1="415" y2="555" stroke="#c9ccd2" stroke-width="5"/><rect x="${x - 6}" y="470" width="12" height="18" fill="${i % 2 ? "#e63946" : "#3d7cc9"}"/>`).join(""); return s; } },
+    { id: "arcade", n: "La borne d'arcade", i: "🕹️", c: 320, s: ["Rouge", "Bleue", "Violette"], a: [790, 380], box: [710, 210, 170, 320],
+      d: (v) => { const c = v < 0 ? RU[0] : ["#d63a3a", "#3d6fb0", "#7a4fd6"][v]; return `<path d="M730 520 V260 L760 220 H850 V520 Z" fill="${c}"/><rect x="755" y="250" width="80" height="80" rx="6" fill="${v < 0 ? "#333" : "#1d1530"}"/>` + (v < 0 ? cracks(730, 220, 120, 300) : `<rect x="765" y="262" width="60" height="56" fill="#5fd38a" opacity=".85"/><circle cx="780" cy="290" r="6" fill="#ffd23f"/><rect x="745" y="345" width="100" height="30" fill="#00000044"/><circle cx="770" cy="358" r="7" fill="#ffd23f"/><circle cx="800" cy="358" r="7" fill="#ff6f91"/><circle cx="825" cy="358" r="7" fill="#8fd3ff"/>`); } },
+    { id: "poufs", n: "Le coin détente", i: "🛋️", c: 240, s: ["Poufs colorés", "Canapé d'angle", "Hamac"], a: [160, 540], box: [40, 430, 260, 200],
+      d: (v) => (v < 0 ? `<ellipse cx="150" cy="580" rx="70" ry="30" fill="${RU[1]}"/>` : v === 0 ? [[100, 570, "#ff6f91"], [190, 585, "#5fd38a"], [150, 540, "#ffd23f"]].map(([x, y, c]) => `<ellipse cx="${x}" cy="${y}" rx="52" ry="38" fill="${c}"/><ellipse cx="${x}" cy="${y - 14}" rx="40" ry="16" fill="#fff" opacity=".25"/>`).join("") : v === 1 ? `<rect x="50" y="490" width="230" height="60" rx="20" fill="#3d6fb0"/><rect x="50" y="530" width="230" height="60" rx="20" fill="#5d8fd6"/>` : `<path d="M60 470 Q160 600 270 470" stroke="#e8c66a" stroke-width="10" fill="none"/><path d="M70 480 Q160 590 260 480 Q160 560 70 480 Z" fill="#ffd23f"/>`) },
+    { id: "lumiere", n: "L'éclairage", i: "🪩", c: 160, s: ["Guirlande", "Boule à facettes", "Néon"], a: [600, 70], box: [100, 0, 700, 160],
+      d: (v) => (v < 0 ? `<line x1="450" x2="450" y1="0" y2="40" stroke="#333" stroke-width="3"/>` : v === 0 ? `<path d="M150 100 Q450 180 750 100" stroke="#333" stroke-width="3" fill="none"/>` + [...Array(11)].map((_, k) => { const x = 170 + k * 56, y = 100 + 70 * (1 - Math.pow((x - 450) / 300, 2)); return `<circle cx="${x}" cy="${y + 8}" r="8" fill="${["#ffd23f", "#ff6f91", "#5fd38a", "#8fd3ff"][k % 4]}"/>`; }).join("") : v === 1 ? `<line x1="450" x2="450" y1="0" y2="50" stroke="#555" stroke-width="3"/><circle cx="450" cy="86" r="38" fill="#c9ccd2"/>` + [...Array(12)].map((_, k) => `<rect x="${426 + (k % 4) * 12}" y="${60 + Math.floor(k / 4) * 16}" width="10" height="12" fill="${k % 3 ? "#e8f4ff" : "#9fd0f0"}"/>`).join("") : `<path d="M330 90 h240" stroke="#ff6f91" stroke-width="10" stroke-linecap="round" style="filter:drop-shadow(0 0 10px #ff6f91)"/>`) }
+   ] },
+ { id: "etang", name: "L'étang et le kiosque", icon: "🦆",
+   base: () => sky(250) + `<path d="M0 240 Q240 170 480 230 T900 210 V320 H0 Z" fill="#4f9f4a"/><rect y="300" width="${ZW}" height="400" fill="#7cc46a"/>`,
+   items: [
+    { id: "saule", n: "Le grand arbre", i: "🌳", c: 240, s: ["Saule pleureur", "Bouleau", "Érable"], a: [110, 260], box: [0, 100, 240, 340],
+      d: (v) => (v < 0 ? `<path d="M110 420 L115 280 L80 220 M115 300 L150 240" stroke="#5a4636" stroke-width="16" fill="none" stroke-linecap="round"/>` : v === 0 ? `<rect x="100" y="260" width="22" height="170" fill="#6e4a32"/><circle cx="110" cy="230" r="90" fill="#7cc456"/>` + [...Array(12)].map((_, k) => `<path d="M${40 + k * 12} 220 q6 90 0 170" stroke="#5fae4a" stroke-width="7" fill="none"/>`).join("") : v === 1 ? `<rect x="102" y="200" width="16" height="230" fill="#f4f2ee"/><path d="M104 260 h12 M104 320 h12 M104 380 h12" stroke="#333" stroke-width="3"/><circle cx="110" cy="190" r="70" fill="#b6d65a"/>` : `<rect x="100" y="260" width="22" height="170" fill="#6e4a32"/><circle cx="110" cy="220" r="80" fill="#e0482f"/><circle cx="70" cy="250" r="50" fill="#c23a24"/>`) },
+    { id: "kiosque", n: "Le kiosque", i: "🛖", c: 420, s: ["Blanc", "Vert jardin", "Bois"], a: [740, 270], box: [610, 120, 280, 280],
+      d: (v) => { const c = v < 0 ? RU[0] : ["#f4f2ee", "#3f8a5a", "#a8703a"][v]; return `<path d="M620 220 L740 140 L860 220 Z" fill="${v < 0 ? RU[1] : ["#3d6fb0", "#2b2b33", "#5a3a22"][v]}"/>` + [640, 700, 780, 840].map((x) => `<rect x="${x - 6}" y="220" width="12" height="150" fill="${c}"/>`).join("") + `<rect x="620" y="360" width="240" height="22" fill="${c}"/><path d="M630 300 Q740 330 850 300" stroke="${c}" stroke-width="6" fill="none"/>` + (v < 0 ? cracks(620, 220, 240, 160) : ""); } },
+    { id: "etang", n: "L'étang", i: "🌊", c: 360, s: ["Eau claire", "Nénuphars", "Carpes koï"], a: [450, 520], box: [120, 380, 640, 270],
+      d: (v) => (v < 0 ? `<ellipse cx="440" cy="520" rx="300" ry="110" fill="#7a6a4a"/><ellipse cx="440" cy="530" rx="200" ry="60" fill="#6a7a4a"/>` + tufts([[300, 500], [560, 540]]) : `<ellipse cx="440" cy="520" rx="310" ry="115" fill="#3f8fb8"/><ellipse cx="440" cy="515" rx="290" ry="100" fill="url(#zwater)"/>` + (v === 1 ? [[300, 500], [380, 560], [520, 480], [580, 550], [460, 600]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="30" ry="12" fill="#3f9a52"/><circle cx="${x + 8}" cy="${y - 4}" r="7" fill="#ff9ec0"/>`).join("") : v === 2 ? [[330, 520, 0], [470, 560, 1], [560, 500, 0]].map(([x, y, w]) => `<ellipse cx="${x}" cy="${y}" rx="26" ry="10" fill="${w ? "#fff" : "#ff7a3d"}"/><ellipse cx="${x + 6}" cy="${y}" rx="10" ry="6" fill="${w ? "#ff7a3d" : "#fff"}"/><path d="M${x - 26} ${y} l-12 -8 v16 z" fill="${w ? "#fff" : "#ff7a3d"}"/>`).join("") : `<path d="M300 500 q30 -8 60 0 M480 560 q30 -8 60 0" stroke="#fff" stroke-width="4" fill="none" opacity=".7"/>`)) },
+    { id: "cascade", n: "Les rochers", i: "🪨", c: 220, s: ["Rocaille", "Petite cascade", "Jets d'eau"], a: [740, 500], box: [660, 400, 200, 180],
+      d: (v) => [[690, 520, 34], [730, 490, 40], [775, 515, 34], [710, 550, 26]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${v < 0 ? RU[1] : "#a39a8c"}"/><circle cx="${x - r * 0.3}" cy="${y - r * 0.3}" r="${r * 0.3}" fill="${v < 0 ? RU[2] : "#c1b8aa"}"/>`).join("") + (v === 1 ? `<path d="M730 455 Q725 500 700 540" stroke="#9be7ff" stroke-width="14" fill="none" opacity=".9"/>` : v === 2 ? `<path d="M650 520 Q620 470 600 520 M640 540 Q600 480 570 540" stroke="#9be7ff" stroke-width="5" fill="none"/>` : "") },
+    { id: "pont", n: "Le petit pont", i: "🌉", c: 280, s: ["Japonais rouge", "Bois", "Pierre"], a: [450, 440], box: [300, 380, 300, 150],
+      d: (v) => (v < 0 ? `<path d="M330 500 Q380 450 420 470" stroke="${RU[3]}" stroke-width="16" fill="none"/>` : `<path d="M320 500 Q450 400 580 500" stroke="${["#c0392b", "#a8703a", "#b8afa2"][v]}" stroke-width="${v === 2 ? 30 : 18}" fill="none"/><path d="M330 470 Q450 375 570 470" stroke="${["#c0392b", "#8a5a33", "#a39a8c"][v]}" stroke-width="6" fill="none"/>` + [350, 400, 450, 500, 550].map((x) => { const y = 500 - 100 * (1 - Math.pow((x - 450) / 130, 2)) * 0.8; return `<line x1="${x}" x2="${x}" y1="${y}" y2="${y - 30}" stroke="${["#c0392b", "#8a5a33", "#a39a8c"][v]}" stroke-width="6"/>`; }).join("")) },
+    { id: "barque", n: "La barque", i: "🛶", c: 200, s: ["Bleue", "Rouge", "Bois verni"], a: [280, 590], box: [190, 530, 190, 110],
+      d: (v) => (v < 0 ? `<path d="M210 600 Q280 640 350 600 L340 590 H220 Z" fill="${RU[1]}" transform="rotate(14 280 600)"/>` : `<path d="M200 580 Q280 640 360 580 Z" fill="${["#3d6fb0", "#c0392b", "#a8703a"][v]}" stroke="#00000033" stroke-width="3"/><path d="M230 590 l70 -40" stroke="#7a5233" stroke-width="6"/>`) },
+    { id: "canards", n: "La maisonnette à canards", i: "🦆", c: 160, s: ["Bleue", "Jaune", "Bois"], a: [560, 600], box: [500, 540, 140, 100],
+      d: (v) => (v < 0 ? "" : `<rect x="530" y="580" width="60" height="34" fill="${["#3d6fb0", "#ffd23f", "#a8703a"][v]}"/><path d="M522 584 L560 560 L598 584 Z" fill="#c0392b"/><circle cx="560" cy="598" r="8" fill="#00000055"/><ellipse cx="620" cy="620" rx="16" ry="10" fill="#fff"/><circle cx="632" cy="610" r="7" fill="#fff"/><path d="M638 610 l8 2 l-8 3" fill="#ffb703"/>`) },
+    { id: "lanternes", n: "Les lanternes", i: "🏮", c: 180, s: ["Japonaises", "Solaires", "Flambeaux"], a: [250, 380], box: [160, 290, 700, 160],
+      d: (v) => (v < 0 ? "" : [[200, 420], [600, 410], [880, 430]].map(([x, y]) => `<rect x="${x - 3}" y="${y - 70}" width="6" height="70" fill="#5a3a22"/>` + [`<ellipse cx="${x}" cy="${y - 80}" rx="16" ry="20" fill="#e63946"/><rect x="${x - 10}" y="${y - 102}" width="20" height="5" fill="#222"/>`, `<rect x="${x - 10}" y="${y - 96}" width="20" height="26" rx="4" fill="#fff6c8" stroke="#555" stroke-width="3"/>`, `<path d="M${x} ${y - 98} q10 12 0 24 q-10 -12 0 -24" fill="#ff8a3d"/>`][v]).join("")) }
+   ] },
+ { id: "veranda", name: "La véranda", icon: "🌿",
+   base: () => `<rect width="${ZW}" height="${ZH}" fill="#cfeedd"/><path d="M0 330 Q300 260 600 320 T900 300 V460 H0 Z" fill="#7cc46a"/>`,
+   items: [
+    { id: "structure", n: "La verrière", i: "🏛️", c: 480, s: ["Fer noir", "Blanche", "Bois"], a: [120, 120], box: [0, 0, 900, 460],
+      d: (v) => { const c = v < 0 ? RU[3] : ["#2b2b33", "#f4f2ee", "#8a5a33"][v]; let s = `<path d="M0 0 H900 V40 H0 Z" fill="${c}"/>`; for (let x = 0; x <= 900; x += 150) s += `<rect x="${x - 6}" y="0" width="12" height="460" fill="${c}"/>`; s += `<rect y="210" width="${ZW}" height="10" fill="${c}"/>`; if (v === 0) s += [75, 225, 375, 525, 675, 825].map((x) => `<path d="M${x - 40} 40 Q${x} 110 ${x + 40} 40" stroke="${c}" stroke-width="5" fill="none"/>`).join(""); if (v < 0) s += cracks(150, 40, 300, 170) + cracks(600, 220, 300, 200); return s; } },
+    { id: "sol", n: "Le sol", i: "⬛", c: 260, s: ["Damier", "Pierre", "Bois"], a: [840, 660], box: [0, 460, 900, 240],
+      d: (v) => (v < 0 ? rect(0, 460, ZW, 240, "#9e968a") + cracks(0, 460, 900, 240) : v === 0 ? rect(0, 460, ZW, 240, "url(#zcheck)") : v === 1 ? rect(0, 460, ZW, 240, "#cfc6b6") + [...Array(8)].map((_, k) => `<line x1="${k * 120}" x2="${k * 120}" y1="460" y2="700" stroke="#a89e8c" stroke-width="3"/>`).join("") + `<line x1="0" x2="900" y1="580" y2="580" stroke="#a89e8c" stroke-width="3"/>` : planks(460, 700, "#c99a6a", "#a8784a")) },
+    { id: "tapis", n: "Le tapis", i: "🟫", c: 160, s: ["Jonc de mer", "Rouge oriental", "Bleu indigo"], a: [300, 640], box: [200, 560, 500, 130],
+      d: (v) => (v < 0 ? "" : `<rect x="220" y="580" width="460" height="100" rx="10" fill="${["#d8c29a", "#8e2f3a", "#2f4f8e"][v]}"/><rect x="236" y="594" width="428" height="72" rx="8" fill="none" stroke="${["#b89a6a", "#e3b45a", "#e3b45a"][v]}" stroke-width="6"/>`) },
+    { id: "table", n: "La table", i: "🍵", c: 260, s: ["Fer forgé", "Bois", "Marbre"], a: [450, 470], box: [320, 420, 260, 180],
+      d: (v) => (v < 0 ? `<ellipse cx="450" cy="520" rx="100" ry="20" fill="${RU[1]}" transform="rotate(8 450 520)"/>` : `<ellipse cx="450" cy="500" rx="110" ry="28" fill="${["#2b2b33", "#a8703a", "#efeeea"][v]}"/><rect x="442" y="520" width="16" height="70" fill="${["#2b2b33", "#7a4f28", "#cfcac2"][v]}"/><ellipse cx="450" cy="592" rx="40" ry="10" fill="${["#2b2b33", "#7a4f28", "#cfcac2"][v]}"/><ellipse cx="430" cy="488" rx="16" ry="6" fill="#fff"/><path d="M462 480 h24 v14 h-24 z" fill="#f4f2ee"/>`) },
+    { id: "fauteuils", n: "Les fauteuils", i: "🪑", c: 320, s: ["Rotin", "Velours", "De jardin"], a: [180, 520], box: [120, 400, 680, 220],
+      d: (v) => (v < 0 ? `<rect x="180" y="520" width="90" height="16" fill="${RU[1]}" transform="rotate(-12 225 528)"/>` : chair(170, 520, ["#d8b07a", "#7a2f5a", "#f4f2ee"][v], ["#b08a4a", "#5a1f40", "#d8d4cc"][v], v === 0 ? 2 : v === 1 ? 1 : 0) + chair(650, 520, ["#d8b07a", "#7a2f5a", "#f4f2ee"][v], ["#b08a4a", "#5a1f40", "#d8d4cc"][v], v === 0 ? 2 : v === 1 ? 1 : 0)) },
+    { id: "plantes", n: "Les plantes", i: "🌴", c: 220, s: ["Palmiers", "Citronniers", "Orchidées"], a: [60, 420], box: [0, 250, 140, 360],
+      d: (v) => (v < 0 ? pot(70, 560, 40, RU[1]) : (v === 0 ? leaves(70, 420, 170, "#3f9a52", "#2c7a3e") + `<rect x="64" y="420" width="12" height="140" fill="#8a6a44"/>` : v === 1 ? `<rect x="64" y="440" width="12" height="120" fill="#6e4a32"/><circle cx="70" cy="420" r="56" fill="#4caf5c"/>` + [[50, 400], [86, 410], [66, 440], [96, 380]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="8" fill="#ffd23f"/>`).join("") : [0, 1, 2].map((k) => `<path d="M${60 + k * 10} 560 q${-20 + k * 20} -80 ${-10 + k * 15} -150" stroke="#5fae4a" stroke-width="4" fill="none"/><circle cx="${50 + k * 25}" cy="${420 + k * 10}" r="12" fill="#e88ad6"/>`).join("")) + pot(70, 560, 40, "#f4f2ee")) },
+    { id: "voliere", n: "La volière", i: "🐦", c: 200, s: ["Dorée", "Blanche", "Bambou"], a: [800, 300], box: [730, 180, 150, 260],
+      d: (v) => (v < 0 ? `<path d="M760 400 Q800 300 840 400" stroke="${RU[1]}" stroke-width="5" fill="none"/>` : `<path d="M750 410 V290 Q800 220 850 290 V410 Z" fill="none" stroke="${["#d4a437", "#f4f2ee", "#a8803f"][v]}" stroke-width="6"/>` + [770, 790, 810, 830].map((x) => `<line x1="${x}" x2="${x}" y1="262" y2="410" stroke="${["#d4a437", "#f4f2ee", "#a8803f"][v]}" stroke-width="3"/>`).join("") + `<rect x="745" y="404" width="110" height="12" fill="${["#d4a437", "#f4f2ee", "#a8803f"][v]}"/><ellipse cx="795" cy="350" rx="14" ry="10" fill="#5fd38a"/><circle cx="805" cy="342" r="6" fill="#5fd38a"/><path d="M810 342 l7 2 l-7 3" fill="#ffb703"/>`) },
+    { id: "lustre", n: "Le lustre", i: "💡", c: 220, s: ["Verre soufflé", "Rotin", "Cristal"], a: [450, 80], box: [360, 0, 180, 150],
+      d: (v) => (v < 0 ? `<line x1="450" x2="450" y1="0" y2="70" stroke="#333" stroke-width="3"/>` : `<line x1="450" x2="450" y1="0" y2="60" stroke="#555" stroke-width="3"/>` + [`<circle cx="430" cy="95" r="20" fill="#bfe6ff" opacity=".85"/><circle cx="470" cy="100" r="18" fill="#ffd8a8" opacity=".85"/><circle cx="450" cy="120" r="16" fill="#d8f5c8" opacity=".85"/>`, `<path d="M400 120 Q450 30 500 120 Z" fill="#d8b07a" stroke="#a8803f" stroke-width="3"/>`, `<path d="M400 80 Q450 120 500 80" stroke="#e8f4ff" stroke-width="5" fill="none"/>` + [400, 425, 450, 475, 500].map((x) => `<path d="M${x} 84 l-6 14 l6 10 l6 -10 z" fill="#cfe8ff"/>`).join("")][v]) }
+   ] }
+);
 const ZONE_BY = Object.fromEntries(ZONES.map((z) => [z.id, z]));
 const zoneSVG = (z, S, override = null, viewBox = null) => {
   const it = { ...(S.items[z.id] || {}) }; if (override) it[override.id] = override.v;
@@ -430,7 +639,7 @@ const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(
 const dayDiff = (a, b) => Math.round((new Date(b) - new Date(a)) / 86400000);
 
 const DEF = () => ({ v: 1, coins: 150, stars: 0, level: 1, items: {}, boosters: { hint: 3, time: 2, bolt: 1 }, found: {},
-  stats: { levels: 0, objects: 0, perfect: 0, three: 0, bestCombo: 0, night: 0, renov: 0 }, ach: {}, daily: { last: "", streak: 0 },
+  stats: { levels: 0, objects: 0, perfect: 0, three: 0, bestCombo: 0, night: 0, renov: 0, boss: 0, treasures: 0 }, ach: {}, treasures: {}, sets: {}, daily: { last: "", streak: 0 },
   settings: { sound: true, music: false, vib: true }, story: {}, upd: 0 });
 const merge = (base, extra) => { for (const k of Object.keys(extra || {})) { const v = extra[k]; base[k] = v && typeof v === "object" && !Array.isArray(v) && base[k] && typeof base[k] === "object" ? merge(base[k], v) : v; } return base; };
 let S = DEF();
@@ -497,9 +706,13 @@ const levelCfg = (L) => {
   const theme = THEMES[(L - 1) % THEMES.length];
   let mode = "image";
   if (L >= 6 && L % 7 === 6) mode = "nuit"; else if (L >= 4 && L % 4 === 0) mode = "ombres"; else if (L >= 3 && L % 3 === 2) mode = "mots";
-  const targets = Math.min(12, 5 + Math.floor(L / 3)), clutter = Math.min(62, 22 + L * 2);
-  const tmin = Math.max(46, 74 - L * 1.1);
-  return { L, theme, mode, targets, clutter, tmin, tmax: tmin + 22, time: 60 + targets * 9 + (mode === "nuit" ? 25 : 0) + (mode === "mots" ? 8 : 0) };
+  const boss = L % 10 === 0;
+  if (boss) mode = L % 20 === 0 ? "ombres" : "image";
+  const targets = Math.min(boss ? 15 : 12, 5 + Math.floor(L / 3) + (boss ? 3 : 0)), clutter = Math.min(boss ? 76 : 64, 22 + L * 2 + (boss ? 12 : 0));
+  const tmin = Math.max(44, 74 - L * 1.1);
+  const tr = rng(L * 31 + 7)(), left = TREASURE_ALL.filter((x) => !S.treasures[x.e]);
+  const treasure = left.length && (boss || tr < 0.4) ? left[Math.floor(rng(L * 97 + 3)() * left.length)] : null;
+  return { L, theme, mode, boss, treasure, targets, clutter, tmin, tmax: tmin + 22, time: 60 + targets * 9 + (mode === "nuit" ? 25 : 0) + (mode === "mots" ? 8 : 0) + (boss ? 45 : 0) };
 };
 const PRICE = { hint: 60, time: 50, bolt: 110 };
 const BOOST = { hint: ["🔍", "Loupe"], time: ["⏳", "+30 s"], bolt: ["⚡", "Éclair"] };
@@ -520,8 +733,10 @@ const buildScene = (cfg, attempt) => {
     return null;
   };
   const tl = targets.map((e) => place(e, cfg.tmin + r() * (cfg.tmax - cfg.tmin), true)).filter(Boolean);
+  const treasure = cfg.treasure ? place(cfg.treasure.e, cfg.tmin * 0.85, true) : null;
+  if (treasure) { treasure.t = false; treasure.treasure = cfg.treasure; }
   for (let i = 0; i < cfg.clutter; i++) place(clutterPool[i % clutterPool.length], 40 + r() * 52, false);
-  return { sc, objs: shuffle(placed, r), targets: tl };
+  return { sc, objs: shuffle(placed, r), targets: tl, treasure };
 };
 
 let G = null;
@@ -532,9 +747,9 @@ const startLevel = (attempt = 0) => {
   G = g;
   const chips = built.targets.map((o, i) => `<div class="chip" data-i="${i}">${cfg.mode === "mots" ? "" : `<span class="e ${cfg.mode === "ombres" ? "sil" : ""}">${o.e}</span>`}${cfg.mode === "ombres" ? "" : `<span>${CATALOG[o.e]}</span>`}</div>`).join("");
   const root = el(`<div id="game">
-    <div class="ghead"><button class="iconbtn" id="gPause" aria-label="Pause">⏸</button><div class="lvl">Niv. ${cfg.L}</div><span class="modebadge">${MODES[cfg.mode]}</span><div class="timer" id="gTimer"><i></i><span></span></div></div>
+    <div class="ghead"><button class="iconbtn" id="gPause" aria-label="Pause">⏸</button><div class="lvl">Niv. ${cfg.L}</div><span class="modebadge">${cfg.boss ? "Grand ménage" : MODES[cfg.mode]}</span><div class="timer" id="gTimer"><i></i><span></span></div></div>
     <div class="viewport" id="gView"><div class="world" id="gWorld" style="width:${SW}px;height:${SH}px">${svg(built.sc.back)}</div>${cfg.mode === "nuit" ? `<div class="night" id="gNight"></div>` : ""}<div class="zoomctl"><button id="zIn" aria-label="Zoomer">+</button><button id="zOut" aria-label="Dézoomer">−</button></div></div>
-    <div class="gfoot"><div class="targets" id="gTargets">${chips}</div><div class="boosters">${Object.entries(BOOST).map(([k, [ic, n]]) => `<button class="boost" data-b="${k}"><span>${ic}</span>${n}<b>${S.boosters[k]}</b></button>`).join("")}</div></div></div>`);
+    <div class="gfoot"><div class="targets" id="gTargets">${chips}${built.treasure ? `<div class="chip treasure" id="gTreasure" title="Un trésor de famille est caché ici : il ne fait pas partie de la liste"><span class="e">✨</span><span>Trésor caché</span></div>` : ""}</div><div class="boosters">${Object.entries(BOOST).map(([k, [ic, n]]) => `<button class="boost" data-b="${k}"><span>${ic}</span>${n}<kbd class="kbd">${{ hint: "L", time: "T", bolt: "E" }[k]}</kbd><b>${S.boosters[k]}</b></button>`).join("")}</div><p class="keyhelp">Molette : zoom · glisser : se déplacer · Espace : pause · 0 : vue entière</p></div></div>`);
   document.body.append(root);
   const world = $("#gWorld"), view = $("#gView");
   built.objs.forEach((o) => { const d = el(`<div class="obj"></div>`); d.textContent = o.e; d.style.left = o.x + "px"; d.style.top = o.y + "px"; d.style.fontSize = o.size + "px"; d.style.opacity = o.op; d.style.transform = `translate(-50%,-50%) rotate(${o.rot}deg) ${o.flip ? "scaleX(-1)" : ""}`; o.node = d; world.append(d); });
@@ -543,13 +758,14 @@ const startLevel = (attempt = 0) => {
 
   /* camera: cover-fit, pinch and wheel zoom, drag to pan */
   const cam = { s: 1, tx: 0, ty: 0, fit: 1 };
-  const clampCam = () => { const vw = view.clientWidth, vh = view.clientHeight; cam.s = Math.min(cam.fit * 3.2, Math.max(cam.fit, cam.s)); const W = SW * cam.s, H = SH * cam.s; cam.tx = W <= vw ? (vw - W) / 2 : Math.min(0, Math.max(vw - W, cam.tx)); cam.ty = H <= vh ? (vh - H) / 2 : Math.min(0, Math.max(vh - H, cam.ty)); world.style.transform = `translate(${cam.tx}px,${cam.ty}px) scale(${cam.s})`; };
-  const fit = () => { const vw = view.clientWidth, vh = view.clientHeight; cam.fit = Math.max(vw / SW, vh / SH) * 0.999; if (cam.s < cam.fit || !g.fitted) { cam.s = cam.fit; cam.tx = (vw - SW * cam.s) / 2; cam.ty = (vh - SH * cam.s) / 2; g.fitted = true; } clampCam(); };
+  const clampCam = () => { const vw = view.clientWidth, vh = view.clientHeight; cam.s = Math.min(cam.fit * 4, Math.max(cam.fit, cam.s)); const W = SW * cam.s, H = SH * cam.s; cam.tx = W <= vw ? (vw - W) / 2 : Math.min(0, Math.max(vw - W, cam.tx)); cam.ty = H <= vh ? (vh - H) / 2 : Math.min(0, Math.max(vh - H, cam.ty)); world.style.transform = `translate(${cam.tx}px,${cam.ty}px) scale(${cam.s})`; };
+  const wide = () => window.matchMedia("(min-width: 900px)").matches || view.clientWidth > view.clientHeight;
+  const fit = (reset) => { const vw = view.clientWidth, vh = view.clientHeight; cam.fit = (wide() ? Math.min(vw / SW, vh / SH) : Math.max(vw / SW, vh / SH)) * 0.999; if (reset === true) g.fitted = false; if (cam.s < cam.fit || !g.fitted) { cam.s = cam.fit; cam.tx = (vw - SW * cam.s) / 2; cam.ty = (vh - SH * cam.s) / 2; g.fitted = true; } clampCam(); };
   const zoomAt = (f, cx, cy) => { const rct = view.getBoundingClientRect(), px = cx - rct.left, py = cy - rct.top, wx = (px - cam.tx) / cam.s, wy = (py - cam.ty) / cam.s; cam.s *= f; clampCam(); cam.tx = px - wx * cam.s; cam.ty = py - wy * cam.s; clampCam(); };
   g.focus = (o, zoom = 1.8) => { const vw = view.clientWidth, vh = view.clientHeight; world.style.transition = "transform .5s ease"; cam.s = Math.max(cam.s, cam.fit * zoom); cam.tx = vw / 2 - o.x * cam.s; cam.ty = vh / 2 - o.y * cam.s; clampCam(); setTimeout(() => (world.style.transition = ""), 520); };
-  requestAnimationFrame(fit); g.onResize = fit; window.addEventListener("resize", fit);
+  requestAnimationFrame(fit); g.onResize = () => fit(); window.addEventListener("resize", g.onResize);
   const ptrs = new Map(); let pinch = null, moved = false, downT = 0;
-  const night = $("#gNight"), light = (x, y) => { if (night) { const rct = view.getBoundingClientRect(); night.style.background = `radial-gradient(circle 120px at ${x - rct.left}px ${y - rct.top}px, transparent 0, transparent 55%, rgba(6,3,16,.97) 100%)`; } };
+  const night = $("#gNight"), light = (x, y) => { if (night) { const rct = view.getBoundingClientRect(); night.style.background = `radial-gradient(circle ${wide() ? 170 : 120}px at ${x - rct.left}px ${y - rct.top}px, transparent 0, transparent 55%, rgba(6,3,16,.97) 100%)`; } };
   if (night) requestAnimationFrame(() => { const rct = view.getBoundingClientRect(); light(rct.left + rct.width / 2, rct.top + rct.height / 2); });
   view.addEventListener("pointerdown", (e) => { audio(); view.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (ptrs.size === 1) { moved = false; downT = performance.now(); } if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), s: cam.s }; moved = true; } light(e.clientX, e.clientY); });
   view.addEventListener("pointermove", (e) => { light(e.clientX, e.clientY); const p = ptrs.get(e.pointerId); if (!p) return; const dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
@@ -582,9 +798,16 @@ const startLevel = (attempt = 0) => {
     let best = null, bd = 1e9;
     for (const o of remaining()) { const d = Math.hypot(o.x - wx, o.y - wy); if (d < o.size * 0.62 + tol && d < bd) { best = o; bd = d; } }
     if (best) return markFound(best, false);
+    const tr = built.treasure; if (tr && !tr.got && Math.hypot(tr.x - wx, tr.y - wy) < tr.size * 0.62 + tol) return grabTreasure(tr);
     g.misses++; g.combo = 0; g.left = Math.max(0, g.left - 3); fx("miss", wx, wy, "✕"); sfx("miss"); vib([30, 40, 30]);
     g.missTimes = g.missTimes.filter((t) => now - t < 2500).concat(now);
     if (g.missTimes.length >= 4) { g.locked = now + 2000; g.missTimes = []; toast("Trop de clics au hasard : pause de 2 secondes."); }
+  };
+  const grabTreasure = (o) => {
+    o.got = true; g.treasureFound = o.treasure; o.node.classList.add("gone"); fx("ring", o.x, o.y); fx("ring", o.x, o.y);
+    S.treasures[o.treasure.e] = 1; S.stats.treasures = (S.stats.treasures || 0) + 1;
+    const c = $("#gTreasure"); if (c) { c.classList.add("done", "got"); c.innerHTML = `<span class="e">${o.e}</span><span>${o.treasure.n}</span>`; }
+    sfx("buy"); vib(40); const pop = el(`<div class="combo">Trésor de famille !</div>`); view.append(pop); setTimeout(() => pop.remove(), 750); save();
   };
   g.tapForTest = (o) => markFound(o, false);
 
@@ -636,30 +859,45 @@ const startLevel = (attempt = 0) => {
   const win = () => {
     if (g.over) return; g.over = true; sfx("win"); confetti(70);
     const ratio = g.left / g.total, stars = ratio >= 0.45 ? 3 : ratio >= 0.2 ? 2 : 1;
-    const base = 30 + 6 * cfg.targets, tb = Math.floor(g.left * 0.8), perfect = g.misses === 0 ? 40 : 0, night = cfg.mode === "nuit" ? 30 : 0, total = base + tb + g.comboCoins + perfect + night;
+    const base = 30 + 6 * cfg.targets + 4 * Math.min(cfg.L, 150), tb = Math.floor(g.left * 0.8), perfect = g.misses === 0 ? 40 : 0, night = cfg.mode === "nuit" ? 30 : 0, boss = cfg.boss ? Math.round((base + tb) * 0.5) : 0, total = base + tb + g.comboCoins + perfect + night + boss;
+    let setDone = null; if (g.treasureFound) { const t = TREASURES.find((x) => x.id === g.treasureFound.set); if (t && t.e.every(([e]) => S.treasures[e]) && !S.sets[t.id]) { S.sets[t.id] = 1; S.coins += t.r; S.stars += 5; setDone = t; } }
     const firstWin = !S.story.firstWin;
-    S.coins += total; S.stars += stars; S.level++; S.stats.levels++; if (!g.misses) S.stats.perfect++; if (stars === 3) S.stats.three++; if (cfg.mode === "nuit") S.stats.night++; S.stats.bestCombo = Math.max(S.stats.bestCombo, g.comboMax);
+    S.coins += total; S.stars += stars; S.level++; S.stats.levels++; if (!g.misses) S.stats.perfect++; if (stars === 3) S.stats.three++; if (cfg.mode === "nuit") S.stats.night++; if (cfg.boss) S.stats.boss = (S.stats.boss || 0) + 1; S.stats.bestCombo = Math.max(S.stats.bestCombo, g.comboMax);
     save();
-    const lines = [["Niveau terminé", base], ["Temps restant", tb], ["Combos", g.comboCoins], ["Sans erreur", perfect], ["Bonus de nuit", night]].filter(([, v]) => v > 0);
+    const lines = [["Niveau terminé", base], ["Temps restant", tb], ["Combos", g.comboCoins], ["Sans erreur", perfect], ["Bonus de nuit", night], ["Grand ménage", boss]].filter(([, v]) => v > 0);
     const s = sheet(`<h2 style="text-align:center">Bravo !</h2><div class="result-stars">${[1, 2, 3].map((k) => `<span data-k="${k}">⭐</span>`).join("")}</div>
       <div class="lines">${lines.map(([n, v]) => `<div><span>${n}</span><span>+${v} 🪙</span></div>`).join("")}<div><span>Total</span><span>+${total} 🪙 · +${stars} ⭐</span></div></div>
+      ${g.treasureFound ? `<p class="treasureline">✨ Trésor trouvé : ${g.treasureFound.e} ${g.treasureFound.n}${setDone ? `<br><b>Collection « ${setDone.n} » complète : +${setDone.r} 🪙 · +5 ⭐</b>` : ""}</p>` : built.treasure ? `<p class="treasureline muted">Un trésor de famille était caché ici… tu le trouveras une autre fois.</p>` : ""}
       <button class="btn gold" id="wOk">Continuer</button>`, { center: true, locked: true });
     [1, 2, 3].forEach((k) => setTimeout(() => { if (k <= stars) { s.querySelector(`[data-k="${k}"]`).classList.add("on"); sfx("coin"); } }, 300 + k * 280));
     $("#wOk", s).onclick = () => { closeSheet(); endGame(); renderAll(); checkUnlocks(); if (firstWin) story("firstWin", "Merveilleux ! Avec ces <b>pièces</b>, tu peux commencer les travaux. Touche le marteau sur le jardin et commence par <b>désherber</b>. Les <b>étoiles</b>, elles, ouvrent les autres parties de la maison."); };
   };
   const MODE_TIP = { mots: "Mode <b>Mots</b> : la liste n'affiche que les noms. Lis bien !", ombres: "Mode <b>Ombres</b> : retrouve les objets d'après leur silhouette. Si tu bloques, touche une silhouette pour voir son nom (ça coûte 5 secondes).", nuit: "Mode <b>Nuit</b> : il fait noir ! Glisse le doigt pour déplacer la lampe et éclairer la pièce." };
   if (S.story.tuto && MODE_TIP[cfg.mode] && !S.story["mode_" + cfg.mode]) { S.story["mode_" + cfg.mode] = 1; save(); g.pause(); say(MODE_TIP[cfg.mode], "Compris !", () => g.resume()); }
-  if (!S.story.tuto) { S.story.tuto = 1; save(); g.pause(); say("Retrouve les objets de la liste du bas en les <b>touchant dans la scène</b>. Écarte deux doigts pour <b>zoomer</b>, glisse pour te déplacer. Attention : chaque erreur coûte 3 secondes !", "C'est parti !", () => g.resume()); }
+  g.onKey = (e) => {
+    if (G !== g || e.ctrlKey || e.metaKey || e.altKey) return;
+    const k = e.key.toLowerCase(), r = view.getBoundingClientRect();
+    if ($("#layer").children.length) return;
+    if (k === " " || k === "escape" || k === "p") { e.preventDefault(); $("#gPause").click(); }
+    else if (k === "l" || k === "h") useBoost("hint"); else if (k === "t") useBoost("time"); else if (k === "e") useBoost("bolt");
+    else if (k === "+" || k === "=") zoomAt(1.3, r.left + r.width / 2, r.top + r.height / 2); else if (k === "-") zoomAt(1 / 1.3, r.left + r.width / 2, r.top + r.height / 2);
+    else if (k === "0") fit(true);
+  };
+  window.addEventListener("keydown", g.onKey);
+  if (!S.story.tuto) { S.story.tuto = 1; save(); g.pause(); say("Retrouve les objets de la liste du bas en les <b>touchant dans la scène</b>. Pour <b>zoomer</b>, écarte deux doigts ou utilise la molette de la souris ; glisse pour te déplacer. Attention : chaque erreur coûte 3 secondes !", "C'est parti !", () => g.resume()); }
 };
-const endGame = () => { if (!G) return; window.removeEventListener("resize", G.onResize); G = null; const n = $("#game"); if (n) n.remove(); };
+const endGame = () => { if (!G) return; window.removeEventListener("resize", G.onResize); window.removeEventListener("keydown", G.onKey); G = null; const n = $("#game"); if (n) n.remove(); };
 /* ================= the estate, shop, album, achievements ================= */
 let VIEW = "domaine", ZONE = "jardin";
 const zoneCount = (z) => z.items.filter((x) => (S.items[z.id] || {})[x.id] !== undefined).length;
-const zoneOpen = (z) => S.stars >= z.need;
-const TAB = { jardin: "Jardin", facade: "Façade", salon: "Salon", cuisine: "Cuisine", chambre: "Chambre", piscine: "Piscine" };
-const SHORT = { salon: "Salon", cuisine: "Cuisine", jardin: "Jardin", grenier: "Grenier", chambre: "Chambre", atelier: "Atelier", serre: "Serre", biblio: "Bibliothèque" };
+const zoneOpen = (z) => { const i = ZONES.indexOf(z); return i === 0 || zoneCount(ZONES[i - 1]) === 8; };
+const TAB = { jardin: "Jardin", facade: "Façade", salon: "Salon", cuisine: "Cuisine", chambre: "Chambre", piscine: "Piscine", bain: "Salle de bain", biblio: "Bibliothèque", potager: "Potager", jeux: "Salle de jeux", etang: "Étang", veranda: "Véranda" };
+const SHORT = { salon: "Salon", cuisine: "Cuisine", jardin: "Jardin", grenier: "Grenier", chambre: "Chambre", atelier: "Atelier", serre: "Serre", biblio: "Bibliothèque", bain: "Salle de bain", potager: "Potager", etang: "Étang", jeux: "Salle de jeux" };
 const allCount = () => ZONES.reduce((a, z) => a + zoneCount(z), 0);
-const priceOf = (z, it) => Math.round(it.c * (1 + ZONES.indexOf(z) * 0.35) / 5) * 5;
+const priceOf = (z, it) => Math.round(it.c * (1 + ZONES.indexOf(z) * 0.22) / 5) * 5;
+/* stars per renovation: 1 for the two cheapest, 3 for the two dearest, 2 otherwise, +1 in the second half of the estate */
+const starOf = (z, it) => { const rank = [...z.items].sort((a, b) => a.c - b.c).indexOf(it); return (rank < 2 ? 1 : rank < 6 ? 2 : 3) + (ZONES.indexOf(z) >= 6 ? 1 : 0); };
+const prevZone = (z) => ZONES[ZONES.indexOf(z) - 1];
 
 const ACH = [
   ["first", "Premiers pas", "Termine ton premier niveau", (s) => s.stats.levels, 1, 50],
@@ -676,7 +914,13 @@ const ACH = [
   ["renov20", "Décorateur", "Fais 20 rénovations", (s) => s.stats.renov, 20, 300],
   ...ZONES.map((z, i) => [`zone_${z.id}`, `${z.name} terminé${z.name.startsWith("La") ? "e" : ""}`, `Rénove entièrement ${z.name.toLowerCase()}`, () => zoneCount(z), 8, 150 + i * 60]),
   ["all", "Les Glycines renaissent", "Rénove tout le domaine", () => allCount(), ZONES.length * 8, 1000],
-  ["streak7", "Fidèle", "Ouvre le jeu 7 jours de suite", (s) => s.daily.streak, 7, 250]
+  ["streak7", "Fidèle", "Ouvre le jeu 7 jours de suite", (s) => s.daily.streak, 7, 250],
+  ["lv60", "Gardien des Glycines", "Termine 60 niveaux", (s) => s.stats.levels, 60, 800],
+  ["lv100", "Légende des Glycines", "Termine 100 niveaux", (s) => s.stats.levels, 100, 1500],
+  ["obj1500", "Fin limier", "Trouve 1 500 objets", (s) => s.stats.objects, 1500, 800],
+  ["boss5", "Grand ménage", "Termine 5 niveaux « Grand ménage »", (s) => s.stats.boss || 0, 5, 400],
+  ["tr10", "Chasseur de trésors", "Trouve 10 trésors de famille", (s) => Object.keys(s.treasures || {}).length, 10, 300],
+  ["trall", "Héritage complet", "Complète les 6 collections de trésors", (s) => TREASURES.filter((t) => t.e.every(([e]) => (s.treasures || {})[e])).length, 6, 1500]
 ];
 const achReady = () => ACH.filter(([id, , , f, n]) => !S.ach[id] && f(S) >= n).length;
 
@@ -684,7 +928,7 @@ const renderTop = () => {
   const c = $("#coinVal"), s = $("#starVal");
   if (c.textContent !== fmt(S.coins)) { c.textContent = fmt(S.coins); $("#coinPill").classList.remove("bump"); void $("#coinPill").offsetWidth; $("#coinPill").classList.add("bump"); }
   if (s.textContent !== fmt(S.stars)) { s.textContent = fmt(S.stars); $("#starPill").classList.remove("bump"); void $("#starPill").offsetWidth; $("#starPill").classList.add("bump"); }
-  const cfg = levelCfg(S.level); $("#lvlNum").textContent = S.level; $("#lvlMode").textContent = `· ${SHORT[cfg.theme.id]} · ${MODES[cfg.mode]}`;
+  const cfg = levelCfg(S.level); $("#lvlNum").textContent = S.level; $("#lvlMode").textContent = `· ${SHORT[cfg.theme.id]} · ${cfg.boss ? "Grand ménage" : MODES[cfg.mode]}`;
   $("#achDot").hidden = !achReady();
   $("#dailyBtn").style.opacity = S.daily.last === today() ? 0.5 : 1;
 };
@@ -695,39 +939,40 @@ const viewDomaine = () => {
   const marks = open ? z.items.filter((x) => it[x.id] === undefined).map((x) => `<g class="mark" data-item="${x.id}" transform="translate(${x.a[0]} ${x.a[1]})"><circle r="30" fill="#ffc94a" stroke="#fff" stroke-width="5"/><text y="11" text-anchor="middle" font-size="30">🔨</text></g>`).join("") : "";
   const scene = zoneSVG(z, S).replace("</svg>", marks + "</svg>");
   $("#main").innerHTML = `<section class="view">
-    <div class="zonetabs" role="tablist">${ZONES.map((q) => `<button class="ztab ${zoneOpen(q) ? "" : "locked"}" role="tab" aria-selected="${q.id === ZONE}" data-z="${q.id}">${q.icon} ${TAB[q.id]} ${zoneOpen(q) ? `<span class="muted">${zoneCount(q)}/8</span>` : `🔒 ${q.need}⭐`}</button>`).join("")}</div>
-    <div class="zonehead"><div><h2>${z.name}</h2><span class="muted">${open ? `${done} rénovation${done > 1 ? "s" : ""} sur 8` : `Débloquée avec ${z.need} étoiles`}</span></div><span class="muted">${Math.round((done / 8) * 100)} %</span></div>
+    <div class="zonetabs" role="tablist">${ZONES.map((q) => `<button class="ztab ${zoneOpen(q) ? "" : "locked"}" role="tab" aria-selected="${q.id === ZONE}" data-z="${q.id}">${q.icon} ${TAB[q.id]} ${zoneOpen(q) ? `<span class="muted">${zoneCount(q)}/8</span>` : "🔒"}</button>`).join("")}</div>
+    <div class="dgrid"><div class="dcol"><div class="zonehead"><div><h2>${z.name}</h2><span class="muted">${open ? `${done} rénovation${done > 1 ? "s" : ""} sur 8 · zone ${ZONES.indexOf(z) + 1} sur ${ZONES.length}` : `Zone ${ZONES.indexOf(z) + 1} sur ${ZONES.length} · verrouillée`}</span></div><span class="muted">${Math.round((done / 8) * 100)} %</span></div>
     <div class="progress"><i style="width:${(done / 8) * 100}%"></i></div>
-    <div class="scenecard" id="zoneScene">${scene}${open ? "" : `<div class="lockveil"><div><b>🔒 ${z.name}</b><p>Il te faut <b>${z.need} ⭐</b> pour ouvrir cette partie. Tu en as ${S.stars}.<br>Chaque niveau rapporte jusqu'à 3 étoiles.</p></div></div>`}</div>
-    ${open ? `<h3>Rénovations</h3><div class="tasks">${z.items.map((x) => { const v = it[x.id], p = priceOf(z, x); return `<button class="task ${v !== undefined ? "done" : S.coins < p ? "cant" : ""}" data-item="${x.id}"><span class="ti">${x.i}</span><span class="tn">${x.n}</span><span class="tp">${v !== undefined ? `✓ ${x.s[v]}` : `🪙 ${fmt(p)}`}</span></button>`; }).join("")}</div>` : ""}
+    <div class="scenecard" id="zoneScene">${scene}${open ? "" : `<div class="lockveil"><div><b>🔒 ${z.name}</b><p>Termine d'abord <b>${prevZone(z).name.toLowerCase()}</b> (${zoneCount(prevZone(z))}/8) pour ouvrir cette partie de la maison.</p></div></div>`}</div></div>
+    <div class="dcol">${open ? `<h3>Rénovations</h3><div class="tasks">${z.items.map((x) => { const v = it[x.id], p = priceOf(z, x), st = starOf(z, x); return `<button class="task ${v !== undefined ? "done" : S.coins < p || S.stars < st ? "cant" : ""}" data-item="${x.id}"><span class="ti">${x.i}</span><span class="tn">${x.n}</span><span class="tp">${v !== undefined ? `✓ ${x.s[v]}` : `🪙 ${fmt(p)} · ⭐ ${st}`}</span></button>`; }).join("")}</div>` : `<div class="card"><div class="big">🗝️</div><div class="grow"><b>Encore un peu de patience</b><span>Chaque zone s'ouvre quand la précédente est entièrement rénovée. Il y a ${ZONES.length} zones à remettre en état.</span></div></div>`}</div></div>
   </section>`;
   document.querySelectorAll(".ztab").forEach((b) => (b.onclick = () => { sfx("click"); ZONE = b.dataset.z; viewDomaine(); }));
   document.querySelectorAll("[data-item]").forEach((b) => (b.onclick = () => { sfx("click"); openItem(z, z.items.find((x) => x.id === b.dataset.item)); }));
 };
 
 const openItem = (z, x) => {
-  const it = S.items[z.id] || {}, owned = it[x.id] !== undefined, p = priceOf(z, x);
+  const it = S.items[z.id] || {}, owned = it[x.id] !== undefined, p = priceOf(z, x), st = starOf(z, x);
   let sel = owned ? it[x.id] : 0;
   const [bx, by, bw, bh] = x.box, pad = 20, vb = `${bx - pad} ${by - pad} ${bw + pad * 2} ${bh + pad * 2}`;
   const s = sheet(`<div class="speaker">${ODETTE}<div class="bubble"><b>${x.i} ${x.n}</b><br>${owned ? "Tu peux changer de style gratuitement." : "Choisis un style, je m'occupe du reste !"}</div></div>
     <div class="styles">${x.s.map((n, v) => `<button class="style" data-v="${v}" aria-pressed="${v === sel}">${zoneSVG(z, S, { id: x.id, v }, vb)}<span>${n}</span></button>`).join("")}</div>
     <div id="itBtn"></div><button class="btn ghost" id="itClose">Fermer</button>`);
-  const paint = () => { s.querySelectorAll(".style").forEach((b) => b.setAttribute("aria-pressed", +b.dataset.v === sel)); const can = S.coins >= p;
-    $("#itBtn", s).innerHTML = owned ? `<button class="btn" id="itGo" ${it[x.id] === sel ? "disabled" : ""}>Appliquer ce style</button>` : can ? `<button class="btn gold" id="itGo">Rénover · 🪙 ${fmt(p)}</button>` : `<button class="btn gold" disabled>Il te manque 🪙 ${fmt(p - S.coins)}</button><p class="muted" style="text-align:center;margin:6px 0 0">Joue un niveau pour gagner des pièces.</p>`;
+  const paint = () => { s.querySelectorAll(".style").forEach((b) => b.setAttribute("aria-pressed", +b.dataset.v === sel)); const can = S.coins >= p && S.stars >= st, miss = [S.coins < p ? `🪙 ${fmt(p - S.coins)}` : "", S.stars < st ? `⭐ ${st - S.stars}` : ""].filter(Boolean).join(" et ");
+    $("#itBtn", s).innerHTML = owned ? `<button class="btn" id="itGo" ${it[x.id] === sel ? "disabled" : ""}>Appliquer ce style</button>` : can ? `<button class="btn gold" id="itGo">Rénover · 🪙 ${fmt(p)} · ⭐ ${st}</button>` : `<button class="btn gold" disabled>Il te manque ${miss}</button><p class="muted" style="text-align:center;margin:6px 0 0">Joue des niveaux pour gagner des pièces et des étoiles.</p>`;
     const go = $("#itGo", s); if (go) go.onclick = buy; };
   const buy = () => {
-    if (!owned) { if (S.coins < p) return; S.coins -= p; S.stats.renov++; }
+    if (!owned) { if (S.coins < p || S.stars < st) return; S.coins -= p; S.stars -= st; S.stats.renov++; }
     S.items[z.id] = { ...(S.items[z.id] || {}), [x.id]: sel }; save(); closeSheet(); sfx(owned ? "click" : "buy"); if (!owned) confetti(40);
     renderAll(); const svgEl = $("#zoneScene svg"); if (svgEl) { svgEl.style.transition = "filter .6s"; svgEl.style.filter = "brightness(1.35)"; setTimeout(() => (svgEl.style.filter = ""), 250); }
     if (!owned) toast(`${x.n} : ${x.s[sel].toLowerCase()} !`);
-    if (zoneCount(z) === 8) setTimeout(() => story(`done_${z.id}`, z.id === "piscine" ? "Oh… regarde ce domaine ! Les Glycines n'ont jamais été aussi belles. Merci, mon petit. Continue à jouer : il reste toujours des objets cachés et des succès à décrocher !" : `${z.name} est entièrement rénové${z.name.startsWith("La") ? "e" : ""} ! Je n'en reviens pas. Gagne des étoiles pour ouvrir la suite de la maison.`), 600);
+    const last = ZONES.indexOf(z) === ZONES.length - 1;
+    if (zoneCount(z) === 8) setTimeout(() => story(`done_${z.id}`, last ? "Oh… regarde ce domaine ! Les Glycines n'ont jamais été aussi belles. Merci, mon petit. Il reste toujours des objets cachés, des trésors de famille et des succès à décrocher !" : `${z.name} est entièrement rénové${/^(La|L'étang)/.test(z.name) ? "e" : ""} ! Je n'en reviens pas.`, checkUnlocks), 600);
   };
   s.querySelectorAll(".style").forEach((b) => (b.onclick = () => { sel = +b.dataset.v; sfx("click"); paint(); }));
   $("#itClose", s).onclick = closeSheet; paint();
 };
 
 const checkUnlocks = () => {
-  ZONES.forEach((z, i) => { if (i && zoneOpen(z) && !S.story[`open_${z.id}`]) { S.story[`open_${z.id}`] = 1; save(); setTimeout(() => say(`Tu as gagné assez d'étoiles : <b>${z.name.toLowerCase()}</b> est ouvert${z.name.startsWith("La") ? "e" : ""} aux travaux ! Va voir dans le Domaine.`, "Allons-y !", () => { ZONE = z.id; VIEW = "domaine"; renderAll(); }), 400); } });
+  ZONES.forEach((z, i) => { if (i && zoneOpen(z) && !S.story[`open_${z.id}`]) { S.story[`open_${z.id}`] = 1; save(); setTimeout(() => say(`Une nouvelle partie de la maison t'attend : <b>${z.name.toLowerCase()}</b>. Au travail !`, "Allons-y !", () => { ZONE = z.id; VIEW = "domaine"; renderAll(); }), 400); } });
 };
 
 const SHOP = [["hint", 1, 60], ["hint", 5, 250], ["time", 1, 50], ["time", 5, 210], ["bolt", 1, 110], ["bolt", 3, 300]];
@@ -750,7 +995,8 @@ const openDaily = () => {
 
 const viewAlbum = () => {
   const n = Object.keys(S.found).length;
-  $("#main").innerHTML = `<section class="view"><h2>Album des trouvailles</h2><p class="muted" style="margin:0">${n} objets découverts sur ${ALL_OBJ.length}. Touche un objet pour voir son nom.</p><div class="progress"><i style="width:${(n / ALL_OBJ.length) * 100}%"></i></div>
+  const sets = TREASURES.map((t) => { const got = t.e.filter(([e]) => S.treasures[e]).length; return `<div class="card tset ${got === 5 ? "full" : ""}"><div class="grow"><b>${t.n} · ${got}/5</b><div class="slots">${t.e.map(([e, n]) => S.treasures[e] ? `<span title="${n}">${e}</span>` : `<span class="q" title="Pas encore trouvé">?</span>`).join("")}</div><span>${got === 5 ? "Collection complète ✓" : `Récompense : ${t.r} 🪙 et 5 ⭐`}</span></div></div>`; }).join("");
+  $("#main").innerHTML = `<section class="view"><h2>Trésors de famille</h2><p class="muted" style="margin:0">Un trésor se cache parfois dans un niveau, en dehors de la liste : repère la case ✨ « Trésor caché ».</p><div class="sets">${sets}</div><h2>Album des trouvailles</h2><p class="muted" style="margin:0">${n} objets découverts sur ${ALL_OBJ.length}. Touche un objet pour voir son nom.</p><div class="progress"><i style="width:${(n / ALL_OBJ.length) * 100}%"></i></div>
     <div class="album">${ALL_OBJ.map((e) => `<div class="${S.found[e] ? "" : "no"}" data-e="${e}" role="img" aria-label="${S.found[e] ? CATALOG[e] : "Pas encore trouvé"}"><span>${e}</span>${S.found[e] ? `<small>${S.found[e]}</small>` : ""}</div>`).join("")}</div></section>`;
   document.querySelectorAll(".album div").forEach((d) => (d.onclick = () => toast(S.found[d.dataset.e] ? `${d.dataset.e} ${CATALOG[d.dataset.e]} · trouvé ${S.found[d.dataset.e]} fois` : "Pas encore trouvé : cherche bien !")));
 };
