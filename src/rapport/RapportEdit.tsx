@@ -481,133 +481,133 @@ const Halt = (t: number) => { const a0 = S(69), say = (f: number) => k(t, mid(69
 
 /* ---------- CHAPITRE 5 ---------- */
 const MX = 410, MCW = 110;
-const Measure = (t: number) => { const c0 = S(74) + 1.9, run = t >= S(76), tt = Math.max(0, t - S(76) - 0.2), pos = run ? bounce(tt, 0.26, 0, 7) : 0, steps = run ? Math.floor(tt / 0.26) : 0, vis = Math.min(8, run ? Math.min(7, steps) + 1 : 0);
-  const hl: Record<number, string> = {}; if (t >= S(77)) for (let i = 0; i < vis; i++) hl[i] = BLUE; hl[Math.round(pos)] = YEL;
+const Measure = (t: number) => { const c0 = S(109) + 1.9, run = t >= S(111), tt = Math.max(0, t - S(111) - 0.2), pos = run ? bounce(tt, 0.26, 0, 7) : 0, steps = run ? Math.floor(tt / 0.26) : 0, vis = Math.min(8, run ? Math.min(7, steps) + 1 : 0);
+  const hl: Record<number, string> = {}; if (t >= S(112)) for (let i = 0; i < vis; i++) hl[i] = BLUE; hl[Math.round(pos)] = YEL;
   return <>
     <T x={680} y={130} s={60} c={DIM} sc={pp(t, c0)}>résoluble ?</T><Tick x={890} y={130} ok sc={pp(t, c0 + 0.3)} /><Draw d="M960 130 H1070" p={k(t, c0 + 0.5, 0.3)} c={YEL} w={5} /><Head x={1076} y={130} p={k(t, c0 + 0.5, 0.3)} c={YEL} s={0.6} />
     <T x={1290} y={130} s={64} c={YEL} sc={pp(t, c0 + 0.7)}>à quel coût ?</T>
-    <Tape x={MX} y={400} cells={["1", "0", "1", "1", "0", "1", "_", "_", "_", "_"]} cw={MCW} p={k(t, S(75) + 0.1, 0.8)} hl={run ? hl : {}} />
-    <Bracket x1={MX + 6} x2={MX + 6 * MCW - 6} y={474} p={k(t, mid(75, 0.5), 0.5)} label="n = 6" />
-    <HeadBox x={cxOf(MX, pos, MCW)} y={400} cw={MCW} sc={pp(t, S(76) + 0.1)} />
-    <Card x={430} y={600} w={500} h={170} c={YEL} p={pp(t, S(76) + 0.3)}><T x={250} y={50} s={30} c={DIM} f="InterX">TEMPS</T><T x={250} y={115} s={56} c={YEL} f={KM}>{steps} transitions</T></Card>
-    <Card x={990} y={600} w={500} h={170} c={BLUE} p={pp(t, S(77) + 0.3)}><T x={250} y={50} s={30} c={DIM} f="InterX">ESPACE</T><T x={250} y={115} s={56} c={W} f={KM}>{vis} cases</T></Card>
-    <T x={960} y={830} s={28} c={DIM} f="InterX" sc={pp(t, mid(76, 0.6))}>dans le pire des cas, en fonction de n</T>
-    <g opacity={k(t, S(78), 0.4)}>{[["processeur lent", "2,0 s"], ["processeur rapide", "0,1 s"]].map(([a, b], i) => <g key={a} transform={`translate(${620 + i * 680} 960)`}>
-      <Desktop x={-160} y={10} s={0.55} sc={pp(t, S(78) + 0.2 + i * 0.3)} /><T x={40} y={-24} s={28} c={W} f="InterX" anchor="start">{a}</T><T x={40} y={22} s={30} c={YEL} f={KM} anchor="start">{steps} étapes · {b}</T></g>)}
-      <T x={960} y={1050} s={28} c={YEL} f="InterX" sc={pp(t, mid(78, 0.6))}>même nombre d’étapes : seul l’algorithme compte</T></g>
+    <Tape x={MX} y={400} cells={["1", "0", "1", "1", "0", "1", "_", "_", "_", "_"]} cw={MCW} p={k(t, S(110) + 0.1, 0.8)} hl={run ? hl : {}} />
+    <Bracket x1={MX + 6} x2={MX + 6 * MCW - 6} y={474} p={k(t, mid(110, 0.5), 0.5)} label="n = 6" />
+    <HeadBox x={cxOf(MX, pos, MCW)} y={400} cw={MCW} sc={pp(t, S(111) + 0.1)} />
+    <Card x={430} y={600} w={500} h={170} c={YEL} p={pp(t, S(111) + 0.3)}><T x={250} y={50} s={30} c={DIM} f="InterX">TEMPS</T><T x={250} y={115} s={56} c={YEL} f={KM}>{steps} transitions</T></Card>
+    <Card x={990} y={600} w={500} h={170} c={BLUE} p={pp(t, S(112) + 0.3)}><T x={250} y={50} s={30} c={DIM} f="InterX">ESPACE</T><T x={250} y={115} s={56} c={W} f={KM}>{vis} cases</T></Card>
+    <T x={960} y={830} s={28} c={DIM} f="InterX" sc={pp(t, mid(111, 0.6))}>dans le pire des cas, en fonction de n</T>
+    <g opacity={k(t, S(113), 0.4)}>{[["processeur lent", "2,0 s"], ["processeur rapide", "0,1 s"]].map(([a, b], i) => <g key={a} transform={`translate(${620 + i * 680} 960)`}>
+      <Desktop x={-160} y={10} s={0.55} sc={pp(t, S(113) + 0.2 + i * 0.3)} /><T x={40} y={-24} s={28} c={W} f="InterX" anchor="start">{a}</T><T x={40} y={22} s={30} c={YEL} f={KM} anchor="start">{steps} étapes · {b}</T></g>)}
+      <T x={960} y={1050} s={28} c={YEL} f="InterX" sc={pp(t, mid(113, 0.6))}>même nombre d’étapes : seul l’algorithme compte</T></g>
   </>; };
 const CLS: [number, number, number, number, string, string, string, number][] = [
   [620, 700, 240, 140, "P", "tri · plus court chemin", "temps polynomial · déterministe", 0],
   [770, 645, 440, 250, "NP", "sudoku · SAT", "vérifiable en temps polynomial", 1],
   [920, 600, 650, 360, "PSPACE", "QBF", "mémoire polynomiale", 2],
   [1030, 560, 830, 460, "EXPTIME", "échecs n × n", "temps exponentiel", 3]];
-const Classes = (t: number) => { const at = [mid(81, 0.4), mid(82, 0.15), mid(83, 0.08), mid(83, 0.42)], lx = [620, 1075, 1395, 1700];
+const Classes = (t: number) => { const at = [mid(116, 0.4), mid(117, 0.15), mid(118, 0.08), mid(118, 0.42)], lx = [620, 1075, 1395, 1700];
   return <>
-    {[...CLS].reverse().map(([cx, cy, rx, ry, n, ex, d, i]) => { const on = t >= at[i], cur = on && (i === 3 ? t < mid(83, 0.7) : t < at[i + 1] + 0.4), c = i === 0 ? YEL : cur ? YEL : W;
+    {[...CLS].reverse().map(([cx, cy, rx, ry, n, ex, d, i]) => { const on = t >= at[i], cur = on && (i === 3 ? t < mid(118, 0.7) : t < at[i + 1] + 0.4), c = i === 0 ? YEL : cur ? YEL : W;
       return <g key={n}><Ring cx={cx} cy={cy} rx={rx} ry={ry} p={k(t, at[i], 0.8)} c={c} fo={i === 0 ? 0.12 : 0.04} />
         <T x={lx[i]} y={i === 0 ? 670 : cy - 40} s={i === 0 ? 70 : 48} c={c} sc={pp(t, at[i] + 0.3)}>{n}</T><T x={lx[i]} y={i === 0 ? 730 : cy + 14} s={24} c={DIM} f="InterX" sc={pp(t, at[i] + 0.5)}>{ex}</T>
         <T x={lx[i]} y={i === 0 ? 770 : cy + 52} s={20} c={cur ? YEL : DIM} f="InterX" sc={pp(t, at[i] + 0.7)}>{d}</T></g>; })}
-    <g opacity={k(t, S(82) + 0.4, 0.4) * (1 - k(t, S(83), 0.4))}><Tick x={1080} y={810} ok sc={1} /><T x={1110} y={810} s={26} c={W} f="InterX" anchor="start">vérifier : rapide</T></g>
-    <T x={960} y={70} s={52} c={W} f={KM} sc={pp(t, mid(83, 0.72))}>P ⊆ NP ⊆ PSPACE ⊆ EXPTIME</T>
+    <g opacity={k(t, S(117) + 0.4, 0.4) * (1 - k(t, S(118), 0.4))}><Tick x={1080} y={810} ok sc={1} /><T x={1110} y={810} s={26} c={W} f="InterX" anchor="start">vérifier : rapide</T></g>
+    <T x={960} y={70} s={52} c={W} f={KM} sc={pp(t, mid(118, 0.72))}>P ⊆ NP ⊆ PSPACE ⊆ EXPTIME</T>
   </>; };
 const SUD = (r: number, c: number) => ((r * 3 + Math.floor(r / 3) + c) % 9) + 1;
-const PvsNP = (t: number) => { const f0 = mid(84, 0.18), f1 = mid(84, 0.48), v0 = mid(84, 0.52), v1 = mid(84, 0.68), sweep = (t - v0) / (v1 - v0);
+const PvsNP = (t: number) => { const f0 = mid(119, 0.18), f1 = mid(119, 0.48), v0 = mid(119, 0.52), v1 = mid(119, 0.68), sweep = (t - v0) / (v1 - v0);
   const curve = (g: (n: number) => number) => { let d = ""; for (let i = 0; i <= 60; i++) { const n = (i / 60) * 10, y = Math.max(-40, 820 - g(n) * 0.58); d += `${i ? "L" : "M"}${1100 + n * 64} ${y} `; } return d; };
   return <>
-    <T x={500} y={110} s={52} c={W} sc={pp(t, S(84) + 0.1)}>TROUVER <tspan fill={DIM}>vs</tspan> VÉRIFIER</T>
-    <g transform="translate(500 520)" opacity={k(t, S(84) + 0.2, 0.4)}>
+    <T x={500} y={110} s={52} c={W} sc={pp(t, S(119) + 0.1)}>TROUVER <tspan fill={DIM}>vs</tspan> VÉRIFIER</T>
+    <g transform="translate(500 520)" opacity={k(t, S(119) + 0.2, 0.4)}>
       {Array.from({ length: 81 }).map((_, i) => { const r = Math.floor(i / 9), c = i % 9, given = (i * 7) % 5 === 0, ft = f0 + (((i * 37) % 81) / 81) * (f1 - f0), shown = given || t > ft, row = Math.floor(sweep * 9);
         return <g key={i}><rect x={-279 + c * 62} y={-279 + r * 62} width={62} height={62} fill={sweep > 0 && sweep < 1.1 && r <= row ? GRN + "33" : "transparent"} stroke={LINE} strokeOpacity={0.35} strokeWidth={1.5} />
           {shown && <text x={-248 + c * 62} y={-237 + r * 62} fontFamily={KM} fontSize={34} fill={given ? W : YEL} textAnchor="middle">{SUD(r, c)}</text>}</g>; })}
       {[0, 1, 2, 3].map((i) => <g key={i}><line x1={-279 + i * 186} x2={-279 + i * 186} y1={-279} y2={279} stroke={W} strokeWidth={4} /><line y1={-279 + i * 186} y2={-279 + i * 186} x1={-279} x2={279} stroke={W} strokeWidth={4} /></g>)}</g>
     <Chip x={340} y={870} text="trouver : très long" c={SOFT} sc={pp(t, f0)} s={30} /><Chip x={680} y={870} text="vérifier : rapide" c={GRN} fg="#0b1a10" sc={pp(t, v0)} s={30} />
-    <T x={500} y={970} s={64} c={YEL} sc={pp(t, mid(84, 0.8))} glow={YEL}>P = NP ?</T>
-    <g opacity={k(t, S(85), 0.4)}><Axes ox={1100} oy={820} w={680} h={660} p={k(t, S(85) + 0.1, 0.5)} xl="n" />
-      <Draw d={curve((n) => n * n)} p={k(t, mid(85, 0.15), 0.8)} c={W} w={7} /><T x={1760} y={720} s={40} c={W} f={KM} sc={pp(t, mid(85, 0.3))}>{sup("n", "2")}</T>
-      <Draw d={curve((n) => 2 ** n)} p={k(t, mid(85, 0.5), 0.8)} c={RED} w={7} glow /><T x={1600} y={160} s={44} c={RED} f={KM} sc={pp(t, mid(85, 0.6))}>{sup("2", "n")}</T>
-      <Chip x={1440} y={960} text="+1 élément  →  temps × 2" c={RED} sc={pp(t, mid(85, 0.82))} s={32} /></g>
+    <T x={500} y={970} s={64} c={YEL} sc={pp(t, mid(119, 0.8))} glow={YEL}>P = NP ?</T>
+    <g opacity={k(t, S(120), 0.4)}><Axes ox={1100} oy={820} w={680} h={660} p={k(t, S(120) + 0.1, 0.5)} xl="n" />
+      <Draw d={curve((n) => n * n)} p={k(t, mid(120, 0.15), 0.8)} c={W} w={7} /><T x={1760} y={720} s={40} c={W} f={KM} sc={pp(t, mid(120, 0.3))}>{sup("n", "2")}</T>
+      <Draw d={curve((n) => 2 ** n)} p={k(t, mid(120, 0.5), 0.8)} c={RED} w={7} glow /><T x={1600} y={160} s={44} c={RED} f={KM} sc={pp(t, mid(120, 0.6))}>{sup("2", "n")}</T>
+      <Chip x={1440} y={960} text="+1 élément  →  temps × 2" c={RED} sc={pp(t, mid(120, 0.82))} s={32} /></g>
   </>; };
 const NPC = ["sudoku", "coloriage", "sac à dos", "voyageur", "clique", "planning"];
 const ReduceBase = (t: number) => <>
-  {([[260, "A"], [880, "B"]] as [number, string][]).map(([x, l], i) => <g key={l} transform={`translate(${x} 230) scale(${pp(t, S(86) + 0.1 + i * 0.4)})`}><rect x={-110} y={-80} width={220} height={160} rx={24} fill={SOFT} stroke={i ? YEL : W} strokeWidth={5} /><T x={0} y={0} s={80} c={i ? YEL : W} f={KM}>{l}</T></g>)}
-  <Arr a={[260, 230]} b={[880, 230]} r={120} p={k(t, mid(86, 0.12), 0.5)} label="réduction" ls={30} lo={-40} c={YEL} />
-  <Arr a={[880, 230]} b={[1380, 230]} r={120} p={k(t, mid(86, 0.25), 0.5)} />
-  <g transform={`translate(1450 230) scale(${pp(t, mid(86, 0.27))})`}><Gear x={0} y={0} r={52} a={t * 80} c={DIM} /><T x={0} y={110} s={28} c={W} f="InterX">résoudre B</T></g>
-  <Chip x={1710} y={230} text="⇒ A résolu" c={GRN} fg="#0b1a10" sc={pp(t, mid(86, 0.35))} s={32} />
-  <g opacity={k(t, mid(86, 0.48), 0.4)}><ellipse cx={600} cy={700} rx={470} ry={250} fill="#ffffff08" stroke={W} strokeWidth={4} /><T x={260} y={500} s={50} c={W}>NP</T>
-    {NPC.map((n, i) => { const a = (i / NPC.length) * Math.PI * 2 + 0.3, x = 600 + Math.cos(a) * 330, y = 700 + Math.sin(a) * 170, p = k(t, mid(86, 0.55 + i * 0.04), 0.4);
-      return <g key={n}><Arr a={[x, y]} b={[600, 700]} r={0} p={p} c={LINE} w={3} /><Chip x={x} y={y} text={n} c={SOFT} sc={pp(t, mid(86, 0.52 + i * 0.04))} s={24} /></g>; })}
-    <g transform={`translate(600 700) scale(${pp(t, mid(86, 0.8))})`}><circle r={86} fill={YEL} style={{ filter: `drop-shadow(0 0 24px ${YEL})` }} /><T x={0} y={2} s={54} c="#14101f">SAT</T></g>
-    <Chip x={600} y={1000} text="NP-complet  ·  Cook–Levin, 1971" c={YEL} fg="#14101f" sc={pp(t, mid(86, 0.86))} s={30} /></g>
-  <Card x={1210} y={500} w={620} h={440} c={YEL} p={pp(t, S(87) + 0.2)} title="L’ÉTALON" tc={YEL}>
+  {([[260, "A"], [880, "B"]] as [number, string][]).map(([x, l], i) => <g key={l} transform={`translate(${x} 230) scale(${pp(t, S(121) + 0.1 + i * 0.4)})`}><rect x={-110} y={-80} width={220} height={160} rx={24} fill={SOFT} stroke={i ? YEL : W} strokeWidth={5} /><T x={0} y={0} s={80} c={i ? YEL : W} f={KM}>{l}</T></g>)}
+  <Arr a={[260, 230]} b={[880, 230]} r={120} p={k(t, mid(121, 0.12), 0.5)} label="réduction" ls={30} lo={-40} c={YEL} />
+  <Arr a={[880, 230]} b={[1380, 230]} r={120} p={k(t, mid(121, 0.25), 0.5)} />
+  <g transform={`translate(1450 230) scale(${pp(t, mid(121, 0.27))})`}><Gear x={0} y={0} r={52} a={t * 80} c={DIM} /><T x={0} y={110} s={28} c={W} f="InterX">résoudre B</T></g>
+  <Chip x={1710} y={230} text="⇒ A résolu" c={GRN} fg="#0b1a10" sc={pp(t, mid(121, 0.35))} s={32} />
+  <g opacity={k(t, mid(121, 0.48), 0.4)}><ellipse cx={600} cy={700} rx={470} ry={250} fill="#ffffff08" stroke={W} strokeWidth={4} /><T x={260} y={500} s={50} c={W}>NP</T>
+    {NPC.map((n, i) => { const a = (i / NPC.length) * Math.PI * 2 + 0.3, x = 600 + Math.cos(a) * 330, y = 700 + Math.sin(a) * 170, p = k(t, mid(121, 0.55 + i * 0.04), 0.4);
+      return <g key={n}><Arr a={[x, y]} b={[600, 700]} r={0} p={p} c={LINE} w={3} /><Chip x={x} y={y} text={n} c={SOFT} sc={pp(t, mid(121, 0.52 + i * 0.04))} s={24} /></g>; })}
+    <g transform={`translate(600 700) scale(${pp(t, mid(121, 0.8))})`}><circle r={86} fill={YEL} style={{ filter: `drop-shadow(0 0 24px ${YEL})` }} /><T x={0} y={2} s={54} c="#14101f">SAT</T></g>
+    <Chip x={600} y={1000} text="NP-complet  ·  Cook–Levin, 1971" c={YEL} fg="#14101f" sc={pp(t, mid(121, 0.86))} s={30} /></g>
+  <Card x={1210} y={500} w={620} h={440} c={YEL} p={pp(t, S(122) + 0.2)} title="L’ÉTALON" tc={YEL}>
     <rect x={60} y={100} width={500} height={70} rx={10} fill={YEL} opacity={0.9} />{Array.from({ length: 21 }).map((_, i) => <line key={i} x1={70 + i * 24} x2={70 + i * 24} y1={100} y2={i % 5 ? 122 : 136} stroke="#14101f" strokeWidth={3} />)}
     <T x={310} y={240} s={32} c={W} f="InterX">temps = nombre de transitions</T><T x={310} y={300} s={32} c={W} f="InterX">espace = nombre de cases</T>
-    <T x={310} y={380} s={28} c={DIM} f="InterX" sc={pp(t, mid(87, 0.6))}>indépendant de la technologie</T></Card>
+    <T x={310} y={380} s={28} c={DIM} f="InterX" sc={pp(t, mid(122, 0.6))}>indépendant de la technologie</T></Card>
 </>;
 /* ---------- CHAPITRE 6 ---------- */
 const CODE = ["bande = list(mot) + ['⊔']", "tete, etat = 0, 'q0'", "while etat not in ('acc', 'rej'):", "    etat, s, d = delta[etat, bande[tete]]", "    bande[tete] = s", "    tete += d"];
 const EVX = 660, EVCW = 120, EVSEQ = ["pair", "impair", "impair", "pair", "impair"];
-const Even = (t: number) => { const c0 = S(89) + 1.9, P: [number, number] = [1140, 330], I: [number, number] = [1600, 330], A: [number, number] = [1140, 520], R: [number, number] = [1600, 520];
-  const taus = [0, 1, 2, 3, 4].map((i) => mid(91, 0.06 + i * 0.12)), ix = taus.filter((x) => t >= x).length - 1, run = t >= S(91), cur = run && ix >= 0 ? EVSEQ[ix] : "", rej = run && t > mid(91, 0.72);
+const Even = (t: number) => { const c0 = S(124) + 1.9, P: [number, number] = [1140, 330], I: [number, number] = [1600, 330], A: [number, number] = [1140, 520], R: [number, number] = [1600, 520];
+  const taus = [0, 1, 2, 3, 4].map((i) => mid(126, 0.06 + i * 0.12)), ix = taus.filter((x) => t >= x).length - 1, run = t >= S(126), cur = run && ix >= 0 ? EVSEQ[ix] : "", rej = run && t > mid(126, 0.72);
   return <>
     <Win x={110} y={110} w={820} h={420} p={pp(t, c0)} title="simulateur.py">
-      {CODE.map((l, i) => <text key={i} x={36} y={110 + i * 50} fontFamily="InterX" fontWeight={600} fontSize={25} fill={i === 3 && t > mid(89, 0.7) ? YEL : i < 2 ? DIM : W} xmlSpace="preserve">{typed(l, (t - c0 - 0.3 - i * 0.45) / 0.8)}</text>)}</Win>
-    <T x={520} y={580} s={28} c={DIM} f="InterX" sc={pp(t, mid(89, 0.75))}>la table de transitions, exécutée pas à pas</T>
-    <T x={1370} y={120} s={36} c={W} sc={pp(t, S(90) + 0.1)}>NOMBRE PAIR DE 1</T>
-    <St x={P[0]} y={P[1]} l="pair" ls={26} lf="InterX" init r={56} sc={pp(t, mid(90, 0.3))} hot={cur === "pair" && !rej} c={cur === "pair" && !rej ? YEL : W} />
-    <St x={I[0]} y={I[1]} l="impair" ls={24} lf="InterX" r={56} sc={pp(t, mid(90, 0.35))} hot={cur === "impair"} c={cur === "impair" ? YEL : W} />
-    <Arr a={P} b={I} bend={-60} p={k(t, mid(90, 0.5), 0.5)} label="1" ls={34} lo={30} /><Arr a={I} b={P} bend={-60} p={k(t, mid(90, 0.55), 0.5)} label="1" ls={34} lo={30} />
-    <T x={P[0] - 140} y={P[1] - 90} s={28} c={DIM} f={KM} sc={pp(t, mid(90, 0.78))}>0 : reste</T><T x={I[0] + 140} y={I[1] - 90} s={28} c={DIM} f={KM} sc={pp(t, mid(90, 0.8))}>0 : reste</T>
-    <St x={A[0]} y={A[1]} l="acc" ls={24} acc c={GRN} r={42} sc={pp(t, mid(90, 0.65))} /><St x={R[0]} y={R[1]} l="rej" ls={24} c={RED} r={42} hot={rej} sc={pp(t, mid(90, 0.68))} />
-    <Arr a={P} b={A} r={50} p={k(t, mid(90, 0.7), 0.4)} label="⊔" ls={28} lo={-26} c={GRN} /><Arr a={I} b={R} r={50} p={k(t, mid(90, 0.72), 0.4)} label="⊔" ls={28} lo={-26} c={RED} />
-    <Tape x={EVX} y={800} cells={["1", "0", "1", "1", "_"]} cw={EVCW} p={k(t, S(91) - 0.2, 0.6)} hl={run && ix >= 0 ? { [Math.min(4, ix)]: rej ? RED : YEL } : {}} />
-    <HeadBox x={cxOf(EVX, kf(t, taus.map((x, i) => [x, i] as [number, number])), EVCW)} y={800} cw={EVCW} st={cur ? <tspan fontFamily="InterX" fontSize={22}>{cur}</tspan> : undefined} c={rej ? RED : YEL} sc={run ? pp(t, S(91)) : 0} />
-    <Chip x={960} y={940} text="3 fois le 1 → impair → REJETÉ" c={RED} sc={rej ? pp(t, mid(91, 0.75)) : 0} s={36} />
+      {CODE.map((l, i) => <text key={i} x={36} y={110 + i * 50} fontFamily="InterX" fontWeight={600} fontSize={25} fill={i === 3 && t > mid(124, 0.7) ? YEL : i < 2 ? DIM : W} xmlSpace="preserve">{typed(l, (t - c0 - 0.3 - i * 0.45) / 0.8)}</text>)}</Win>
+    <T x={520} y={580} s={28} c={DIM} f="InterX" sc={pp(t, mid(124, 0.75))}>la table de transitions, exécutée pas à pas</T>
+    <T x={1370} y={120} s={36} c={W} sc={pp(t, S(125) + 0.1)}>NOMBRE PAIR DE 1</T>
+    <St x={P[0]} y={P[1]} l="pair" ls={26} lf="InterX" init r={56} sc={pp(t, mid(125, 0.3))} hot={cur === "pair" && !rej} c={cur === "pair" && !rej ? YEL : W} />
+    <St x={I[0]} y={I[1]} l="impair" ls={24} lf="InterX" r={56} sc={pp(t, mid(125, 0.35))} hot={cur === "impair"} c={cur === "impair" ? YEL : W} />
+    <Arr a={P} b={I} bend={-60} p={k(t, mid(125, 0.5), 0.5)} label="1" ls={34} lo={30} /><Arr a={I} b={P} bend={-60} p={k(t, mid(125, 0.55), 0.5)} label="1" ls={34} lo={30} />
+    <T x={P[0] - 140} y={P[1] - 90} s={28} c={DIM} f={KM} sc={pp(t, mid(125, 0.78))}>0 : reste</T><T x={I[0] + 140} y={I[1] - 90} s={28} c={DIM} f={KM} sc={pp(t, mid(125, 0.8))}>0 : reste</T>
+    <St x={A[0]} y={A[1]} l="acc" ls={24} acc c={GRN} r={42} sc={pp(t, mid(125, 0.65))} /><St x={R[0]} y={R[1]} l="rej" ls={24} c={RED} r={42} hot={rej} sc={pp(t, mid(125, 0.68))} />
+    <Arr a={P} b={A} r={50} p={k(t, mid(125, 0.7), 0.4)} label="⊔" ls={28} lo={-26} c={GRN} /><Arr a={I} b={R} r={50} p={k(t, mid(125, 0.72), 0.4)} label="⊔" ls={28} lo={-26} c={RED} />
+    <Tape x={EVX} y={800} cells={["1", "0", "1", "1", "_"]} cw={EVCW} p={k(t, S(126) - 0.2, 0.6)} hl={run && ix >= 0 ? { [Math.min(4, ix)]: rej ? RED : YEL } : {}} />
+    <HeadBox x={cxOf(EVX, kf(t, taus.map((x, i) => [x, i] as [number, number])), EVCW)} y={800} cw={EVCW} st={cur ? <tspan fontFamily="InterX" fontSize={22}>{cur}</tspan> : undefined} c={rej ? RED : YEL} sc={run ? pp(t, S(126)) : 0} />
+    <Chip x={960} y={940} text="3 fois le 1 → impair → REJETÉ" c={RED} sc={rej ? pp(t, mid(126, 0.75)) : 0} s={36} />
   </>; };
 /* ---------- CHAPITRE 7 ---------- */
-const VsPCBase = (t: number) => { const hop = bounce(Math.max(0, t - S(106) - 0.5), 0.45, 0, 6), jump = k(t, mid(106, 0.75), 0.5);
+const VsPCBase = (t: number) => { const hop = bounce(Math.max(0, t - S(141) - 0.5), 0.45, 0, 6), jump = k(t, mid(141, 0.75), 0.5);
   return <>
-    <T x={500} y={130} s={50} c={W} sc={pp(t, S(106) + 0.1)}>MACHINE DE TURING</T><T x={1420} y={130} s={50} c={W} sc={pp(t, mid(106, 0.4))}>ORDINATEUR RÉEL</T>
-    <T x={960} y={450} s={60} c={DIM} sc={pp(t, mid(106, 0.4))}>VS</T>
-    <Tape x={110} y={430} cells={["1", "0", "1", "1", "0", "1", "0"]} cw={92} p={k(t, S(106) + 0.2, 0.7)} hl={{ [Math.round(hop)]: YEL }} />
-    <HeadBox x={cxOf(110, hop, 92)} y={430} cw={92} sc={pp(t, S(106) + 0.5)} />
-    <Chip x={440} y={600} text="bande INFINIE" c={SOFT} sc={pp(t, mid(106, 0.1))} s={34} /><Chip x={440} y={690} text="case par case" c={SOFT} sc={pp(t, mid(106, 0.62))} s={34} />
-    <g transform={`translate(1420 400) scale(${pp(t, mid(106, 0.35))})`}><rect x={-300} y={-110} width={600} height={220} rx={16} fill="#163a24" stroke={GRN} strokeWidth={5} />
+    <T x={500} y={130} s={50} c={W} sc={pp(t, S(141) + 0.1)}>MACHINE DE TURING</T><T x={1420} y={130} s={50} c={W} sc={pp(t, mid(141, 0.4))}>ORDINATEUR RÉEL</T>
+    <T x={960} y={450} s={60} c={DIM} sc={pp(t, mid(141, 0.4))}>VS</T>
+    <Tape x={110} y={430} cells={["1", "0", "1", "1", "0", "1", "0"]} cw={92} p={k(t, S(141) + 0.2, 0.7)} hl={{ [Math.round(hop)]: YEL }} />
+    <HeadBox x={cxOf(110, hop, 92)} y={430} cw={92} sc={pp(t, S(141) + 0.5)} />
+    <Chip x={440} y={600} text="bande INFINIE" c={SOFT} sc={pp(t, mid(141, 0.1))} s={34} /><Chip x={440} y={690} text="case par case" c={SOFT} sc={pp(t, mid(141, 0.62))} s={34} />
+    <g transform={`translate(1420 400) scale(${pp(t, mid(141, 0.35))})`}><rect x={-300} y={-110} width={600} height={220} rx={16} fill="#163a24" stroke={GRN} strokeWidth={5} />
       {Array.from({ length: 6 }).map((_, i) => <rect key={i} x={-270 + i * 92} y={-78} width={72} height={120} rx={8} fill="#0d0e15" />)}
       {Array.from({ length: 18 }).map((_, i) => <rect key={`p${i}`} x={-284 + i * 32} y={110} width={16} height={26} fill={YEL} />)}<T x={0} y={74} s={30} c={W}>16 Go</T></g>
-    <Chip x={1420} y={600} text="mémoire FINIE" c={SOFT} sc={pp(t, mid(106, 0.42))} s={34} />
-    <g opacity={k(t, mid(106, 0.68), 0.3)}>{[0, 1, 2, 3, 4].map((i) => <g key={i}><rect x={1180 + i * 100} y={740} width={90} height={60} rx={8} fill={i === 4 && jump > 0.9 ? YEL + "44" : PANEL} stroke={i === 4 && jump > 0.9 ? YEL : LINE} strokeWidth={3} />
+    <Chip x={1420} y={600} text="mémoire FINIE" c={SOFT} sc={pp(t, mid(141, 0.42))} s={34} />
+    <g opacity={k(t, mid(141, 0.68), 0.3)}>{[0, 1, 2, 3, 4].map((i) => <g key={i}><rect x={1180 + i * 100} y={740} width={90} height={60} rx={8} fill={i === 4 && jump > 0.9 ? YEL + "44" : PANEL} stroke={i === 4 && jump > 0.9 ? YEL : LINE} strokeWidth={3} />
       <T x={1225 + i * 100} y={770} s={20} c={DIM} f="InterX">{["0", "1", "2", "…", "4096"][i]}</T></g>)}
       <Draw d="M1240 860 Q1420 980 1625 810" p={jump} c={YEL} w={5} /><Head x={1625} y={810} p={jump} c={YEL} a={-60} s={0.6} /><T x={1420} y={990} s={30} c={YEL} f="InterX">accès direct à n’importe quelle adresse</T></g>
   </>; };
 const INF: [number, number, string, number][] = [[380, 240, "programme enregistré", 0.08], [1540, 240, "langages Turing-complets", 0.25], [380, 800, "compilateurs", 0.42], [1540, 800, "une machine peut-elle penser ?", 0.6]];
 const Influence = (t: number) => <>
-  <g transform={`translate(960 520) scale(${pp(t, S(108) + 0.1)})`}><circle r={170} fill={PANEL} stroke={YEL} strokeWidth={5} style={{ filter: `drop-shadow(0 0 24px ${YEL}55)` }} />
+  <g transform={`translate(960 520) scale(${pp(t, S(143) + 0.1)})`}><circle r={170} fill={PANEL} stroke={YEL} strokeWidth={5} style={{ filter: `drop-shadow(0 0 24px ${YEL}55)` }} />
     <Tape x={-150} y={20} cells={["1", "0", "1"]} cw={100} ends={false} p={1} /><HeadBox x={-50 + 50} y={20} cw={100} sc={1} /></g>
-  {INF.map(([x, y, l, f], i) => { const at = mid(108, f);
-    return <g key={l} opacity={1 - 0.5 * k(t, S(109), 0.5)}><Draw d={`M${960 + (x - 960) * 0.2} ${520 + (y - 520) * 0.4} L${x + (960 - x) * 0.25} ${y + (520 - y) * 0.2}`} p={k(t, at, 0.4)} c={LINE} w={3} dash="10 10" />
+  {INF.map(([x, y, l, f], i) => { const at = mid(143, f);
+    return <g key={l} opacity={1 - 0.5 * k(t, S(144), 0.5)}><Draw d={`M${960 + (x - 960) * 0.2} ${520 + (y - 520) * 0.4} L${x + (960 - x) * 0.25} ${y + (520 - y) * 0.2}`} p={k(t, at, 0.4)} c={LINE} w={3} dash="10 10" />
       {i === 0 && <CpuMem x={x} y={y - 20} s={0.65} sc={pp(t, at)} />}{i === 1 && <T x={x} y={y - 30} s={80} c={W} f={KM} sc={pp(t, at)}>{"{ }"}</T>}{i === 2 && <Gear x={x} y={y - 30} r={44} a={t * 50} c={DIM} />}{i === 3 && <Bulb x={x} y={y - 40} sc={pp(t, at) * 0.8} on={1} />}
       <Chip x={x} y={y + 70} text={l} c={SOFT} sc={pp(t, at + 0.1)} s={30} /></g>; })}
-  <T x={1540} y={940} s={24} c={DIM} f="InterX" sc={pp(t, mid(108, 0.7)) * (1 - k(t, S(109), 0.4))}>le test de Turing, 1950</T>
-  {([[960, 230, "calculabilité"], [960, 330, "classes de complexité"], [960, 830, "calcul quantique"]] as [number, number, string][]).map(([x, y, l], i) => <Chip key={l} x={x} y={y} text={l} c={YEL} fg="#14101f" sc={pp(t, mid(109, 0.2 + i * 0.22))} s={34} />)}
-  <T x={960} y={140} s={36} c={W} sc={pp(t, S(109) + 0.1)}>LA RÉFÉRENCE EN RECHERCHE</T>
-  <g transform={`translate(960 940) scale(${pp(t, mid(109, 0.7))})`}><circle r={46} fill="none" stroke={YEL} strokeWidth={4} /><ellipse rx={46} ry={14} fill="none" stroke={YEL} strokeWidth={2} /><path d={`M0 0 L${30 * Math.cos(t * 2)} ${-30 + 6 * Math.sin(t * 2)}`} stroke={W} strokeWidth={4} /></g>
+  <T x={1540} y={940} s={24} c={DIM} f="InterX" sc={pp(t, mid(143, 0.7)) * (1 - k(t, S(144), 0.4))}>le test de Turing, 1950</T>
+  {([[960, 230, "calculabilité"], [960, 330, "classes de complexité"], [960, 830, "calcul quantique"]] as [number, number, string][]).map(([x, y, l], i) => <Chip key={l} x={x} y={y} text={l} c={YEL} fg="#14101f" sc={pp(t, mid(144, 0.2 + i * 0.22))} s={34} />)}
+  <T x={960} y={140} s={36} c={W} sc={pp(t, S(144) + 0.1)}>LA RÉFÉRENCE EN RECHERCHE</T>
+  <g transform={`translate(960 940) scale(${pp(t, mid(144, 0.7))})`}><circle r={46} fill="none" stroke={YEL} strokeWidth={4} /><ellipse rx={46} ry={14} fill="none" stroke={YEL} strokeWidth={2} /><path d={`M0 0 L${30 * Math.cos(t * 2)} ${-30 + 6 * Math.sin(t * 2)}`} stroke={W} strokeWidth={4} /></g>
 </>;
 
 /* ---------- CONCLUSION ---------- */
-const Concl = (t: number) => { const c0 = S(111) + 1.9, fin = k(t, mid(114, 0.55), 0.8);
+const Concl = (t: number) => { const c0 = S(146) + 1.9, fin = k(t, mid(149, 0.55), 0.8);
   return <>
     <g opacity={1 - fin}>
       {([["la bande", 0], ["la tête", 1], ["les états", 2], ["la transition δ", 3]] as [string, number][]).map(([l, i]) => { const x = 330 + i * 420, at = c0 + 0.2 + i * 0.45;
         return <g key={l}>{i === 0 && <Tape x={x - 150} y={230} cells={["1", "0", "1"]} cw={100} ends={false} p={k(t, at, 0.4)} />}{i === 1 && <HeadBox x={x} y={290} sc={pp(t, at)} st={sub("q", "1")} />}
           {i === 2 && <><St x={x - 60} y={230} l={sub("q", "0")} r={40} sc={pp(t, at)} /><St x={x + 60} y={230} l="acc" ls={20} r={40} acc c={GRN} sc={pp(t, at + 0.1)} /></>}{i === 3 && <T x={x} y={230} s={90} c={YEL} f={KM} sc={pp(t, at)}>δ</T>}
           <T x={x} y={330} s={30} c={W} f="InterX" sc={pp(t, at + 0.2)}>{l}</T></g>; })}
-      <T x={960} y={430} s={44} c={W} f="InterX" sc={pp(t, mid(111, 0.7))}>même puissance <tspan fill={YEL}>≠</tspan> même efficacité</T>
-      <Card x={310} y={520} w={1300} h={170} c={YEL} p={pp(t, S(112) + 0.2)}><T x={650} y={60} s={30} c={DIM} f="InterX">réponse à la problématique</T>
+      <T x={960} y={430} s={44} c={W} f="InterX" sc={pp(t, mid(146, 0.7))}>même puissance <tspan fill={YEL}>≠</tspan> même efficacité</T>
+      <Card x={310} y={520} w={1300} h={170} c={YEL} p={pp(t, S(147) + 0.2)}><T x={650} y={60} s={30} c={DIM} f="InterX">réponse à la problématique</T>
         <T x={650} y={118} s={42} c={W} f="InterX">Ce qu’elle ne peut pas faire, aucun ordinateur ne le peut.</T></Card>
-      <T x={700} y={810} s={80} c={W} f={KM} sc={pp(t, S(113) + 0.4)}>P ⊆ NP</T><T x={1240} y={810} s={80} c={YEL} sc={pp(t, mid(113, 0.7))} glow={YEL}>P = NP ?</T>
-      <Chip x={960} y={960} text="question ouverte depuis 1971 · plus de 50 ans" c={SOFT} sc={pp(t, S(114) + 0.3)} s={32} /></g>
-    {fin > 0 && <g opacity={fin}><T x={960} y={330} s={120} c={W} glow={BLUE}>LA MACHINE DE TURING</T><Squig x={960} y={412} w={860} p={k(t, mid(114, 0.7), 0.5)} c={YEL} />
+      <T x={700} y={810} s={80} c={W} f={KM} sc={pp(t, S(148) + 0.4)}>P ⊆ NP</T><T x={1240} y={810} s={80} c={YEL} sc={pp(t, mid(148, 0.7))} glow={YEL}>P = NP ?</T>
+      <Chip x={960} y={960} text="question ouverte depuis 1971 · plus de 50 ans" c={SOFT} sc={pp(t, S(149) + 0.3)} s={32} /></g>
+    {fin > 0 && <g opacity={fin}><T x={960} y={330} s={120} c={W} glow={BLUE}>LA MACHINE DE TURING</T><Squig x={960} y={412} w={860} p={k(t, mid(149, 0.7), 0.5)} c={YEL} />
       <Tape x={685} y={600} cells={["1", "0", "1", "1", "0"]} cw={110} p={1} hl={{ [Math.round(bounce(t, 0.6, 0, 4))]: YEL }} /><HeadBox x={cxOf(685, bounce(t, 0.6, 0, 4), 110)} y={600} cw={110} sc={1} />
       <T x={960} y={760} s={36} c={DIM} f="InterX">une bande · une tête · quelques règles</T></g>}
   </>; };
@@ -809,24 +809,24 @@ const DecEx = (t: number) => <>
 const NOT: [string, string, (n: number) => number, string][] = [["O(1)", "constant", () => 70, GRN], ["O(log n)", "logarithmique", (n) => 110 * Math.log2(1 + n), W], ["O(n)", "linéaire", (n) => 60 * n, YEL], ["O(n²)", "quadratique", (n) => 7 * n * n, RED]];
 const SEQ = ["7", "3", "19", "5", "11", "26", "8", "42"];
 const Notation = (t: number) => { const path = (g: (n: number) => number) => { let d = ""; for (let i = 0; i <= 50; i++) { const n = (i / 50) * 10, y = Math.max(150, 900 - g(n)); d += `${i ? "L" : "M"}${150 + n * 78} ${y} `; } return d; };
-  const a0 = mid(80, 0.15), stp = (mid(80, 0.6) - a0) / 7, ci = t < a0 ? -1 : Math.min(7, Math.floor((t - a0) / stp)), found = ci === 7 && t > a0 + 7 * stp + 0.2;
+  const a0 = mid(115, 0.15), stp = (mid(115, 0.6) - a0) / 7, ci = t < a0 ? -1 : Math.min(7, Math.floor((t - a0) / stp)), found = ci === 7 && t > a0 + 7 * stp + 0.2;
   return <>
-    <T x={560} y={110} s={46} c={W} sc={pp(t, S(79) + 0.1)}>NOTATION ASYMPTOTIQUE</T>
-    <Axes ox={150} oy={900} w={800} h={720} p={k(t, S(79) + 0.2, 0.5)} xl="n" yl="coût" />
-    {NOT.map(([l, d, g, c], i) => { const at = mid(79, 0.2 + i * 0.16), y = Math.max(150, 900 - g(10));
+    <T x={560} y={110} s={46} c={W} sc={pp(t, S(114) + 0.1)}>NOTATION ASYMPTOTIQUE</T>
+    <Axes ox={150} oy={900} w={800} h={720} p={k(t, S(114) + 0.2, 0.5)} xl="n" yl="coût" />
+    {NOT.map(([l, d, g, c], i) => { const at = mid(114, 0.2 + i * 0.16), y = Math.max(150, 900 - g(10));
       return <g key={l}><Draw d={path(g)} p={k(t, at, 0.8)} c={c} w={6} /><T x={990} y={y} s={34} c={c} f={KM} sc={pp(t, at + 0.6)} anchor="start">{l}</T><T x={990} y={y + 40} s={22} c={DIM} f="InterX" sc={pp(t, at + 0.7)} anchor="start">{d}</T></g>; })}
-    <T x={1440} y={200} s={42} c={W} sc={pp(t, S(80) + 0.1)}>RECHERCHE SÉQUENTIELLE</T>
-    <Chip x={1440} y={290} text="chercher 42" c={SOFT} sc={pp(t, S(80) + 0.3)} s={32} />
-    <Tape x={1040} y={420} cells={SEQ} cw={100} s={40} ends={false} p={k(t, S(80) + 0.2, 0.6)} hl={found ? { 7: GRN } : ci >= 0 ? { [ci]: YEL } : {}} dim={ci > 0 ? Array.from({ length: ci }, (_, j) => j) : []} />
+    <T x={1440} y={200} s={42} c={W} sc={pp(t, S(115) + 0.1)}>RECHERCHE SÉQUENTIELLE</T>
+    <Chip x={1440} y={290} text="chercher 42" c={SOFT} sc={pp(t, S(115) + 0.3)} s={32} />
+    <Tape x={1040} y={420} cells={SEQ} cw={100} s={40} ends={false} p={k(t, S(115) + 0.2, 0.6)} hl={found ? { 7: GRN } : ci >= 0 ? { [ci]: YEL } : {}} dim={ci > 0 ? Array.from({ length: ci }, (_, j) => j) : []} />
     {ci >= 0 && <path d={`M${cxOf(1040, ci, 100) - 16} 340 h32 l-16 20 z`} fill={found ? GRN : YEL} />}
     <T x={1440} y={540} s={38} c={W} f="InterX" sc={pp(t, a0)}>comparaisons : <tspan fill={YEL} fontFamily={KM}>{Math.max(0, ci + 1)}</tspan></T>
-    <Chip x={1440} y={650} text="pire des cas : n comparaisons → O(n)" c={YEL} fg="#14101f" sc={pp(t, mid(80, 0.68))} s={32} />
+    <Chip x={1440} y={650} text="pire des cas : n comparaisons → O(n)" c={YEL} fg="#14101f" sc={pp(t, mid(115, 0.68))} s={32} />
   </>; };
 
 /* ---------- CHAPITRE 7 : perspectives (110) ---------- */
-const Persp = (t: number) => { const at = [0.1, 0.3, 0.5, 0.72].map((x) => mid(110, x)), sp: [number, number][] = [[130, 170], [990, 170], [130, 590], [990, 590]];
+const Persp = (t: number) => { const at = [0.1, 0.3, 0.5, 0.72].map((x) => mid(145, x)), sp: [number, number][] = [[130, 170], [990, 170], [130, 590], [990, 590]];
   return <>
-    <T x={960} y={95} s={56} c={W} sc={pp(t, S(110) + 0.05)}>PERSPECTIVES</T>
+    <T x={960} y={95} s={56} c={W} sc={pp(t, S(145) + 0.05)}>PERSPECTIVES</T>
     {([["EFFICACITÉ DES ALGORITHMES", "faire mieux avec moins"], ["CALCUL PARALLÈLE ET DISTRIBUÉ", "plusieurs machines ensemble"], ["INFORMATIQUE QUANTIQUE", "ne supprime pas les limites de la calculabilité"], ["FONDEMENTS DE L’IA", "intelligence artificielle"]] as [string, string][]).map(([a, b], i) => <Card key={a} x={sp[i][0]} y={sp[i][1]} w={800} h={380} c={YEL} p={pp(t, at[i])} title={a} tc={YEL}>
       {i === 0 && <g transform="translate(400 230)"><path d="M-110 0 A110 110 0 0 1 110 0" fill="none" stroke={LINE} strokeWidth={10} /><path d={`M0 0 L${-95 * Math.cos(0.3 + 0.9 * k(t, at[0] + 0.3, 1.2))} ${-95 * Math.sin(0.3 + 0.9 * k(t, at[0] + 0.3, 1.2))}`} stroke={YEL} strokeWidth={8} strokeLinecap="round" /><circle r={12} fill={YEL} /></g>}
       {i === 1 && <g transform="translate(400 220)">{[[-150, 0], [-50, -60], [-50, 60], [60, -30], [60, 60], [150, 10]].map(([x, y], j, A) => <g key={j}>{j > 0 && <line x1={A[j - 1][0]} y1={A[j - 1][1]} x2={x} y2={y} stroke={LINE} strokeWidth={3} />}<circle cx={x} cy={y} r={20} fill={Math.floor(t * 3) % 6 === j ? YEL : PANEL} stroke={W} strokeWidth={3} /></g>)}</g>}
@@ -859,22 +859,22 @@ const Calc = (t: number) => <>
 </>;
 /* ---------- CHAPITRE 5 : résumé (88) ---------- */
 const Reduce = (t: number) => <>
-  <g opacity={1 - 0.84 * k(t, S(88) - 0.1, 0.5)}>{ReduceBase(t)}</g>
-  <Card x={300} y={330} w={1320} h={400} c={YEL} p={pp(t, S(88) + 0.15)} title="EN RÉSUMÉ" tc={YEL}>
-    <Tick x={110} y={170} ok sc={pp(t, mid(88, 0.25))} s={1.2} /><T x={170} y={170} s={38} c={W} f="InterX" anchor="start" sc={pp(t, mid(88, 0.25))}>quels problèmes se résolvent efficacement</T>
-    <Tick x={110} y={290} ok={false} sc={pp(t, mid(88, 0.6))} s={1.2} /><T x={170} y={290} s={38} c={W} f="InterX" anchor="start" sc={pp(t, mid(88, 0.6))}>quelles sont les limites des algorithmes</T></Card>
+  <g opacity={1 - 0.84 * k(t, S(123) - 0.1, 0.5)}>{ReduceBase(t)}</g>
+  <Card x={300} y={330} w={1320} h={400} c={YEL} p={pp(t, S(123) + 0.15)} title="EN RÉSUMÉ" tc={YEL}>
+    <Tick x={110} y={170} ok sc={pp(t, mid(123, 0.25))} s={1.2} /><T x={170} y={170} s={38} c={W} f="InterX" anchor="start" sc={pp(t, mid(123, 0.25))}>quels problèmes se résolvent efficacement</T>
+    <Tick x={110} y={290} ok={false} sc={pp(t, mid(123, 0.6))} s={1.2} /><T x={170} y={290} s={38} c={W} f="InterX" anchor="start" sc={pp(t, mid(123, 0.6))}>quelles sont les limites des algorithmes</T></Card>
 </>;
 /* ---------- CHAPITRE 7 : mêmes calculs (107) ---------- */
 const VsPC = (t: number) => <>
-  <g opacity={1 - 0.84 * k(t, S(107) - 0.1, 0.5)}>{VsPCBase(t)}</g>
-  <Card x={360} y={320} w={1200} h={420} c={YEL} p={pp(t, S(107) + 0.15)} title="LES MÊMES TYPES DE CALCULS" tc={YEL}>
+  <g opacity={1 - 0.84 * k(t, S(142) - 0.1, 0.5)}>{VsPCBase(t)}</g>
+  <Card x={360} y={320} w={1200} h={420} c={YEL} p={pp(t, S(142) + 0.15)} title="LES MÊMES TYPES DE CALCULS" tc={YEL}>
     <T x={600} y={150} s={34} c={W} f="InterX">la différence porte sur les conditions pratiques</T>
-    {["la mémoire", "la vitesse", "les ressources"].map((x, i) => <Chip key={x} x={260 + i * 340} y={280} text={x} c={SOFT} sc={pp(t, mid(107, 0.45 + i * 0.1))} s={36} />)}</Card>
+    {["la mémoire", "la vitesse", "les ressources"].map((x, i) => <Chip key={x} x={260 + i * 340} y={280} text={x} c={SOFT} sc={pp(t, mid(142, 0.45 + i * 0.1))} s={36} />)}</Card>
 </>;
 
 /* ---------- CHAPITRE 6 : palindrome 10101 et incrémentation binaire (92–95) ---------- */
 const PX = 200, PCW = 120, AX = 200, ACW = 110;
-const PalAdd = (t: number) => { const f = (x: number) => mid(93, x), g = (x: number) => mid(94, x), h = (x: number) => mid(95, x);
+const PalAdd = (t: number) => { const f = (x: number) => mid(128, x), g = (x: number) => mid(129, x), h = (x: number) => mid(130, x);
   const php = kf(t, [[f(0.02), 1], [f(0.2), 5], [f(0.28), 5], [f(0.42), 2], [f(0.46), 2], [f(0.56), 4], [f(0.6), 4], [f(0.66), 3]]);
   const er: [number, number][] = [[1, f(0.04)], [5, f(0.26)], [2, f(0.46)], [4, f(0.6)]];
   const pcells = ["_", "1", "0", "1", "0", "1", "_"].map((c, i) => (er.some(([j, at]) => j === i && t > at) ? "_" : c));
@@ -886,51 +886,505 @@ const PalAdd = (t: number) => { const f = (x: number) => mid(93, x), g = (x: num
   const ahp = ex2 ? kf(t, [[h(0.5), 4], [h(0.55), 4], [h(0.58), 3], [h(0.62), 3], [h(0.65), 2], [h(0.69), 2], [h(0.72), 1]]) : kf(t, [[g(0.55), 1], [g(0.7), 4], [g(0.74), 4], [g(0.78), 3], [g(0.82), 3], [g(0.86), 2]]);
   const done1 = !ex2 && t > g(0.9), done2 = t > h(0.76), carry = (!ex2 && t > g(0.74) && t < g(0.9)) || (ex2 && t > h(0.55) && t < h(0.76));
   return <>
-    <T x={960} y={90} s={48} c={W} sc={pp(t, S(92) + 0.1)}>PALINDROME</T><T x={960} y={142} s={26} c={DIM} f="InterX" sc={pp(t, S(92) + 0.3)}>se lit pareil dans les deux sens</T>
-    <Tape x={PX} y={340} cells={pcells} cw={PCW} p={k(t, S(92) + 0.2, 0.6)} hl={pacc ? { 3: GRN } : pok ? { [Math.round(php)]: GRN } : { [Math.round(php)]: YEL }} />
-    <HeadBox x={cxOf(PX, php, PCW)} y={340} cw={PCW} st={pst} c={pacc ? GRN : YEL} sc={pp(t, S(92) + 0.5)} />
-    {["① effacer le premier symbole", "② courir jusqu’au dernier", "③ vérifier qu’il est identique, l’effacer", "④ revenir, recommencer jusqu’au bout"].map((l, i) => <T key={l} x={1250} y={250 + i * 60} s={26} c={W} f="InterX" anchor="start" sc={pp(t, mid(92, 0.3 + i * 0.13))}>{l}</T>)}
+    <T x={960} y={90} s={48} c={W} sc={pp(t, S(127) + 0.1)}>PALINDROME</T><T x={960} y={142} s={26} c={DIM} f="InterX" sc={pp(t, S(127) + 0.3)}>se lit pareil dans les deux sens</T>
+    <Tape x={PX} y={340} cells={pcells} cw={PCW} p={k(t, S(127) + 0.2, 0.6)} hl={pacc ? { 3: GRN } : pok ? { [Math.round(php)]: GRN } : { [Math.round(php)]: YEL }} />
+    <HeadBox x={cxOf(PX, php, PCW)} y={340} cw={PCW} st={pst} c={pacc ? GRN : YEL} sc={pp(t, S(127) + 0.5)} />
+    {["① effacer le premier symbole", "② courir jusqu’au dernier", "③ vérifier qu’il est identique, l’effacer", "④ revenir, recommencer jusqu’au bout"].map((l, i) => <T key={l} x={1250} y={250 + i * 60} s={26} c={W} f="InterX" anchor="start" sc={pp(t, mid(127, 0.3 + i * 0.13))}>{l}</T>)}
     <Chip x={620} y={470} text="le 1 central, seul → ACCEPTÉ" c={GRN} fg="#0b1a10" sc={pacc ? pp(t, f(0.72)) : 0} s={32} />
-    <T x={960} y={590} s={48} c={W} sc={pp(t, S(94) + 0.1)}>INCRÉMENTATION BINAIRE</T>
-    <Tape x={AX} y={810} cells={acells} cw={ACW} p={k(t, S(94) + 0.3, 0.6)} hl={done1 ? { 1: GRN, 2: GRN, 3: GRN, 4: GRN } : done2 ? { 1: GRN, 2: GRN, 3: GRN, 4: GRN } : { [Math.round(ahp)]: YEL }} />
+    <T x={960} y={590} s={48} c={W} sc={pp(t, S(129) + 0.1)}>INCRÉMENTATION BINAIRE</T>
+    <Tape x={AX} y={810} cells={acells} cw={ACW} p={k(t, S(129) + 0.3, 0.6)} hl={done1 ? { 1: GRN, 2: GRN, 3: GRN, 4: GRN } : done2 ? { 1: GRN, 2: GRN, 3: GRN, 4: GRN } : { [Math.round(ahp)]: YEL }} />
     <HeadBox x={cxOf(AX, ahp, ACW)} y={810} cw={ACW} st={carry ? "+1" : undefined} c={done1 || done2 ? GRN : YEL} sc={pp(t, g(0.5))} />
-    <T x={1070} y={770} s={30} c={W} f="InterX" anchor="start" sc={pp(t, mid(94, 0.3))}>dernier bit = 0 → écrire 1, s’arrêter</T>
-    <T x={1070} y={840} s={30} c={W} f="InterX" anchor="start" sc={pp(t, mid(94, 0.45))}>dernier bit = 1 → écrire 0, retenue ←</T>
-    <Chip x={530} y={960} text="1011 (11)  →  1100 (12)" c={GRN} fg="#0b1a10" sc={done1 || (t > S(95) && !ex2) ? pp(t, g(0.92)) : 0} s={36} />
+    <T x={1070} y={770} s={30} c={W} f="InterX" anchor="start" sc={pp(t, mid(129, 0.3))}>dernier bit = 0 → écrire 1, s’arrêter</T>
+    <T x={1070} y={840} s={30} c={W} f="InterX" anchor="start" sc={pp(t, mid(129, 0.45))}>dernier bit = 1 → écrire 0, retenue ←</T>
+    <Chip x={530} y={960} text="1011 (11)  →  1100 (12)" c={GRN} fg="#0b1a10" sc={done1 || (t > S(130) && !ex2) ? pp(t, g(0.92)) : 0} s={36} />
     <Chip x={530} y={960} text="111 (7)  →  1000 (8)" c={GRN} fg="#0b1a10" sc={done2 ? pp(t, h(0.8)) : 0} s={36} />
     <Chip x={1350} y={960} text="tous les bits à 1 : un nouveau bit" c={SOFT} sc={ex2 ? pp(t, h(0.5)) : 0} s={30} />
   </>; };
 /* ---------- CHAPITRE 6 : simulateur et analyse (96–99) ---------- */
 const ANA: [string, React.ReactNode, string][] = [["nombre pair de 1", "O(n)", "n + 1 étapes"], ["palindrome · 1 bande", <>{sup("O(n", "2")})</>, "Hennie, 1965"], ["palindrome · 2 bandes", "O(n)", ""], ["incrémentation", "O(n)", "au plus 2n + 2 étapes"]];
-const Sim = (t: number) => { const clicks = [0.25, 0.4, 0.55, 0.7].map((f) => mid(96, f)), n = clicks.filter((x) => t > x).length, press = Math.max(0, ...clicks.map((x) => (t > x ? 1 - sat((t - x) / 0.3) : 0)));
-  const cur: [number, number] = [kf(t, [[S(96), 900], [mid(96, 0.2), 560]]), kf(t, [[S(96), 900], [mid(96, 0.2), 812]])], at = [mid(97, 0.15), mid(98, 0.08), mid(98, 0.45), mid(98, 0.72)];
+const Sim = (t: number) => { const clicks = [0.25, 0.4, 0.55, 0.7].map((f) => mid(131, f)), n = clicks.filter((x) => t > x).length, press = Math.max(0, ...clicks.map((x) => (t > x ? 1 - sat((t - x) / 0.3) : 0)));
+  const cur: [number, number] = [kf(t, [[S(131), 900], [mid(131, 0.2), 560]]), kf(t, [[S(131), 900], [mid(131, 0.2), 812]])], at = [mid(132, 0.15), mid(133, 0.08), mid(133, 0.45), mid(133, 0.72)];
   return <>
-    <Win x={110} y={100} w={940} h={800} p={pp(t, S(96) + 0.1)} title="Simulateur de machine de Turing">
+    <Win x={110} y={100} w={940} h={800} p={pp(t, S(131) + 0.1)} title="Simulateur de machine de Turing">
       <Tape x={130} y={200} cells={["1", "0", "1", "1", "_", "_"]} cw={100} ends={false} p={1} hl={{ [n]: YEL }} />
-      <HeadBox x={cxOf(130, kf(t, clicks.map((x, i) => [x + 0.1, i + 1] as [number, number]).concat([[S(96), 0]]).sort((a, b) => a[0] - b[0])), 100)} y={200} cw={100} st={n % 2 ? "impair" : "pair"} />
+      <HeadBox x={cxOf(130, kf(t, clicks.map((x, i) => [x + 0.1, i + 1] as [number, number]).concat([[S(131), 0]]).sort((a, b) => a[0] - b[0])), 100)} y={200} cw={100} st={n % 2 ? "impair" : "pair"} />
       <T x={130} y={330} s={28} c={DIM} f="InterX" anchor="start">état : <tspan fill={YEL}>{n % 2 ? "impair" : "pair"}</tspan>   ·   étape : <tspan fill={YEL}>{n}</tspan></T>
       <rect x={40} y={380} width={860} height={250} rx={14} fill={SOFT} /><T x={70} y={415} s={24} c={DIM} f="InterX" anchor="start">TRANSITIONS</T>
       {["pair, 1 → impair, 1, D", "pair, 0 → pair, 0, D", "impair, 1 → pair, 1, D", "impair, 0 → impair, 0, D"].map((l, i) => <T key={l} x={70} y={460 + i * 44} s={28} c={W} f={KM} anchor="start">{l}</T>)}
       {[["▶ exécuter", 150], ["⏭ pas à pas", 450], ["⟲ réinitialiser", 750]].map(([l, x], i) => <g key={l as string}><rect x={(x as number) - 130} y={680} width={260} height={64} rx={14} fill={i === 1 && press > 0 ? YEL : SOFT} stroke={LINE} strokeOpacity={0.4} strokeWidth={2} />
         <T x={x as number} y={712} s={28} c={i === 1 && press > 0 ? "#14101f" : W} f="InterX">{l as string}</T></g>)}</Win>
-    {t > S(96) && t < E(96) + 0.5 && <Cursor x={cur[0]} y={cur[1]} press={press} />}
-    <Card x={1110} y={150} w={740} h={640} c={YEL} p={pp(t, S(97) + 0.1)} title="ANALYSE DE LA COMPLEXITÉ" tc={YEL}>
-      <T x={40} y={120} s={24} c={DIM} f="InterX" anchor="start">exemple</T><T x={500} y={120} s={24} c={DIM} f="InterX">temps</T><T x={650} y={120} s={24} c={DIM} f="InterX" sc={pp(t, S(99) + 0.1)}>espace</T>
+    {t > S(131) && t < E(131) + 0.5 && <Cursor x={cur[0]} y={cur[1]} press={press} />}
+    <Card x={1110} y={150} w={740} h={640} c={YEL} p={pp(t, S(132) + 0.1)} title="ANALYSE DE LA COMPLEXITÉ" tc={YEL}>
+      <T x={40} y={120} s={24} c={DIM} f="InterX" anchor="start">exemple</T><T x={500} y={120} s={24} c={DIM} f="InterX">temps</T><T x={650} y={120} s={24} c={DIM} f="InterX" sc={pp(t, S(134) + 0.1)}>espace</T>
       {ANA.map(([a, b, c], i) => <g key={a} opacity={k(t, at[i], 0.3)}><T x={40} y={190 + i * 112} s={28} c={W} f="InterX" anchor="start">{a}</T>{c ? <T x={40} y={228 + i * 112} s={21} c={DIM} f="InterX" anchor="start">{c}</T> : null}
-        <T x={500} y={200 + i * 112} s={34} c={i === 1 ? RED : YEL} f={KM}>{b}</T><T x={650} y={200 + i * 112} s={30} c={W} f={KM} sc={pp(t, S(99) + 0.3 + i * 0.25)}>O(n)</T></g>)}</Card>
-    <Chip x={1480} y={860} text="mémoire : l’entrée + une case pour la retenue" c={YEL} fg="#14101f" sc={pp(t, mid(99, 0.45))} s={28} />
+        <T x={500} y={200 + i * 112} s={34} c={i === 1 ? RED : YEL} f={KM}>{b}</T><T x={650} y={200 + i * 112} s={30} c={W} f={KM} sc={pp(t, S(134) + 0.3 + i * 0.25)}>O(n)</T></g>)}</Card>
+    <Chip x={1480} y={860} text="mémoire : l’entrée + une case pour la retenue" c={YEL} fg="#14101f" sc={pp(t, mid(134, 0.45))} s={28} />
   </>; };
 /* ---------- CHAPITRE 7 : avantages et limites (100–105) ---------- */
-const ADV: [string, string, number, number][] = [["simple et précis", "chaque étape : une règle bien définie", 100, 0.45], ["définit la calculabilité", "résoluble en un nombre fini d’étapes", 101, 0.25], ["machine universelle", "une machine, différents programmes", 102, 0.25], ["mesure la complexité", "en temps et en espace", 103, 0.2], ["indépendante du matériel", "un modèle abstrait", 103, 0.6]];
-const LIM: [string, string, number, number][] = [["mémoire infinie", "un ordinateur a une mémoire limitée", 104, 0.2], ["problèmes sans solution", "le problème de l’arrêt", 104, 0.6], ["calculable ≠ pratique", "calculabilité et complexité", 105, 0.2], ["pas d’interaction directe", "réseaux, temps réel", 105, 0.65]];
-const AdvLim = (t: number) => { const c0 = S(100) + 1.9, row = (l: [string, string, number, number][], ok: boolean) => l.map(([a, b, si, f], i) => { const at = si === 100 ? Math.max(c0 + 0.3, mid(si, f)) : mid(si, f), cur = t >= S(si) && t < S(si + 1);
+const ADV: [string, string, number, number][] = [["simple et précis", "chaque étape : une règle bien définie", 135, 0.45], ["définit la calculabilité", "résoluble en un nombre fini d’étapes", 136, 0.25], ["machine universelle", "une machine, différents programmes", 137, 0.25], ["mesure la complexité", "en temps et en espace", 138, 0.2], ["indépendante du matériel", "un modèle abstrait", 138, 0.6]];
+const LIM: [string, string, number, number][] = [["mémoire infinie", "un ordinateur a une mémoire limitée", 139, 0.2], ["problèmes sans solution", "le problème de l’arrêt", 139, 0.6], ["calculable ≠ pratique", "calculabilité et complexité", 140, 0.2], ["pas d’interaction directe", "réseaux, temps réel", 140, 0.65]];
+const AdvLim = (t: number) => { const c0 = S(135) + 1.9, row = (l: [string, string, number, number][], ok: boolean) => l.map(([a, b, si, f], i) => { const at = si === 135 ? Math.max(c0 + 0.3, mid(si, f)) : mid(si, f), cur = t >= S(si) && t < S(si + 1);
     return <g key={a} opacity={k(t, at, 0.3) * (cur ? 1 : 0.75)}><Tick x={80} y={150 + i * 132} ok={ok} sc={pp(t, at)} s={1.05} /><T x={130} y={140 + i * 132} s={36} c={cur ? (ok ? GRN : RED) : W} f="InterX" anchor="start">{a}</T>
       <T x={130} y={184 + i * 132} s={25} c={DIM} f="InterX" anchor="start">{b}</T></g>; });
   return <>
     <Card x={100} y={110} w={840} h={800} c={GRN} p={pp(t, c0)} title="AVANTAGES" tc={GRN}>{row(ADV, true)}</Card>
-    <Card x={980} y={110} w={840} h={800} c={RED} p={pp(t, S(104) + 0.1)} title="LIMITES" tc={RED}>{row(LIM, false)}
-      <g transform="translate(700 640)" opacity={k(t, mid(105, 0.7))}><circle r={44} fill="none" stroke={RED} strokeWidth={5} strokeDasharray="190 86" transform={`rotate(${t * 200})`} /><T x={0} y={2} s={40} c={RED} f={KM}>∞</T></g></Card>
+    <Card x={980} y={110} w={840} h={800} c={RED} p={pp(t, S(139) + 0.1)} title="LIMITES" tc={RED}>{row(LIM, false)}
+      <g transform="translate(700 640)" opacity={k(t, mid(140, 0.7))}><circle r={44} fill="none" stroke={RED} strokeWidth={5} strokeDasharray="190 86" transform={`rotate(${t * 200})`} /><T x={0} y={2} s={40} c={RED} f={KM}>∞</T></g></Card>
   </>; };
+
+
+/* ======================= CHAPITRE 4 (59–108) : réécrit d'après le chapitre « Machine de Turing et calculabilité » ======================= */
+/** sub/superscripts whose offset is undone at the same font size, so the text that follows stays on the baseline */
+const sub4 = (b: React.ReactNode, i: string) => <>{b}<tspan dy="0.28em" fontSize="62%">{i}</tspan><tspan dy="-0.28em" fontSize="62%">{"\u200b"}</tspan></>;
+const sup4 = (b: React.ReactNode, e: string) => <>{b}<tspan dy="-0.42em" fontSize="62%">{e}</tspan><tspan dy="0.42em" fontSize="62%">{"\u200b"}</tspan></>;
+const C4Num: React.FC<{ x: number; y: number; n: number; sc: number; c?: string }> = ({ x, y, n, sc, c = YEL }) => sc <= 0.001 ? null : (
+  <g transform={`translate(${x} ${y}) scale(${sc})`}><circle r={22} fill={PANEL} stroke={c} strokeWidth={3} /><T x={0} y={1} s={26} c={c} f="InterX">{n}</T></g>);
+const C4Loop: React.FC<{ x: number; y: number; t: number; o?: number; r?: number; c?: string }> = ({ x, y, t, o = 1, r = 34, c = RED }) => o <= 0.001 ? null : (
+  <g transform={`translate(${x} ${y})`} opacity={o}><circle r={r} fill="none" stroke={c} strokeWidth={5} strokeDasharray={`${r * 4.4} ${r * 1.9}`} transform={`rotate(${t * 240})`} /><T x={0} y={2} s={r * 1.05} c={c} f={KM}>∞</T></g>);
+const C4Line: React.FC<{ x: number; y: number; s?: number; c?: string; sc?: number; f?: string; children: React.ReactNode }> = ({ x, y, s = 30, c = W, sc = 1, f = "InterX", children }) => (
+  <T x={x} y={y} s={s} c={c} f={f} anchor="start" sc={sc}>{children}</T>);
+const OVL = (l: string) => <tspan style={{ textDecoration: "overline" }}>{l}</tspan>;
+const CHI = <>χ<tspan dy="0.28em" fontSize="62%">L</tspan><tspan dy="0.16em" fontSize="44%">P</tspan><tspan dy="-0.16em" fontSize="44%">{"\u200b"}</tspan><tspan dy="-0.28em" fontSize="62%">{"\u200b"}</tspan></>;
+const chipW = (s: string, sz = 30) => s.length * sz * 0.5 + sz * 1.1;
+
+/* ---------- 59–60 : un ordinateur peut-il tout résoudre ? trois questions ---------- */
+const Q4P: [number, number, string][] = [[470, 380, "trier une liste"], [1450, 380, "chercher un chemin"], [470, 700, "n est-il premier ?"], [1450, 700, "ce programme s’arrête-t-il ?"]];
+const Q4Q: [string[], string][] = [[["Que signifient", "« calcul » et", "« algorithme » ?"], "IV.1 · IV.4"], [["Quels problèmes", "peut-on résoudre", "par un algorithme ?"], "IV.2 · IV.3"], [["Existe-t-il des problèmes", "qu’aucun algorithme", "ne pourra jamais résoudre ?"], "IV.5 · IV.6"]];
+const Questions4 = (t: number) => { const c0 = S(59) + 1.9;
+  return <>
+    <g opacity={1 - k(t, S(60) - 0.25, 0.45)}>
+      <T x={960} y={150} s={52} c={W} sc={pp(t, c0)}>UN ORDINATEUR PEUT-IL TOUT RÉSOUDRE ?</T>
+      <Laptop x={960} y={590} s={1.25} sc={pp(t, c0 + 0.3)}><T x={0} y={-70} s={110} c={YEL} sc={pp(t, c0 + 0.6)}>?</T></Laptop>
+      {Q4P.map(([x, y, s], i) => { const hw = chipW(s, 32) / 2, at = mid(59, 0.18 + i * 0.08);
+        return <g key={s}><Draw d={`M${x < 960 ? x + hw + 14 : x - hw - 14} ${y} L${x < 960 ? 790 : 1130} ${y < 540 ? 470 : 600}`} p={k(t, at + 0.1, 0.4)} c={LINE} w={3} dash="10 10" />
+          <Chip x={x} y={y} text={s} c={i === 3 ? RED : SOFT} sc={pp(t, at)} s={32} /></g>; })}
+      <Chip x={960} y={900} text="d’abord : dire précisément ce qu’est un algorithme" c={YEL} fg="#14101f" sc={pp(t, mid(59, 0.72))} s={34} />
+    </g>
+    <g opacity={k(t, S(60), 0.4)}>
+      <T x={960} y={150} s={52} c={W}>TROIS QUESTIONS</T>
+      {Q4Q.map(([ls, sec], i) => { const c = i === 2 ? RED : YEL;
+        return <Card key={sec} x={110 + i * 590} y={250} w={520} h={580} c={c} p={pp(t, mid(60, 0.1 + i * 0.27))}>
+          <circle cx={260} cy={140} r={70} fill={SOFT} stroke={c} strokeWidth={5} /><T x={260} y={144} s={84} c={c}>{i + 1}</T>
+          {ls.map((l, j) => <T key={j} x={260} y={290 + j * 50} s={31} c={W} f="InterX">{l}</T>)}
+          <Chip x={260} y={490} text={`sections ${sec}`} c={SOFT} s={28} /></Card>; })}
+    </g>
+  </>; };
+
+/* ---------- 61–65 : la calculabilité, la machine en bref, le 7-uplet, trois issues ---------- */
+const BX = 610, BCW = 100;
+const TUP4: [React.ReactNode, string, string][] = [["Q", "états", YEL], ["Σ", "alphabet d’entrée", YEL], ["Γ", "alphabet du ruban", YEL], ["δ", "transition", YEL], [sub4("q", "0"), "état initial", YEL], [sub4("q", "acc"), "acceptation", GRN], [sub4("q", "rej"), "rejet", RED]];
+const STEPS4: [string, number][] = [["lit a = 0", 0.1], ["écrit b = 1", 0.24], ["déplace → D", 0.4], ["passe en q′", 0.56]];
+const Brief4 = (t: number) => { const wr = t > mid(63, 0.24), hp = 2 + k(t, mid(63, 0.4), 0.45), st = t > mid(63, 0.56), row = t > S(63) - 0.1;
+  return <>
+    <g opacity={fade(t, S(61), S(62) - 0.05)}>
+      <T x={960} y={140} s={52} c={W} sc={pp(t, S(61) + 0.1)}>LA CALCULABILITÉ</T>
+      <T x={960} y={215} s={30} c={DIM} f="InterX" sc={pp(t, S(61) + 0.3)}>étudie les problèmes que l’on peut résoudre par un algorithme</T>
+      <Doc x={380} y={560} s={0.75} sc={pp(t, S(61) + 0.4)} title="un problème" />
+      <Arr a={[380, 560]} b={[960, 560]} r={130} p={k(t, mid(61, 0.3), 0.4)} />
+      <MTBox x={960} y={560} sc={pp(t, mid(61, 0.34))} label="?" c={YEL} /><T x={960} y={670} s={30} c={YEL} f="InterX" sc={pp(t, mid(61, 0.4))}>une méthode ?</T>
+      {[0, 1, 2, 3, 4].map((j) => { const y = 340 + j * 110, at = mid(61, 0.5 + j * 0.07);
+        return <g key={j} opacity={k(t, at, 0.3)}><Draw d={`M1060 560 L1290 ${y}`} p={k(t, at, 0.3)} c={LINE} w={3} />
+          <C4Line x={1320} y={y} s={32} f={KM}>{j === 4 ? "entrée  …" : `entrée  ${j + 1}`}</C4Line><Tick x={1560} y={y} ok sc={pp(t, at + 0.15)} s={0.9} /></g>; })}
+      <Chip x={960} y={930} text="la bonne réponse pour TOUTES les entrées possibles ?" c={YEL} fg="#14101f" sc={pp(t, mid(61, 0.86))} s={32} />
+    </g>
+    <g opacity={fade(t, S(62), S(64) - 0.05)}>
+      <T x={960} y={110} s={46} c={W}>LA MACHINE DE TURING EN BREF</T>
+      <Tape x={BX} y={340} cells={["_", "1", wr ? "1" : "0", "1", "1", "_", "_"]} cw={BCW} p={k(t, S(62) + 0.2, 0.8)} hl={t > S(63) ? { [Math.round(hp)]: YEL } : {}} />
+      <C4Num x={720} y={448} n={1} sc={pp(t, mid(62, 0.12))} /><C4Line x={752} y={448} s={30} sc={pp(t, mid(62, 0.12))}>un ruban infini, découpé en cases</C4Line>
+      <HeadBox x={cxOf(BX, hp, BCW)} y={340} st={st ? "q′" : "q"} sc={pp(t, mid(62, 0.3))} />
+      <C4Num x={175} y={212} n={2} sc={pp(t, mid(62, 0.32))} /><T x={700} y={212} s={30} c={W} f="InterX" anchor="end" sc={pp(t, mid(62, 0.32))}>une tête de lecture / écriture</T>
+      <Card x={230} y={520} w={680} h={310} p={pp(t, mid(62, 0.52))} title="ÉTATS · la mémoire" tc={YEL}>
+        <C4Num x={40} y={44} n={3} sc={1} />
+        {[[sub4("q", "0"), 0], ["q", 1], ["q′", 2]].map(([l, j]) => <St key={j as number} x={170 + (j as number) * 170} y={175} l={l as React.ReactNode} r={48} ls={30} c={(j === 1 && row && !st) || (j === 2 && st) ? YEL : W} hot={(j === 1 && row && !st) || (j === 2 && st)} />)}
+        <T x={340} y={270} s={26} c={DIM} f="InterX">un nombre fini d’états</T></Card>
+      <Card x={1010} y={520} w={680} h={310} p={pp(t, mid(62, 0.76))} title="TRANSITIONS · le programme" tc={YEL}>
+        <C4Num x={40} y={44} n={4} sc={1} />
+        {["δ(q, 0) = (q′, 1, D)", "δ(q′, 1) = (q′, 1, D)", "δ(q′, ⊔) = (q, ⊔, G)"].map((l, j) => <g key={l}>{j === 0 && row && <rect x={90} y={88} width={500} height={60} rx={14} fill={YEL} fillOpacity={0.14} stroke={YEL} strokeWidth={3} />}
+          <T x={340} y={118 + j * 62} s={34} c={j === 0 && row ? YEL : W} f={KM}>{l}</T></g>)}
+      </Card>
+      {STEPS4.map(([l, f], j) => <Chip key={l} x={390 + j * 380} y={900} text={l} c={t > mid(63, f) + 0.5 ? SOFT : YEL} fg={t > mid(63, f) + 0.5 ? W : "#14101f"} sc={pp(t, mid(63, f))} s={30} />)}
+      <T x={960} y={985} s={40} c={W} f={KM} sc={pp(t, mid(63, 0.75))}>δ(q, a) = (q′, b, D)</T>
+    </g>
+    <g opacity={k(t, S(64), 0.4)}>
+      <T x={960} y={130} s={46} c={W}>DÉFINITION : UN 7-UPLET</T>
+      <T x={195} y={300} s={64} c={W} f={KM} sc={pp(t, S(64) + 0.2)}>M = (</T>
+      {TUP4.map(([s, l, c], i) => { const x = 360 + i * 215, at = mid(64, 0.14 + i * 0.1);
+        return <g key={i}><T x={x} y={300} s={64} c={c} f={KM} sc={pp(t, at)}>{s}</T>{i < 6 && <T x={x + 107} y={316} s={60} c={W} f={KM} sc={pp(t, at)}>,</T>}
+          <T x={x} y={385} s={22} c={DIM} f="InterX" sc={pp(t, at + 0.1)}>{l}</T></g>; })}
+      <T x={1740} y={300} s={64} c={W} f={KM} sc={pp(t, mid(64, 0.86))}>)</T>
+      {([["ACCEPTE", GRN, "acc"], ["REJETTE", RED, "rej"], ["BOUCLE", YEL, ""]] as [string, string, string][]).map(([n, c, q], i) =>
+        <Card key={n} x={140 + i * 570} y={480} w={500} h={330} c={c} p={pp(t, mid(65, 0.06 + i * 0.2))} title={n} tc={c}>
+          {q ? <St x={250} y={170} l={sub4("q", q)} c={c} acc={i === 0} r={58} ls={34} hot /> : <C4Loop x={250} y={170} t={t} r={52} c={YEL} />}
+          <T x={250} y={280} s={28} c={W} f="InterX">{q ? <>elle atteint {sub4("q", q)}</> : "elle ne s’arrête jamais"}</T></Card>)}
+      <Chip x={960} y={900} text="c’est la troisième issue qui rend la calculabilité subtile" c={YEL} fg="#14101f" sc={pp(t, mid(65, 0.72))} s={34} />
+    </g>
+  </>; };
+
+/* ---------- 66–71 : fonction calculable, Church–Turing, la machine « successeur » ---------- */
+const SUX = 500, SUCW = 110;
+const SUTR: [string, React.ReactNode, string, number][] = [["0", sub4("q", "0"), "111", 0], ["1", sub4("q", "0"), "111", 1], ["2", sub4("q", "0"), "111", 2], ["3", sub4("q", "0"), "111⊔", 3], ["4", sub4("q", "acc"), "1111⊔", 4]];
+const Succ = (t: number) => { const ts = [0, 1, 2, 3].map((j) => mid(70, 0.12 + j * 0.17)), n = ts.filter((x) => t > x).length, hp = ts.reduce((a, x) => a + k(t, x, 0.35), 0), done = n >= 4;
+  return <>
+    <g opacity={1 - k(t, S(68) - 0.25, 0.45)}>
+      <Card x={110} y={150} w={840} h={430} c={YEL} p={pp(t, S(66) + 0.15)} title="FONCTION CALCULABLE" tc={YEL}>
+        <T x={110} y={190} s={46} c={W} f={KI} it sc={pp(t, S(66) + 0.5)}>x</T><Draw d="M150 190 H290" p={k(t, S(66) + 0.6, 0.3)} c={W} w={5} /><Head x={296} y={190} p={k(t, S(66) + 0.6, 0.3)} c={W} s={0.6} />
+        <MTBox x={420} y={190} sc={pp(t, S(66) + 0.7)} /><Draw d="M520 190 H660" p={k(t, mid(66, 0.45), 0.3)} c={W} w={5} /><Head x={666} y={190} p={k(t, mid(66, 0.45), 0.3)} c={W} s={0.6} />
+        <T x={745} y={190} s={46} c={GRN} f={KM} sc={pp(t, mid(66, 0.5))}>f(x)</T>
+        <Chip x={420} y={315} text="pour toute entrée x : elle s’arrête, f(x) sur le ruban" c={GRN} fg="#0b1a10" sc={pp(t, mid(66, 0.62))} s={26} />
+        <T x={420} y={380} s={28} c={DIM} f="InterX" sc={pp(t, mid(66, 0.8))}>en un nombre fini d’étapes</T></Card>
+      <Card x={990} y={150} w={820} h={430} p={pp(t, S(67) + 0.15)} title="THÈSE DE CHURCH–TURING" tc={W}>
+        <T x={410} y={140} s={34} c={W} f="InterX" sc={pp(t, S(67) + 0.4)}>tout ce qu’une procédure mécanique calcule</T><T x={410} y={205} s={50} c={YEL} f={KM} sc={pp(t, mid(67, 0.25))}>⇓</T>
+        <T x={410} y={270} s={34} c={W} f="InterX" sc={pp(t, mid(67, 0.3))}>une machine de Turing le calcule</T>
+        <Chip x={410} y={365} text="une thèse, pas un théorème : notion intuitive" c={SOFT} sc={pp(t, mid(67, 0.62))} s={26} /></Card>
+      <T x={960} y={720} s={34} c={DIM} f="InterX" sc={pp(t, mid(67, 0.8))}>un fondement de l’informatique théorique</T>
+    </g>
+    <g opacity={k(t, S(68), 0.4)}>
+      <T x={960} y={110} s={50} c={W}>EXEMPLE : f(n) = n + 1</T>
+      <Card x={110} y={180} w={560} h={300} p={pp(t, S(68) + 0.2)} title="NOTATION UNAIRE" tc={YEL}>
+        {([["0", "mot vide"], ["1", "1"], ["2", "11"], ["3", "111"]] as [string, string][]).map(([a, b], i) => <g key={a} opacity={k(t, mid(68, 0.4 + i * 0.1), 0.3)}>
+          <T x={150} y={105 + i * 50} s={32} c={W} f={KM}>{a}</T><T x={230} y={105 + i * 50} s={30} c={DIM} f={KM}>→</T>
+          <C4Line x={300} y={105 + i * 50} s={i ? 34 : 28} c={i === 3 ? YEL : i ? W : DIM} f={i ? KM : "InterX"}>{b}</C4Line></g>)}</Card>
+      <St x={950} y={350} l={sub4("q", "0")} init sc={pp(t, S(69) + 0.15)} c={done ? W : t > S(70) ? YEL : W} hot={t > S(70) && !done} />
+      <St x={1580} y={350} l={sub4("q", "acc")} acc sc={pp(t, S(69) + 0.3)} c={GRN} hot={done} ls={28} />
+      <SelfLoop x={950} y={350} p={k(t, mid(69, 0.2), 0.5)} label="1 → 1, D" />
+      <Arr a={[950, 350]} b={[1580, 350]} p={k(t, mid(69, 0.55), 0.5)} label="⊔ → 1, D" c={GRN} lo={-34} />
+      <T x={1265} y={455} s={26} c={DIM} f="InterX" sc={pp(t, mid(69, 0.7))}>lire, écrire, déplacer</T>
+      <g opacity={k(t, mid(68, 0.78), 0.4)}>
+        <Tape x={SUX} y={665} cells={["1", "1", "1", done ? "1" : "_", "_"]} cw={SUCW} p={1} hl={t > S(70) ? { [Math.round(hp)]: done ? GRN : YEL } : {}} />
+        <HeadBox x={cxOf(SUX, hp, SUCW)} y={665} cw={SUCW} st={done ? sub4("q", "acc") : sub4("q", "0")} c={done ? GRN : YEL} sc={1} />
+        <T x={SUX + 165} y={760} s={26} c={DIM} f="InterX">n = 3</T></g>
+      <Card x={1300} y={520} w={520} h={420} p={pp(t, S(70) + 0.1)} title="EXÉCUTION" tc={YEL}>
+        {["étape", "état", "ruban"].map((h, j) => <T key={h} x={90 + j * 170} y={100} s={24} c={DIM} f="InterX">{h}</T>)}
+        {SUTR.map(([e, s, r, u], j) => <g key={e} opacity={t > (j ? ts[j - 1] : S(70) + 0.3) ? 1 : 0}>
+          <T x={90} y={150 + j * 55} s={30} c={W} f={KM}>{e}</T><T x={260} y={150 + j * 55} s={30} c={j === 4 ? GRN : W} f={KM}>{s}</T>
+          <T x={430} y={150 + j * 55} s={30} c={W} f={KM}>{r.split("").map((ch, ci) => <tspan key={ci} fill={ci === u ? YEL : W} style={ci === u ? { textDecoration: "underline" } : undefined}>{ch}</tspan>)}</T></g>)}</Card>
+      <T x={780} y={850} s={44} c={W} f={KM} sc={pp(t, S(71) + 0.2)}>{sup4("1", "n")}{"  ↦  "}{sup4("1", "n+1")}</T>
+      <T x={780} y={915} s={28} c={DIM} f="InterX" sc={pp(t, mid(71, 0.3))}>n + 1 étapes, pour tout n (même n = 0)</T>
+      <Chip x={960} y={995} text="la fonction successeur est calculable" c={GRN} fg="#0b1a10" sc={pp(t, mid(71, 0.62))} s={32} />
+    </g>
+  </>; };
+
+/* ---------- 72–77 : problèmes de décision, décidable / semi-décidable / indécidable, coder en mots ---------- */
+const DCARDS: [string, string, number, string[]][] = [["DÉCIDABLE", GRN, 73, ["toujours une réponse,", "en temps fini"]], ["SEMI-DÉCIDABLE", YEL, 74, ["« oui » : on finit par le savoir", "« non » : attente peut-être infinie"]], ["INDÉCIDABLE", RED, 73.6, ["aucune méthode", "ne répond toujours"]]];
+const at4 = (x: number) => (Number.isInteger(x) ? S(x) + 0.15 : mid(Math.floor(x), x - Math.floor(x)));
+const Decide = (t: number) => <>
+  <g opacity={1 - k(t, S(76) - 0.25, 0.45)}>
+    <T x={960} y={120} s={50} c={W} sc={pp(t, S(72) + 0.1)}>PROBLÈMES DE DÉCISION</T>
+    <T x={960} y={205} s={38} c={W} f="InterX" sc={pp(t, S(72) + 0.4)}>« cet entier est-il premier ? »  →  OUI / NON</T>
+    <Chip x={640} y={292} text="29 → OUI · instance positive" c={GRN} fg="#0b1a10" sc={pp(t, mid(72, 0.62))} s={30} />
+    <Chip x={1280} y={292} text="91 → NON · instance négative" c={RED} sc={pp(t, mid(72, 0.75))} s={30} />
+    {DCARDS.map(([n, c, a, intu], i) => { const x = [105, 690, 1275][i];
+      return <Card key={n} x={x} y={370} w={540} h={520} c={c} p={pp(t, at4(a))} title={n} tc={c}>
+        {i === 0 && <><MTBox x={170} y={160} sc={1} c={GRN} /><Chip x={400} y={125} text="OUI" c={GRN} fg="#0b1a10" s={28} /><Chip x={400} y={195} text="NON" c={GRN} fg="#0b1a10" s={28} />
+          <T x={270} y={270} s={26} c={W} f="InterX">s’arrête sur toute instance</T><T x={270} y={310} s={26} c={W} f="InterX">avec la bonne réponse</T></>}
+        {i === 1 && <><C4Line x={40} y={135} s={26}>instance positive</C4Line><Chip x={390} y={135} text="OUI" c={GRN} fg="#0b1a10" s={26} sc={pp(t, mid(74, 0.35))} /><Tick x={470} y={135} ok sc={pp(t, mid(74, 0.4))} s={0.8} />
+          <C4Line x={40} y={225} s={26}>instance négative</C4Line><Chip x={390} y={225} text="NON ?" c={SOFT} s={26} sc={pp(t, mid(74, 0.6))} /><C4Loop x={480} y={225} t={t} r={26} c={YEL} o={k(t, mid(74, 0.66))} />
+          <T x={270} y={310} s={26} c={DIM} f="InterX" sc={pp(t, mid(74, 0.75))}>peut ne jamais s’arrêter</T></>}
+        {i === 2 && <><path d="M190 100 L350 240 M350 100 L190 240" stroke={RED} strokeWidth={14} strokeLinecap="round" opacity={0.9} />
+          <T x={270} y={290} s={26} c={W} f="InterX">aucun algorithme ne s’arrête</T><T x={270} y={328} s={26} c={W} f="InterX">avec la bonne réponse partout</T></>}
+        <g opacity={k(t, S(75) + 0.2 + i * 0.6, 0.4)}><line x1={40} x2={500} y1={378} y2={378} stroke={c} strokeOpacity={0.35} strokeWidth={2} />
+          <T x={270} y={405} s={20} c={c} f="InterX" ls={3}>EN INTUITION</T>
+          {intu.map((l, j) => <T key={j} x={270} y={445 + j * 36} s={25} c={W} f="InterX">{l}</T>)}</g></Card>; })}
+    <Chip x={960} y={965} text="le problème de l’arrêt : semi-décidable, mais indécidable" c={YEL} fg="#14101f" sc={pp(t, mid(75, 0.72))} s={32} />
+  </g>
+  <g opacity={k(t, S(76), 0.4)}>
+    <T x={960} y={120} s={50} c={W}>CHAQUE INSTANCE DEVIENT UN MOT</T>
+    <g opacity={k(t, mid(76, 0.12), 0.4)}><T x={380} y={290} s={90} c={W} f={KM}>13</T>
+      <Draw d="M380 360 V420" p={k(t, mid(76, 0.18), 0.3)} c={LINE} w={4} /><Chip x={380} y={470} text="1101" c={YEL} fg="#14101f" s={34} sc={pp(t, mid(76, 0.2))} />
+      <T x={380} y={545} s={26} c={DIM} f="InterX">un entier → écriture binaire</T></g>
+    <g opacity={k(t, mid(76, 0.35), 0.4)}>{([[900, 240], [1020, 240], [960, 335]] as [number, number][]).map(([x, y], j, A) => <g key={j}><line x1={x} y1={y} x2={A[(j + 1) % 3][0]} y2={A[(j + 1) % 3][1]} stroke={W} strokeWidth={4} /></g>)}
+      {([[900, 240], [1020, 240], [960, 335]] as [number, number][]).map(([x, y], j) => <circle key={j} cx={x} cy={y} r={20} fill={PANEL} stroke={YEL} strokeWidth={4} />)}
+      <Draw d="M960 370 V420" p={k(t, mid(76, 0.42), 0.3)} c={LINE} w={4} /><Chip x={960} y={470} text="011 101 110" c={YEL} fg="#14101f" s={34} sc={pp(t, mid(76, 0.45))} />
+      <T x={960} y={545} s={26} c={DIM} f="InterX">un graphe → matrice d’adjacence</T></g>
+    <g opacity={k(t, mid(76, 0.6), 0.4)}><MTBox x={1540} y={290} sc={1} /><Draw d="M1540 360 V420" p={k(t, mid(76, 0.66), 0.3)} c={LINE} w={4} />
+      <Chip x={1540} y={470} text="⟨M⟩ = 0110 0101 …" c={YEL} fg="#14101f" s={32} sc={pp(t, mid(76, 0.7))} />
+      <T x={1540} y={545} s={26} c={DIM} f="InterX">une machine → sa table de transitions</T></g>
+    <g opacity={k(t, S(77), 0.4)}>
+      <Ring cx={560} cy={810} rx={430} ry={170} p={k(t, S(77) + 0.2, 0.7)} c={LINE} /><T x={190} y={680} s={40} c={W} f={KM}>{sup4("Σ", "*")}</T>
+      <Ring cx={650} cy={820} rx={220} ry={100} p={k(t, mid(77, 0.2), 0.6)} c={GRN} fo={0.14} /><T x={650} y={745} s={34} c={GRN} f={KM} sc={pp(t, mid(77, 0.25))}>{sub4("L", "P")}</T>
+      {([[580, 830, "29", 1], [690, 800, "13", 1], [740, 860, "7", 1], [280, 810, "91", 0], [360, 900, "8", 0], [960, 820, "15", 0], [900, 735, "1", 0]] as [number, number, string, number][]).map(([x, y, s, ok], j) =>
+        <T key={j} x={x} y={y} s={30} c={ok ? GRN : DIM} f={KM} sc={pp(t, mid(77, 0.3 + j * 0.03))}>{s}</T>)}
+      <Card x={1120} y={630} w={700} h={330} c={YEL} p={pp(t, mid(77, 0.45))} title="FONCTION CARACTÉRISTIQUE" tc={YEL}>
+        <C4Line x={60} y={130} s={36} f={KM}>{CHI}(w) = 1   si  w ∈ {sub4("L", "P")}</C4Line><C4Line x={60} y={190} s={36} f={KM}>{CHI}(w) = 0   sinon</C4Line>
+        <Chip x={350} y={275} text="P décidable ⇔ χ calculable" c={GRN} fg="#0b1a10" s={30} sc={pp(t, mid(77, 0.75))} /></Card>
+    </g>
+  </g>
+</>;
+
+/* ---------- 78–81 : la primalité est décidable ; l'arrêt, lui, n'a pas de borne ---------- */
+const Prime = (t: number) => { const runAt = (r: number, j: number) => mid(79, (r ? 0.5 : 0.08) + j * 0.06), steps = Math.floor(Math.pow(10, 1 + Math.max(0, t - S(81) - 0.6) * 0.55));
+  return <>
+    <T x={960} y={105} s={50} c={W} sc={pp(t, S(78) + 0.1)}>EXEMPLE : LA PRIMALITÉ</T>
+    <Win x={110} y={170} w={780} h={340} p={pp(t, S(78) + 0.3)} title="algorithme">
+      {([["pour d de 2 à ⌊√n⌋ :", 60, YEL], ["si d divise n : répondre NON, s’arrêter", 110, W], ["répondre OUI", 60, YEL]] as [string, number, string][]).map(([l, x, c], i) =>
+        <C4Line key={i} x={x} y={125 + i * 70} s={32} c={c} sc={pp(t, mid(78, 0.15 + i * 0.22))}>{l}</C4Line>)}</Win>
+    {[0, 1].map((r) => { const n = r ? 91 : 29, ds = r ? [2, 3, 4, 5, 6, 7] : [2, 3, 4, 5], y = r ? 420 : 230;
+      return <g key={n} opacity={k(t, runAt(r, 0) - 0.3, 0.3)}><C4Line x={970} y={y} s={40} f={KM}>n = {n}</C4Line>
+        {ds.map((d, j) => { const hit = r === 1 && d === 7; return <Chip key={d} x={1220 + j * 105} y={y} text={`d=${d}`} c={hit ? YEL : SOFT} fg={hit ? "#14101f" : W} s={26} sc={pp(t, runAt(r, j))} />; })}
+        {r === 0 ? <Chip x={1400} y={312} text="aucun d ne divise 29 → OUI" c={GRN} fg="#0b1a10" s={28} sc={pp(t, runAt(0, 4) + 0.2)} />
+          : <><T x={1250} y={505} s={34} c={YEL} f={KM} sc={pp(t, runAt(1, 6))}>91 = 7 × 13</T><Chip x={1610} y={505} text="→ NON" c={RED} s={30} sc={pp(t, runAt(1, 6) + 0.25)} /></>}</g>; })}
+    <Card x={110} y={580} w={840} h={390} c={GRN} p={pp(t, S(80) + 0.15)} title="POURQUOI ÇA MARCHE" tc={GRN}>
+      <C4Line x={50} y={120} s={28} c={YEL} sc={pp(t, S(80) + 0.4)}>terminaison</C4Line><C4Line x={240} y={120} s={28} sc={pp(t, S(80) + 0.4)}>au plus ⌊√n⌋ − 1 itérations</C4Line>
+      <C4Line x={240} y={165} s={24} c={DIM} sc={pp(t, mid(80, 0.2))}>un nombre fini, connu à l’avance</C4Line>
+      <C4Line x={50} y={225} s={28} c={YEL} sc={pp(t, mid(80, 0.4))}>correction</C4Line><C4Line x={240} y={225} s={28} sc={pp(t, mid(80, 0.4))}>n = a · b, a ≤ b  ⇒  a ≤ √n</C4Line>
+      <C4Line x={240} y={270} s={24} c={DIM} sc={pp(t, mid(80, 0.5))}>s’il existe un diviseur, on le trouve</C4Line>
+      <Chip x={420} y={335} text="la primalité est décidable" c={GRN} fg="#0b1a10" s={30} sc={pp(t, mid(80, 0.72))} /></Card>
+    <Card x={990} y={580} w={820} h={390} c={RED} p={pp(t, S(81) + 0.15)} title="LE PROBLÈME DE L’ARRÊT" tc={RED}>
+      <T x={410} y={115} s={30} c={W} f="InterX">aucune borne connue sur le nombre d’étapes</T>
+      <rect x={60} y={170} width={620} height={34} rx={17} fill={SOFT} stroke={LINE} strokeOpacity={0.4} strokeWidth={2} />
+      <rect x={60} y={170} width={620 * (0.15 + 0.8 * (((t - S(81)) * 0.35) % 1))} height={34} rx={17} fill={RED} opacity={0.75} />
+      <C4Loop x={740} y={187} t={t} r={28} c={RED} o={k(t, S(81) + 0.4)} />
+      <T x={410} y={250} s={30} c={DIM} f={KM}>étapes : {steps.toLocaleString("fr-FR")} …</T>
+      <T x={410} y={320} s={32} c={YEL} f="InterX" sc={pp(t, mid(81, 0.6))}>finira-t-il un jour ? on ne peut pas savoir</T></Card>
+  </>; };
+
+/* ---------- 82–84 : complémentaire, union, intersection ; les réductions ---------- */
+const Props4 = (t: number) => { const sw = k(t, mid(82, 0.25), 0.6);
+  return <>
+    <T x={960} y={105} s={50} c={W} sc={pp(t, S(82) + 0.1)}>PROPRIÉTÉS UTILES</T>
+    <Card x={110} y={170} w={820} h={330} c={GRN} p={pp(t, S(82) + 0.25)} title="COMPLÉMENTAIRE" tc={GRN}>
+      <MTBox x={190} y={190} sc={1} c={GRN} /><Arr a={[280, 190]} b={[440, 150]} r={0} p={1} c={LINE} w={3} /><Arr a={[280, 190]} b={[440, 240]} r={0} p={1} c={LINE} w={3} />
+      <Chip x={520} y={150 + 90 * sw} text="OUI" c={GRN} fg="#0b1a10" s={30} /><Chip x={520} y={240 - 90 * sw} text="NON" c={RED} s={30} />
+      <C4Line x={600} y={195} s={24} c={DIM}>on échange</C4Line><C4Line x={600} y={230} s={24} c={DIM}>les réponses</C4Line></Card>
+    <Card x={990} y={170} w={820} h={330} c={GRN} p={pp(t, mid(82, 0.5))} title="UNION · INTERSECTION" tc={GRN}>
+      <MTBox x={160} y={150} sc={0.62} label="P" /><MTBox x={160} y={255} sc={0.62} label="Q" />
+      <Arr a={[220, 150]} b={[420, 200]} r={0} p={k(t, mid(82, 0.62), 0.4)} c={LINE} w={3} /><Arr a={[220, 255]} b={[420, 210]} r={0} p={k(t, mid(82, 0.62), 0.4)} c={LINE} w={3} />
+      <circle cx={470} cy={205} r={44} fill={SOFT} stroke={W} strokeWidth={4} /><T x={470} y={207} s={40} c={W} f={KM}>∪ ∩</T>
+      <Chip x={660} y={205} text="décidable" c={GRN} fg="#0b1a10" s={28} sc={pp(t, mid(82, 0.75))} /></Card>
+    <g opacity={k(t, S(83), 0.4)}>
+      <T x={960} y={575} s={44} c={YEL}>RÉDUCTION</T><T x={1150} y={575} s={44} c={YEL} f={KM} anchor="start">A {sub4("≤", "m")} B</T>
+      <Chip x={230} y={720} text="w" c={SOFT} s={40} sc={pp(t, S(83) + 0.3)} />
+      <Arr a={[230, 720]} b={[520, 720]} r={50} p={k(t, mid(83, 0.2), 0.4)} />
+      <Gear x={580} y={720} r={46} a={t * 60} c={YEL} /><T x={580} y={810} s={26} c={YEL} f="InterX">h calculable</T>
+      <Arr a={[580, 720]} b={[860, 720]} r={70} p={k(t, mid(83, 0.35), 0.4)} />
+      <Chip x={930} y={720} text="h(w)" c={SOFT} s={40} sc={pp(t, mid(83, 0.4))} />
+      <T x={600} y={895} s={42} c={W} f={KM} sc={pp(t, mid(83, 0.62))}>w ∈ A  ⇔  h(w) ∈ B</T>
+      <g opacity={k(t, S(84) + 0.1, 0.4)}><Arr a={[930, 720]} b={[1200, 720]} r={80} p={k(t, S(84) + 0.2, 0.4)} />
+        <MTBox x={1290} y={720} sc={1} c={GRN} label="B" /><T x={1290} y={815} s={24} c={DIM} f="InterX">décideur de B</T>
+        <Arr a={[1380, 720]} b={[1560, 670]} r={0} p={k(t, mid(84, 0.25), 0.4)} c={LINE} w={3} /><Arr a={[1380, 720]} b={[1560, 770]} r={0} p={k(t, mid(84, 0.25), 0.4)} c={LINE} w={3} />
+        <Chip x={1640} y={670} text="OUI" c={GRN} fg="#0b1a10" s={28} /><Chip x={1640} y={770} text="NON" c={RED} s={28} /></g>
+      <Chip x={1380} y={890} text="B décidable ⇒ A décidable" c={GRN} fg="#0b1a10" s={30} sc={pp(t, mid(84, 0.35))} />
+      <Chip x={960} y={985} text="contraposée : A indécidable ⇒ B indécidable · la méthode standard" c={RED} s={30} sc={pp(t, mid(84, 0.62))} />
+    </g>
+  </>; };
+
+/* ---------- 85–89 : reconnaissable / décidable, le théorème, les exemples, la clôture ---------- */
+const EXL: [React.ReactNode, number, number][] = [
+  [<>{"{ "}{sup4("a", "n")}{sup4("b", "n")}{" | n ≥ 0 }"}</>, 1, 1], [<>{"{ "}{sup4("a", "n")}{sup4("b", "n")}{sup4("c", "n")}{" | n ≥ 0 }"}</>, 1, 1], ["mots de longueur paire", 1, 1],
+  [<>{sub4("A", "TM")}{" = { ⟨M, w⟩ | M accepte w }"}</>, 0, 1], ["HALT = { ⟨M, w⟩ | M s’arrête sur w }", 0, 1], [<>{"complémentaire de "}{sub4("A", "TM")}</>, 0, 0]];
+const CLO = ["union", "intersection", "complémentaire", "concaténation", "étoile"];
+const RecDec = (t: number) => { const lane = (j: number, d: number) => mid(87, 0.32 + j * 0.06 + d), acc = t > mid(87, 0.32 + 5 * 0.06 + 0.03) + 0.2;
+  return <>
+    <g opacity={1 - k(t, S(88) - 0.25, 0.45)}>
+      <Card x={110} y={110} w={840} h={330} c={YEL} p={pp(t, S(85) + 0.15)} title="RECONNAISSABLE" tc={YEL}>
+        <C4Line x={50} y={140} s={30} f={KM}>w ∈ L</C4Line><C4Line x={200} y={140} s={30}>→ s’arrête et accepte</C4Line><Tick x={720} y={140} ok sc={pp(t, mid(85, 0.15))} s={0.9} />
+        <C4Line x={50} y={230} s={30} f={KM}>w ∉ L</C4Line><C4Line x={200} y={230} s={30}>→ rejette, ou boucle</C4Line><C4Loop x={720} y={230} t={t} r={28} c={YEL} o={k(t, mid(85, 0.25))} /></Card>
+      <Card x={990} y={110} w={820} h={330} c={GRN} p={pp(t, mid(85, 0.45))} title="DÉCIDABLE" tc={GRN}>
+        <C4Line x={50} y={140} s={30} f={KM}>w ∈ L</C4Line><C4Line x={200} y={140} s={30}>→ accepte</C4Line><Tick x={700} y={140} ok sc={pp(t, mid(85, 0.55))} s={0.9} />
+        <C4Line x={50} y={230} s={30} f={KM}>w ∉ L</C4Line><C4Line x={200} y={230} s={30}>→ rejette</C4Line><Tick x={700} y={230} ok={false} sc={pp(t, mid(85, 0.6))} s={0.9} />
+        <Chip x={410} y={295} text="elle s’arrête toujours" c={GRN} fg="#0b1a10" s={26} sc={pp(t, mid(85, 0.72))} /></Card>
+      <g opacity={k(t, S(86), 0.4)}>
+        <Ring cx={480} cy={740} rx={370} ry={215} p={k(t, S(86) + 0.2, 0.7)} c={YEL} /><T x={480} y={578} s={32} c={YEL}>RECONNAISSABLES</T>
+        <Ring cx={430} cy={780} rx={190} ry={110} p={k(t, mid(86, 0.25), 0.6)} c={GRN} fo={0.14} /><T x={430} y={780} s={32} c={GRN}>DÉCIDABLES</T>
+        <circle cx={720} cy={760} r={12} fill={RED} opacity={k(t, mid(86, 0.6))} /><T x={720} y={720} s={28} c={RED} f="InterX" sc={pp(t, mid(86, 0.6))}>HALT</T>
+        <Chip x={480} y={995} text="décidable ⇒ reconnaissable · la réciproque est fausse" c={SOFT} s={26} sc={pp(t, mid(86, 0.5))} /></g>
+      <Card x={920} y={490} w={900} h={500} c={YEL} p={pp(t, S(87) + 0.15)} title="THÉORÈME" tc={YEL}>
+        <T x={450} y={110} s={32} c={W} f="InterX">L décidable  ⇔  L et {OVL("L")} reconnaissables</T>
+        {[0, 1].map((r) => <g key={r}><T x={110} y={210 + r * 100} s={30} c={W} f={KM}>{sub4("M", r ? "2" : "1")}</T><T x={110} y={244 + r * 100} s={18} c={DIM} f="InterX">reconnaît {r ? OVL("L") : "L"}</T>
+          {[0, 1, 2, 3, 4, 5, 6].map((j) => { const show = t > lane(j, r * 0.03) && (!acc || j <= 5), win = acc && r === 1 && j === 5;
+            return show ? <rect key={j} x={190 + j * 62} y={190 + r * 100} width={48} height={40} rx={8} fill={win ? GRN : YEL} opacity={!acc ? 0.85 : win ? 1 : r === 1 ? 0.5 : 0.25} /> : null; })}
+          {r === 1 && acc && <Chip x={720} y={310} text="ACCEPTE" c={GRN} fg="#0b1a10" s={26} />}</g>)}
+        <C4Line x={190} y={385} s={22} c={DIM} sc={pp(t, mid(87, 0.3))}>en parallèle, une étape chacune à tour de rôle</C4Line>
+        <Chip x={450} y={445} text={acc ? "M₂ accepte : w ∉ L, on rejette → un décideur pour L" : "l’une des deux finit par accepter"} c={acc ? GRN : SOFT} fg={acc ? "#0b1a10" : W} s={26} sc={pp(t, mid(87, 0.45))} /></Card>
+    </g>
+    <g opacity={k(t, S(88), 0.4)}>
+      <Card x={260} y={100} w={1400} h={560} p={pp(t, S(88) + 0.15)} title="EXEMPLES" tc={YEL}>
+        {["langage", "décidable ?", "reconnaissable ?"].map((h, j) => <T key={h} x={[360, 900, 1180][j]} y={110} s={24} c={DIM} f="InterX">{h}</T>)}
+        <line x1={50} x2={1350} y1={138} y2={138} stroke={LINE} strokeOpacity={0.3} strokeWidth={2} />
+        {EXL.map(([l, d, r], j) => <g key={j} opacity={k(t, mid(88, 0.08 + j * 0.13), 0.3)}>
+          <T x={360} y={185 + j * 62} s={30} c={W} f={KM}>{l}</T>
+          <T x={900} y={185 + j * 62} s={30} c={d ? GRN : RED} f="InterX">{d ? "oui" : "NON"}</T><T x={1180} y={185 + j * 62} s={30} c={r ? GRN : RED} f="InterX">{r ? "oui" : "NON"}</T></g>)}</Card>
+      <Card x={260} y={700} w={1400} h={290} c={LINE} p={pp(t, S(89) + 0.15)} title="STABILITÉ" tc={W}>
+        {[0, 1].map((r) => <g key={r} opacity={k(t, mid(89, r ? 0.4 : 0.1), 0.4)}><T x={200} y={130 + r * 90} s={28} c={r ? YEL : GRN}>{r ? "RECONNAISSABLES" : "DÉCIDABLES"}</T>
+          {CLO.map((c, j) => { const bad = r === 1 && j === 2; return <g key={c}><Chip x={490 + j * 205} y={130 + r * 90} text={c} c={bad ? RED : SOFT} s={24} />
+            {bad && <path d={`M${490 + j * 205 - 95} ${130 + r * 90} H${490 + j * 205 + 95}`} stroke="#fff" strokeWidth={4} />}</g>; })}</g>)}
+        <C4Line x={1060} y={268} s={22} c={DIM} sc={pp(t, mid(89, 0.75))}>sinon, HALT serait décidable</C4Line></Card>
+    </g>
+  </>; };
+
+/* ---------- 90–93 : l'algorithme selon Turing, la thèse de Church–Turing, modèles équivalents, variantes, machine universelle ---------- */
+const MODELS: [string, string, string][] = [["machine de Turing", "", "Turing, 1936"], ["λ-calcul", "", "Church, 1936"], ["fonctions", "récursives", "Gödel, Kleene"], ["machines à registres,", "langages usuels", "époque moderne"]];
+const Algo4 = (t: number) => <>
+  <g opacity={1 - k(t, S(92) - 0.25, 0.45)}>
+    <T x={960} y={100} s={50} c={W} sc={pp(t, S(90) + 0.1)}>QU’EST-CE QU’UN ALGORITHME ?</T>
+    <Card x={110} y={170} w={760} h={380} p={pp(t, S(90) + 0.3)} title="INTUITIVEMENT : UNE RECETTE" tc={W}>
+      {["1.  casser trois œufs", "2.  battre une minute", "3.  cuire jusqu’à ce que ce soit pris"].map((l, j) => <C4Line key={l} x={70} y={130 + j * 62} s={30} sc={pp(t, mid(90, 0.15 + j * 0.08))}>{l}</C4Line>)}
+      <T x={380} y={330} s={26} c={DIM} f="InterX" sc={pp(t, mid(90, 0.42))}>assez détaillée pour être suivie sans réfléchir</T></Card>
+    <Arr a={[880, 360]} b={[1060, 360]} r={0} p={k(t, mid(90, 0.55), 0.4)} c={YEL} />
+    <Card x={1060} y={170} w={750} h={380} c={YEL} p={pp(t, mid(90, 0.58))} title="SELON TURING" tc={YEL}>
+      <MTBox x={160} y={180} sc={1} c={YEL} /><C4Line x={300} y={160} s={30}>une machine qui s’arrête</C4Line><C4Line x={300} y={205} s={30} c={YEL}>sur toutes ses entrées</C4Line>
+      <C4Line x={60} y={300} s={22} c={DIM} sc={pp(t, mid(90, 0.8))}>si elle peut boucler : un reconnaisseur, pas un décideur</C4Line></Card>
+    <Card x={160} y={610} w={1600} h={360} c={YEL} p={pp(t, S(91) + 0.15)} title="LA THÈSE DE CHURCH–TURING" tc={YEL}>
+      <rect x={70} y={95} width={8} height={120} rx={4} fill={YEL} />
+      <C4Line x={110} y={125} s={34} c={W}>« Tout ce qui est calculable par une procédure effective</C4Line><C4Line x={110} y={180} s={34} c={W}>est calculable par une machine de Turing. »</C4Line>
+      <Chip x={480} y={285} text="intuitif  ⟷  formel" c={SOFT} s={30} sc={pp(t, mid(91, 0.55))} /><Chip x={1110} y={285} text="une thèse, pas un théorème : indémontrable" c={RED} s={30} sc={pp(t, mid(91, 0.72))} /></Card>
+  </g>
+  <g opacity={k(t, S(92), 0.4)}>
+    <T x={960} y={110} s={46} c={W}>DES MODÈLES ÉQUIVALENTS</T>
+    {MODELS.map(([a, b, c], i) => <g key={a} transform={`translate(${300 + i * 440} 300) scale(${pp(t, mid(92, 0.1 + i * 0.13))})`}>
+      <rect x={-190} y={-105} width={380} height={210} rx={24} fill={PANEL} stroke={i === 0 ? YEL : LINE} strokeWidth={4} />
+      <T x={0} y={b ? -35 : -15} s={30} c={i === 0 ? YEL : W} f="InterX">{a}</T>{b && <T x={0} y={8} s={30} c={W} f="InterX">{b}</T>}<T x={0} y={60} s={24} c={DIM} f="InterX">{c}</T></g>)}
+    {[0, 1, 2].map((i) => <T key={i} x={520 + i * 440} y={300} s={46} c={YEL} f={KM} sc={pp(t, mid(92, 0.2 + i * 0.13))}>⇔</T>)}
+    <Chip x={960} y={480} text="les mêmes fonctions calculables : le meilleur argument pour la thèse" c={YEL} fg="#14101f" s={30} sc={pp(t, mid(92, 0.72))} />
+    <Card x={110} y={570} w={800} h={420} c={LINE} p={pp(t, S(93) + 0.15)} title="VARIANTES" tc={W}>
+      {["plusieurs rubans", "ruban infini dans les deux sens", "non déterministe (plus lente à simuler)"].map((l, j) => <g key={l} opacity={k(t, S(93) + 0.3 + j * 0.5, 0.3)}><Tick x={70} y={130 + j * 70} ok sc={1} s={0.8} /><C4Line x={110} y={130 + j * 70} s={28}>{l}</C4Line></g>)}
+      <Chip x={400} y={355} text="même pouvoir de calcul" c={GRN} fg="#0b1a10" s={30} sc={pp(t, mid(93, 0.35))} /></Card>
+    <Card x={960} y={570} w={850} h={420} c={YEL} p={pp(t, mid(93, 0.45))} title="MACHINE UNIVERSELLE" tc={YEL}>
+      <T x={150} y={190} s={36} c={W} f={KM}>⟨M⟩, w</T><Arr a={[230, 190]} b={[380, 190]} r={0} p={k(t, mid(93, 0.55), 0.4)} />
+      <MTBox x={470} y={190} sc={1} c={YEL} label="U" /><Arr a={[560, 190]} b={[690, 190]} r={0} p={k(t, mid(93, 0.62), 0.4)} />
+      <T x={750} y={175} s={26} c={W} f="InterX">fait</T><T x={750} y={210} s={26} c={W} f="InterX">comme M</T>
+      <Chip x={425} y={340} text="le programme enregistré" c={YEL} fg="#14101f" s={30} sc={pp(t, mid(93, 0.78))} /></Card>
+  </g>
+</>;
+
+/* ---------- 94–98 : le problème de l'arrêt, reconnaissable, preuve par l'absurde ---------- */
+const HaltP = (t: number) => { const say = (f: number) => k(t, mid(97, f), 0.3), boom = t > mid(97, 0.82);
+  return <>
+    <g opacity={1 - k(t, S(96) - 0.25, 0.45)}>
+      <T x={960} y={105} s={50} c={W} sc={pp(t, S(94) + 0.1)}>LE PROBLÈME DE L’ARRÊT</T>
+      <MTBox x={330} y={290} sc={pp(t, S(94) + 0.3)} label="M" /><T x={470} y={290} s={50} c={W} f={KM} sc={pp(t, S(94) + 0.4)}>+</T><Chip x={560} y={290} text="w" c={SOFT} s={40} sc={pp(t, S(94) + 0.5)} />
+      <Arr a={[560, 290]} b={[880, 290]} r={60} p={k(t, mid(94, 0.2), 0.4)} /><Chip x={1020} y={290} text="s’arrête ?" c={YEL} fg="#14101f" s={34} sc={pp(t, mid(94, 0.25))} />
+      <g transform={`translate(1560 270) scale(${pp(t, mid(94, 0.6))})`}><circle cx={-10} cy={-10} r={62} fill={SOFT} stroke={W} strokeWidth={8} /><path d="M34 34 L96 96" stroke={W} strokeWidth={18} strokeLinecap="round" />
+        <T x={-10} y={-8} s={70} c={YEL}>?</T><T x={20} y={150} s={28} c={YEL} f="InterX">un « super-débogueur » ?</T></g>
+      <T x={960} y={470} s={44} c={W} f={KM} sc={pp(t, mid(94, 0.4))}>HALT = {"{"} ⟨M, w⟩ | M s’arrête sur w {"}"}</T>
+      <Card x={210} y={560} w={1500} h={420} c={GRN} p={pp(t, S(95) + 0.15)} title="HALT EST RECONNAISSABLE" tc={GRN}>
+        <T x={140} y={210} s={34} c={W} f={KM}>⟨M, w⟩</T><Arr a={[220, 210]} b={[350, 210]} r={0} p={k(t, S(95) + 0.4, 0.4)} />
+        <MTBox x={440} y={210} sc={1} c={W} label="U" /><T x={440} y={300} s={24} c={DIM} f="InterX">simule M sur w</T>
+        <Arr a={[530, 210]} b={[800, 140]} r={0} p={k(t, mid(95, 0.3), 0.4)} c={LINE} w={3} /><Arr a={[530, 210]} b={[800, 280]} r={0} p={k(t, mid(95, 0.55), 0.4)} c={LINE} w={3} />
+        <C4Line x={820} y={140} s={28} sc={pp(t, mid(95, 0.32))}>M s’arrête → U accepte</C4Line><Tick x={1240} y={140} ok sc={pp(t, mid(95, 0.38))} s={0.9} />
+        <C4Line x={820} y={280} s={28} sc={pp(t, mid(95, 0.57))}>M boucle → U boucle aussi</C4Line><C4Loop x={1270} y={280} t={t} r={28} c={RED} o={k(t, mid(95, 0.62))} />
+        <Chip x={750} y={365} text="un reconnaisseur, pas un décideur" c={SOFT} s={28} sc={pp(t, mid(95, 0.78))} /></Card>
+    </g>
+    <g opacity={k(t, S(96), 0.4)}>
+      <T x={960} y={105} s={46} c={W}>PREUVE PAR L’ABSURDE</T>
+      <g transform={`translate(430 430) scale(${pp(t, S(96) + 0.25)})`}><rect x={-150} y={-100} width={300} height={200} rx={26} fill={SOFT} stroke={boom ? RED : W} strokeWidth={5} /><T x={0} y={0} s={100} c={boom ? RED : W}>H</T></g>
+      <T x={430} y={575} s={26} c={DIM} f="InterX" sc={pp(t, S(96) + 0.4)}>supposons : H décide HALT</T>
+      <rect x={960} y={200} width={820} height={470} rx={30} fill="none" stroke={YEL} strokeWidth={5} opacity={k(t, mid(96, 0.25))} /><T x={1370} y={245} s={44} c={YEL} sc={pp(t, mid(96, 0.25))}>D</T>
+      <T x={1055} y={440} s={30} c={W} f={KM} sc={pp(t, mid(96, 0.3))}>⟨M⟩</T>
+      <g transform={`translate(1230 440) scale(${pp(t, mid(96, 0.35))})`}><rect x={-90} y={-70} width={180} height={140} rx={20} fill={SOFT} stroke={W} strokeWidth={4} /><T x={0} y={-12} s={56} c={W}>H</T><T x={0} y={40} s={18} c={DIM} f={KM}>⟨M, ⟨M⟩⟩</T></g>
+      <Arr a={[1230, 440]} b={[1600, 340]} r={100} p={k(t, mid(96, 0.6), 0.4)} label="« s’arrête »" ls={24} lo={26} bend={-20} />
+      <Arr a={[1230, 440]} b={[1600, 560]} r={100} p={k(t, mid(96, 0.7), 0.4)} label="« boucle »" ls={24} lo={26} bend={20} />
+      <C4Loop x={1680} y={340} t={t} r={36} c={RED} o={k(t, mid(96, 0.66))} /><Chip x={1680} y={560} text="STOP" c={RED} s={30} sc={pp(t, mid(96, 0.76))} />
+      <Chip x={1370} y={630} text="D fait le contraire de ce que H prédit" c={YEL} fg="#14101f" s={26} sc={pp(t, mid(96, 0.85))} />
+      <g opacity={k(t, S(97), 0.4)}>
+        <Draw d="M1370 670 Q1370 760 1020 760 Q920 760 920 560 Q920 440 1010 440" p={say(0.08)} c={YEL} w={5} dash="14 12" />
+        <T x={1180} y={800} s={28} c={YEL} f="InterX" sc={pp(t, mid(97, 0.1))}>D reçoit son propre code ⟨D⟩</T>
+        <T x={960} y={870} s={34} c={W} f="InterX" sc={pp(t, mid(97, 0.28))}>D s’arrête  <tspan fill={RED}>⇒</tspan>  H prédit « s’arrête »  <tspan fill={RED}>⇒</tspan>  D boucle</T>
+        <T x={960} y={925} s={34} c={W} f="InterX" sc={pp(t, mid(97, 0.5))}>D boucle  <tspan fill={RED}>⇒</tspan>  H prédit « boucle »  <tspan fill={RED}>⇒</tspan>  D s’arrête</T>
+        <Mark x={960} y={897} rx={640} ry={70} p={k(t, mid(97, 0.66), 0.5)} c={RED} w={7} seed={4} /><Chip x={430} y={680} text="CONTRADICTION" c={RED} s={36} sc={pp(t, mid(97, 0.7))} />
+        {boom && <g transform={`translate(430 430) scale(${pp(t, mid(97, 0.82))})`}><path d="M-150 -110 L150 110 M150 -110 L-150 110" stroke={RED} strokeWidth={16} strokeLinecap="round" /></g>}
+        <Chip x={960} y={1000} text="H n’existe pas : HALT est indécidable" c={RED} s={32} sc={pp(t, mid(97, 0.88)) * (1 - k(t, S(98) - 0.1, 0.3))} /></g>
+      <Chip x={960} y={1000} text="≈ le paradoxe du menteur : D contredit ce que H affirme d’elle" c={YEL} fg="#14101f" s={30} sc={pp(t, S(98) + 0.2)} />
+    </g>
+  </>; };
+
+/* ---------- 99–101 : réduire HALT à d'autres problèmes ; portée du résultat ---------- */
+const Reduc2 = (t: number) => <>
+  <g opacity={1 - 0.85 * k(t, S(101) - 0.1, 0.45)}>
+    <T x={960} y={105} s={50} c={W} sc={pp(t, S(99) + 0.1)}>D’AUTRES PROBLÈMES INDÉCIDABLES</T>
+    <Chip x={240} y={340} text="⟨M, w⟩" c={SOFT} s={38} sc={pp(t, S(99) + 0.3)} /><Arr a={[240, 340]} b={[520, 340]} r={90} p={k(t, mid(99, 0.12), 0.4)} />
+    <Card x={520} y={190} w={820} h={300} c={YEL} p={pp(t, mid(99, 0.14))} title="LA MACHINE M′" tc={YEL}>
+      {["ignore son entrée", "simule M sur w", "puis accepte"].map((l, j) => <g key={l} opacity={k(t, mid(99, 0.2 + j * 0.08), 0.3)}><C4Num x={90} y={120 + j * 55} n={j + 1} sc={1} /><C4Line x={130} y={120 + j * 55} s={30}>{l}</C4Line></g>)}</Card>
+    <Arr a={[1340, 340]} b={[1500, 340]} r={0} p={k(t, mid(99, 0.45), 0.4)} /><Chip x={1650} y={340} text="accepte ε ?" c={YEL} fg="#14101f" s={32} sc={pp(t, mid(99, 0.48))} />
+    <T x={960} y={570} s={40} c={W} f="InterX" sc={pp(t, mid(99, 0.62))}>M s’arrête sur w  <tspan fill={YEL}>⇔</tspan>  M′ accepte le mot vide</T>
+    <Chip x={960} y={645} text="un décideur ici déciderait HALT : impossible" c={RED} s={30} sc={pp(t, mid(99, 0.8))} />
+    <T x={960} y={745} s={30} c={DIM} f="InterX" sc={pp(t, S(100) + 0.1)}>indécidables, eux aussi :</T>
+    {["deux machines, même langage ?", "le langage reconnu est-il vide ?", "termine sur toutes les entrées ?"].map((l, j) => <g key={l} opacity={k(t, mid(100, 0.15 + j * 0.22), 0.3)}>
+      <Chip x={370 + j * 590} y={830} text={l} c={SOFT} s={28} /><Tick x={370 + j * 590} y={895} ok={false} sc={1} s={0.8} /></g>)}
+  </g>
+  <Card x={360} y={300} w={1200} h={440} c={YEL} p={pp(t, S(101) + 0.15)} title="PORTÉE DU RÉSULTAT" tc={YEL}>
+    <Tick x={110} y={150} ok={false} sc={pp(t, S(101) + 0.4)} s={1.1} /><C4Line x={160} y={150} s={32} sc={pp(t, S(101) + 0.4)}>aucun vérificateur universel de terminaison</C4Line>
+    <Tick x={110} y={250} ok sc={pp(t, mid(101, 0.45))} s={1.1} /><C4Line x={160} y={250} s={32} sc={pp(t, mid(101, 0.45))}>un programme précis : on peut prouver qu’il s’arrête</C4Line>
+    <Chip x={600} y={355} text="l’indécidabilité concerne le cas général" c={YEL} fg="#14101f" s={30} sc={pp(t, mid(101, 0.72))} /></Card>
+</>;
+
+/* ---------- 102–103 : cardinalité ; théorème de Rice ---------- */
+const DOTS = Array.from({ length: 140 }, (_, i) => [760 + ((i * 137) % 1000), 200 + ((i * 89) % 460), (i * 53) % 100] as [number, number, number]);
+const LimA = (t: number) => <>
+  <g opacity={1 - k(t, S(103) - 0.25, 0.45)}>
+    <T x={960} y={105} s={50} c={W} sc={pp(t, S(102) + 0.1)}>LES LIMITES DE LA CALCULABILITÉ</T>
+    <T x={330} y={190} s={30} c={YEL} sc={pp(t, S(102) + 0.3)}>MACHINES</T>
+    {[1, 2, 3, 4, 5].map((i) => <g key={i} opacity={k(t, S(102) + 0.4 + i * 0.18, 0.3)}><Chip x={330} y={190 + i * 85} text={i < 5 ? `M${"₁₂₃₄"[i - 1]}` : "…"} c={SOFT} s={34} />
+      {i < 5 && <Draw d={`M380 ${190 + i * 85} L${DOTS[i * 7][0]} ${DOTS[i * 7][1]}`} p={k(t, mid(102, 0.55 + i * 0.04), 0.4)} c={GRN} w={3} />}</g>)}
+    <T x={330} y={720} s={24} c={DIM} f="InterX" sc={pp(t, mid(102, 0.15))}>dénombrables :</T><T x={330} y={755} s={24} c={DIM} f="InterX" sc={pp(t, mid(102, 0.15))}>chacune est un mot fini</T>
+    {DOTS.map(([x, y, d], i) => <circle key={i} cx={x} cy={y} r={7} fill={[7, 14, 21, 28].includes(i) ? GRN : LINE} opacity={0.75 * k(t, mid(102, 0.25 + d * 0.003), 0.3)} />)}
+    <T x={1260} y={720} s={28} c={W} f="InterX" sc={pp(t, mid(102, 0.4))}>LANGAGES : non dénombrables (Cantor)</T>
+    <Chip x={1260} y={800} text="la plupart des langages : aucune machine" c={RED} s={30} sc={pp(t, mid(102, 0.8))} />
+    <C4Line x={760} y={890} s={24} c={DIM} sc={pp(t, mid(102, 0.85))}>argument non constructif · exemple concret : le complémentaire de HALT</C4Line>
+  </g>
+  <g opacity={k(t, S(103), 0.4)}>
+    <Card x={210} y={120} w={1500} h={300} c={RED} p={pp(t, S(103) + 0.15)} title="THÉORÈME DE RICE" tc={RED}>
+      <T x={750} y={140} s={34} c={W} f="InterX">toute propriété non triviale du langage reconnu</T><T x={750} y={195} s={34} c={W} f="InterX">par une machine de Turing est indécidable</T></Card>
+    <Card x={210} y={480} w={730} h={450} c={RED} p={pp(t, mid(103, 0.3))} title="SÉMANTIQUE : INDÉCIDABLE" tc={RED}>
+      {["« L(M) est vide »", "« L(M) est fini »", "« M accepte le mot vide »"].map((l, j) => <g key={l}><Tick x={80} y={140 + j * 80} ok={false} sc={1} s={0.8} /><C4Line x={120} y={140 + j * 80} s={30}>{l}</C4Line></g>)}
+      <T x={365} y={395} s={24} c={DIM} f="InterX">ce que fait la machine</T></Card>
+    <Card x={980} y={480} w={730} h={450} c={GRN} p={pp(t, mid(103, 0.62))} title="SYNTAXIQUE : NON CONCERNÉE" tc={GRN}>
+      <C4Line x={80} y={150} s={30}>« M a plus de 10 états »</C4Line><Tick x={80} y={240} ok sc={1} s={0.8} /><C4Line x={120} y={240} s={30}>décidable : il suffit de compter</C4Line>
+      <T x={365} y={395} s={24} c={DIM} f="InterX">la forme de son code</T></Card>
+  </g>
+</>;
+
+/* ---------- 104–105 : autres problèmes indécidables ; le lien avec Gödel ---------- */
+const PCP: [string, string][] = [["a", "baa"], ["ab", "aa"], ["bba", "bb"]];
+const LimB = (t: number) => <>
+  <T x={960} y={105} s={50} c={W} sc={pp(t, S(104) + 0.1)}>AUTRES PROBLÈMES INDÉCIDABLES</T>
+  <Card x={110} y={170} w={820} h={270} c={RED} p={pp(t, S(104) + 0.3)} title="CORRESPONDANCE DE POST" tc={RED}>
+    {PCP.map(([a, b], j) => <g key={j} transform={`translate(${170 + j * 150} 150)`}><rect x={-55} y={-55} width={110} height={110} rx={10} fill={SOFT} stroke={LINE} strokeWidth={3} /><line x1={-55} x2={55} y1={0} y2={0} stroke={LINE} strokeWidth={2} />
+      <T x={0} y={-26} s={26} c={W} f={KM}>{a}</T><T x={0} y={28} s={26} c={W} f={KM}>{b}</T></g>)}
+    <C4Line x={570} y={130} s={24} c={DIM}>même mot</C4Line><C4Line x={570} y={165} s={24} c={DIM}>en haut et en bas ?</C4Line>
+    <T x={410} y={240} s={22} c={DIM} f="InterX">utile pour d’autres réductions</T></Card>
+  <Card x={990} y={170} w={820} h={270} c={RED} p={pp(t, mid(104, 0.25))} title="DIXIÈME PROBLÈME DE HILBERT" tc={RED}>
+    <T x={410} y={130} s={40} c={W} f={KM}>P(x, y, z) = 0  ?</T>
+    <T x={410} y={185} s={24} c={DIM} f="InterX">une solution en nombres entiers ?</T><Chip x={410} y={235} text="Matiyasevich, 1970" c={SOFT} s={24} /></Card>
+  <Card x={110} y={470} w={820} h={270} c={RED} p={pp(t, mid(104, 0.5))} title="ÉQUIVALENCE DE GRAMMAIRES" tc={RED}>
+    <T x={410} y={135} s={46} c={W} f={KM}>{sub4("G", "1")}  ≟  {sub4("G", "2")}</T>
+    <T x={410} y={205} s={24} c={DIM} f="InterX">deux grammaires non contextuelles, même langage ?</T></Card>
+  <Card x={990} y={470} w={820} h={270} c={RED} p={pp(t, mid(104, 0.72))} title="CASTOR AFFAIRÉ" tc={RED}>
+    <T x={410} y={130} s={30} c={W} f={KM}>1, 6, 21, 107, 47 176 870, …</T>
+    <T x={410} y={185} s={22} c={DIM} f="InterX">étapes max. d’une machine à n états qui s’arrête</T><Chip x={410} y={235} text="fonction non calculable" c={RED} s={24} /></Card>
+  <Card x={310} y={780} w={1300} h={220} c={YEL} p={pp(t, S(105) + 0.15)} title="LIEN AVEC GÖDEL (1931)" tc={YEL}>
+    <C4Line x={70} y={115} s={28}>incomplétude : des énoncés vrais mais indémontrables</C4Line>
+    <C4Line x={70} y={165} s={28} c={YEL} sc={pp(t, mid(105, 0.45))}>même idée : l’auto-référence</C4Line>
+    <g transform="translate(1140 140)" opacity={k(t, mid(105, 0.5))}><MTBox x={0} y={0} sc={0.6} c={YEL} /><Draw d="M-34 -40 C-64 -104 64 -104 34 -40" p={k(t, mid(105, 0.55), 0.5)} c={YEL} w={5} /><Head x={34} y={-40} p={k(t, mid(105, 0.55), 0.5)} c={YEL} a={113} s={0.55} /></g></Card>
+</>;
+
+/* ---------- 106–107 : limites pratiques (complexité) ; limites du modèle ---------- */
+const LimC = (t: number) => { const curve = (g: (n: number) => number) => { let d = ""; for (let i = 0; i <= 40; i++) { const n = (i / 40) * 8, y = Math.max(-120, 300 - g(n)); d += `${i ? "L" : "M"}${100 + n * 70} ${y} `; } return d; };
+  return <>
+    <T x={960} y={105} s={50} c={W} sc={pp(t, S(106) + 0.1)}>LIMITES PRATIQUES ET LIMITES DU MODÈLE</T>
+    <Card x={110} y={170} w={840} h={800} c={YEL} p={pp(t, S(106) + 0.25)} title="DÉCIDABLE ≠ FAISABLE" tc={YEL}>
+      <g transform="translate(40 40)"><Axes ox={100} oy={300} w={600} h={200} p={k(t, S(106) + 0.4, 0.5)} />
+        <Draw d={curve((n) => n * n * 1.2)} p={k(t, mid(106, 0.12), 0.6)} c={W} w={6} /><T x={705} y={225} s={30} c={W} f={KM} sc={pp(t, mid(106, 0.2))}>{sup4("n", "2")}</T>
+        <Draw d={curve((n) => Math.pow(2, n))} p={k(t, mid(106, 0.22), 0.6)} c={RED} w={6} glow /><T x={705} y={55} s={30} c={RED} f={KM} sc={pp(t, mid(106, 0.3))}>{sup4("2", "n")}</T></g>
+      <C4Line x={60} y={440} s={28} sc={pp(t, mid(106, 0.4))}><tspan fill={YEL}>P</tspan> : résoudre en temps polynomial</C4Line>
+      <C4Line x={60} y={500} s={28} sc={pp(t, mid(106, 0.5))}><tspan fill={YEL}>NP</tspan> : vérifier une solution en temps polynomial</C4Line>
+      <C4Line x={60} y={560} s={28} sc={pp(t, mid(106, 0.58))}>certains : temps exponentiel, voire plus</C4Line>
+      <T x={420} y={670} s={64} c={YEL} sc={pp(t, mid(106, 0.75))} glow={YEL}>P = NP ?</T>
+      <T x={420} y={740} s={24} c={DIM} f="InterX" sc={pp(t, mid(106, 0.8))}>question ouverte · voir chapitre 5</T></Card>
+    <Card x={990} y={170} w={820} h={800} c={LINE} p={pp(t, S(107) + 0.15)} title="LIMITES DU MODÈLE" tc={W}>
+      <g opacity={k(t, S(107) + 0.4, 0.4)}><Tape x={150} y={160} cells={["1", "0", "1", "_"]} cw={80} p={1} /><C4Line x={80} y={250} s={28}>théorique : ruban infini, temps non compté</C4Line></g>
+      <g opacity={k(t, mid(107, 0.3), 0.4)}><CpuMem x={260} y={380} s={0.8} /><C4Line x={430} y={370} s={26}>ni énergie, ni matériel,</C4Line><C4Line x={430} y={410} s={26}>ni interaction directe</C4Line></g>
+      <g opacity={k(t, mid(107, 0.55), 0.4)} transform="translate(150 600)"><circle r={60} fill="none" stroke={W} strokeWidth={4} /><ellipse rx={60} ry={20} fill="none" stroke={W} strokeWidth={2} strokeDasharray="6 6" transform={`rotate(${t * 30})`} />
+        <ellipse rx={60} ry={20} fill="none" stroke={YEL} strokeWidth={2} transform={`rotate(${60 + t * 30})`} /><circle r={9} fill={YEL} />
+        <C4Line x={100} y={-25} s={28}>ordinateur quantique :</C4Line><C4Line x={100} y={20} s={26} c={RED}>ne résout aucun problème indécidable</C4Line><C4Line x={100} y={60} s={26} c={GRN}>parfois plus rapide</C4Line></g></Card>
+  </>; };
+
+/* ---------- 108 : à retenir ---------- */
+const REC4 = ["la machine de Turing définit la notion d’algorithme", "décidable : un algorithme répond toujours", "semi-décidable : un algorithme confirme les « oui »", "le problème de l’arrêt est indécidable",
+  "réductions et théorème de Rice : bien d’autres le sont", "décidable ne veut pas dire faisable : la complexité"];
+const Recap4 = (t: number) => <Card x={260} y={140} w={1400} h={800} c={YEL} p={pp(t, S(108) + 0.1)} title="À RETENIR" tc={YEL}>
+  {REC4.map((l, j) => <g key={l} opacity={k(t, mid(108, 0.06 + j * 0.14), 0.3)}><Tick x={100} y={150 + j * 105} ok={j !== 3} sc={1} s={0.9} /><C4Line x={150} y={150 + j * 105} s={34}>{l}</C4Line></g>)}
+</Card>;
 
 type Scene = { a: number; r: (t: number) => React.ReactNode; cam: Key[] };
 const st0 = (i: number) => (i === 0 ? 0 : S(i) - 0.35);
@@ -951,26 +1405,36 @@ const SCENES: Scene[] = [
   { a: st0(50), r: Variants, cam: [[S(50), 510, 320, 1.3], [E(50), 520, 320, 1.3], [S(51) + 0.3, 1410, 320, 1.3], [E(51), 1400, 320, 1.3], [S(52) + 0.3, 960, 790, 1.25], [E(52), 960, 600, 1.0]] },
   { a: st0(53), r: VarEx, cam: [[S(53), 860, 460, 1.06], [E(53), 860, 460, 1.06], [S(54) + 0.3, 1060, 460, 1.06], [E(54), 1060, 460, 1.06], [S(55) + 0.3, 860, 620, 1.06], [E(55), 860, 620, 1.06], [S(56) + 0.3, 1060, 620, 1.06], [E(56), 960, 540, 1.0]] },
   { a: st0(57), r: Compare, cam: [[S(57), 680, 490, 1.15], [E(57), 700, 490, 1.15], [S(58) + 0.3, 1450, 540, 1.2], [E(58), 1300, 540, 1.05]] },
-  { a: st0(59), r: Calc, cam: [[S(59), 960, 540, 1.0], [S(59) + 1.9, 510, 260, 1.3], [E(59), 510, 270, 1.3], [S(60) + 0.3, 1150, 520, 1.04], [E(60), 1150, 520, 1.04], [S(61) + 0.3, 510, 690, 1.3], [E(61), 510, 690, 1.3]] },
-  { a: st0(62), r: DecEx, cam: [[S(62), 860, 540, 1.04], [E(62), 860, 540, 1.04], [S(63) + 0.3, 1060, 540, 1.04], [E(63), 960, 540, 1.0]] },
-  { a: st0(64), r: Calc, cam: [[S(64), 1150, 440, 1.08], [E(64), 1150, 440, 1.1], [S(65) + 0.3, 1150, 560, 1.06], [E(65), 1150, 580, 1.06], [S(66) + 0.3, 1200, 700, 1.15], [E(66), 1150, 640, 1.06], [S(67) + 0.3, 960, 530, 1.05], [E(67), 960, 540, 1.0]] },
-  { a: st0(68), r: Halt, cam: [[S(68), 620, 260, 1.25], [E(68), 700, 260, 1.15], [S(69) + 0.2, 760, 600, 1.05], [mid(69, 0.4), 1380, 560, 1.15], [mid(69, 0.85), 1200, 400, 1.05], [mid(69, 0.95), 640, 620, 1.15], [S(70) + 0.3, 960, 450, 1.1], [E(70), 960, 460, 1.1], [S(71) + 0.3, 960, 450, 1.1], [E(71), 960, 460, 1.08], [S(72) + 0.3, 960, 510, 1.05], [E(72), 960, 520, 1.0], [S(73) + 0.3, 960, 620, 1.05], [E(73), 960, 580, 1.0]] },
-  { a: st0(74), r: Measure, cam: [[S(74), 960, 300, 1.0], [S(74) + 1.9, 960, 140, 1.25], [E(74), 960, 160, 1.2], [S(75) + 0.3, 760, 420, 1.3], [E(75), 760, 430, 1.3], [S(76) + 0.3, 760, 520, 1.2], [E(76), 800, 520, 1.2], [S(77) + 0.3, 1100, 520, 1.2], [E(77), 1100, 520, 1.2], [S(78) + 0.3, 960, 900, 1.2], [E(78), 960, 640, 1.0]] },
-  { a: st0(79), r: Notation, cam: [[S(79), 760, 520, 1.05], [E(79), 760, 520, 1.05], [S(80) + 0.3, 1160, 480, 1.06], [E(80), 1060, 520, 1.03]] },
-  { a: st0(81), r: Classes, cam: [[S(81), 640, 700, 1.4], [E(81), 660, 700, 1.4], [S(82) + 0.3, 800, 650, 1.2], [E(82), 820, 650, 1.2], [S(83) + 0.3, 960, 600, 1.05], [E(83), 960, 540, 1.0]] },
-  { a: st0(84), r: PvsNP, cam: [[S(84), 500, 520, 1.2], [mid(84, 0.75), 500, 600, 1.2], [S(85) + 0.2, 1420, 520, 1.2], [E(85), 1300, 560, 1.05]] },
-  { a: st0(86), r: Reduce, cam: [[S(86), 900, 260, 1.15], [mid(86, 0.45), 960, 280, 1.1], [mid(86, 0.55), 620, 720, 1.2], [E(86), 640, 720, 1.2], [S(87) + 0.3, 1500, 720, 1.25], [E(87), 1200, 560, 1.0], [S(88) + 0.3, 960, 530, 1.05], [E(88), 960, 540, 1.0]] },
-  { a: st0(89), r: Even, cam: [[S(89), 960, 540, 1.0], [S(89) + 1.9, 520, 330, 1.3], [E(89), 520, 340, 1.3], [S(90) + 0.3, 1370, 360, 1.3], [E(90), 1370, 380, 1.3], [S(91) + 0.3, 1000, 680, 1.1], [E(91), 1000, 680, 1.1]] },
-  { a: st0(92), r: PalAdd, cam: [[S(92), 960, 330, 1.08], [E(92), 960, 340, 1.06], [S(93) + 0.2, 860, 380, 1.08], [E(93), 860, 400, 1.08], [S(94) + 0.3, 860, 720, 1.08], [E(94), 860, 720, 1.08], [S(95) + 0.3, 860, 760, 1.08], [E(95), 960, 600, 1.03]] },
-  { a: st0(96), r: Sim, cam: [[S(96), 580, 500, 1.15], [E(96), 600, 500, 1.15], [S(97) + 0.3, 1470, 440, 1.25], [E(98), 1450, 480, 1.2], [S(99) + 0.3, 1470, 560, 1.2], [E(99), 1300, 540, 1.05]] },
-  { a: st0(100), r: AdvLim, cam: [[S(100), 960, 540, 1.0], [S(100) + 1.9, 760, 520, 1.05], [E(103), 760, 520, 1.05], [S(104) + 0.3, 1160, 520, 1.05], [E(105), 960, 540, 1.0]] },
-  { a: st0(106), r: VsPC, cam: [[S(106), 500, 480, 1.2], [mid(106, 0.4), 520, 480, 1.2], [mid(106, 0.5), 1420, 520, 1.2], [E(106), 1300, 560, 1.05], [S(107) + 0.3, 960, 530, 1.05], [E(107), 960, 540, 1.0]] },
-  { a: st0(108), r: Influence, cam: [[S(108), 960, 520, 1.0], [E(108), 960, 520, 1.03], [S(109) + 0.3, 960, 560, 1.1], [E(109), 960, 560, 1.05]] },
-  { a: st0(110), r: Persp, cam: [[S(110), 960, 540, 1.0], [mid(110, 0.12), 860, 470, 1.04], [mid(110, 0.3), 1060, 470, 1.04], [mid(110, 0.5), 860, 620, 1.04], [mid(110, 0.72), 1060, 620, 1.04], [E(110), 960, 540, 1.0]] },
-  { a: st0(111), r: Concl, cam: [[S(111), 960, 540, 1.0], [S(111) + 1.9, 960, 300, 1.2], [E(111), 960, 320, 1.2], [S(112) + 0.3, 960, 600, 1.2], [E(112), 960, 600, 1.2], [S(113) + 0.3, 960, 800, 1.2], [E(113), 960, 820, 1.2], [S(114) + 0.3, 960, 900, 1.15], [mid(114, 0.55), 960, 540, 1.0], [TM.total, 960, 540, 1.04]] },
+  { a: st0(59), r: Questions4, cam: [[S(59), 960, 540, 1.0], [S(59) + 1.9, 960, 520, 1.04], [E(59), 960, 540, 1.03], [S(60) + 0.2, 960, 540, 1.0], [E(60), 960, 530, 1.03]] },
+  { a: st0(61), r: Brief4, cam: [[S(61), 960, 540, 1.0], [E(61), 960, 540, 1.03], [S(62) + 0.2, 960, 500, 1.02], [E(62), 960, 520, 1.03], [S(63) + 0.2, 960, 580, 1.04], [E(63), 960, 580, 1.04], [S(64) + 0.2, 960, 380, 1.06], [E(64), 960, 400, 1.05], [S(65) + 0.2, 960, 620, 1.04], [E(65), 960, 560, 1.0]] },
+  { a: st0(66), r: Succ, cam: [[S(66), 960, 400, 1.04], [E(67), 960, 410, 1.04], [S(68) + 0.2, 960, 540, 1.0], [E(68), 940, 480, 1.03], [S(69) + 0.2, 1160, 360, 1.05], [E(69), 1160, 380, 1.05], [S(70) + 0.2, 1060, 640, 1.04], [E(70), 1060, 640, 1.04], [S(71) + 0.2, 900, 780, 1.04], [E(71), 960, 560, 1.0]] },
+  { a: st0(72), r: Decide, cam: [[S(72), 960, 380, 1.04], [E(72), 960, 400, 1.04], [S(73) + 0.2, 960, 600, 1.02], [E(75), 960, 620, 1.02], [S(76) + 0.2, 960, 380, 1.05], [E(76), 960, 380, 1.05], [S(77) + 0.2, 960, 760, 1.05], [E(77), 960, 600, 1.0]] },
+  { a: st0(78), r: Prime, cam: [[S(78), 760, 380, 1.05], [E(78), 760, 380, 1.05], [S(79) + 0.2, 1240, 380, 1.05], [E(79), 1240, 380, 1.05], [S(80) + 0.2, 640, 760, 1.05], [E(80), 640, 760, 1.05], [S(81) + 0.2, 1280, 760, 1.05], [E(81), 960, 560, 1.0]] },
+  { a: st0(82), r: Props4, cam: [[S(82), 960, 340, 1.05], [E(82), 960, 340, 1.05], [S(83) + 0.2, 760, 760, 1.05], [E(83), 760, 760, 1.05], [S(84) + 0.2, 1100, 800, 1.04], [E(84), 960, 600, 1.0]] },
+  { a: st0(85), r: RecDec, cam: [[S(85), 960, 420, 1.05], [E(85), 960, 420, 1.05], [S(86) + 0.2, 600, 700, 1.04], [E(86), 600, 700, 1.04], [S(87) + 0.2, 1280, 700, 1.04], [E(87), 1280, 700, 1.04], [S(88) + 0.2, 960, 400, 1.04], [E(88), 960, 400, 1.04], [S(89) + 0.2, 960, 820, 1.05], [E(89), 960, 560, 1.0]] },
+  { a: st0(90), r: Algo4, cam: [[S(90), 960, 340, 1.04], [E(90), 960, 340, 1.04], [S(91) + 0.2, 960, 780, 1.05], [E(91), 960, 780, 1.05], [S(92) + 0.2, 960, 320, 1.05], [E(92), 960, 320, 1.05], [S(93) + 0.2, 960, 780, 1.04], [E(93), 960, 560, 1.0]] },
+  { a: st0(94), r: HaltP, cam: [[S(94), 960, 340, 1.05], [E(94), 960, 340, 1.05], [S(95) + 0.2, 960, 700, 1.05], [E(95), 960, 700, 1.05], [S(96) + 0.2, 1060, 460, 1.04], [E(96), 1060, 480, 1.04], [S(97) + 0.2, 960, 640, 1.03], [E(97), 960, 660, 1.03], [S(98) + 0.2, 960, 760, 1.03], [E(98), 960, 560, 1.0]] },
+  { a: st0(99), r: Reduc2, cam: [[S(99), 960, 400, 1.04], [E(99), 960, 420, 1.04], [S(100) + 0.2, 960, 760, 1.04], [E(100), 960, 760, 1.04], [S(101) + 0.2, 960, 520, 1.05], [E(101), 960, 540, 1.0]] },
+  { a: st0(102), r: LimA, cam: [[S(102), 960, 440, 1.04], [E(102), 1000, 460, 1.04], [S(103) + 0.2, 960, 320, 1.05], [mid(103, 0.4), 760, 680, 1.05], [mid(103, 0.7), 1160, 680, 1.05], [E(103), 960, 560, 1.0]] },
+  { a: st0(104), r: LimB, cam: [[S(104), 760, 320, 1.05], [mid(104, 0.3), 1160, 320, 1.05], [mid(104, 0.55), 760, 600, 1.05], [mid(104, 0.78), 1160, 600, 1.05], [E(104), 960, 560, 1.02], [S(105) + 0.2, 960, 860, 1.05], [E(105), 960, 560, 1.0]] },
+  { a: st0(106), r: LimC, cam: [[S(106), 640, 540, 1.05], [E(106), 640, 560, 1.05], [S(107) + 0.2, 1280, 540, 1.05], [E(107), 960, 540, 1.0]] },
+  { a: st0(108), r: Recap4, cam: [[S(108), 960, 540, 1.0], [mid(108, 0.4), 960, 500, 1.04], [E(108), 960, 560, 1.02]] },
+  { a: st0(109), r: Measure, cam: [[S(109), 960, 300, 1.0], [S(109) + 1.9, 960, 140, 1.25], [E(109), 960, 160, 1.2], [S(110) + 0.3, 760, 420, 1.3], [E(110), 760, 430, 1.3], [S(111) + 0.3, 760, 520, 1.2], [E(111), 800, 520, 1.2], [S(112) + 0.3, 1100, 520, 1.2], [E(112), 1100, 520, 1.2], [S(113) + 0.3, 960, 900, 1.2], [E(113), 960, 640, 1.0]] },
+  { a: st0(114), r: Notation, cam: [[S(114), 760, 520, 1.05], [E(114), 760, 520, 1.05], [S(115) + 0.3, 1160, 480, 1.06], [E(115), 1060, 520, 1.03]] },
+  { a: st0(116), r: Classes, cam: [[S(116), 640, 700, 1.4], [E(116), 660, 700, 1.4], [S(117) + 0.3, 800, 650, 1.2], [E(117), 820, 650, 1.2], [S(118) + 0.3, 960, 600, 1.05], [E(118), 960, 540, 1.0]] },
+  { a: st0(119), r: PvsNP, cam: [[S(119), 500, 520, 1.2], [mid(119, 0.75), 500, 600, 1.2], [S(120) + 0.2, 1420, 520, 1.2], [E(120), 1300, 560, 1.05]] },
+  { a: st0(121), r: Reduce, cam: [[S(121), 900, 260, 1.15], [mid(121, 0.45), 960, 280, 1.1], [mid(121, 0.55), 620, 720, 1.2], [E(121), 640, 720, 1.2], [S(122) + 0.3, 1500, 720, 1.25], [E(122), 1200, 560, 1.0], [S(123) + 0.3, 960, 530, 1.05], [E(123), 960, 540, 1.0]] },
+  { a: st0(124), r: Even, cam: [[S(124), 960, 540, 1.0], [S(124) + 1.9, 520, 330, 1.3], [E(124), 520, 340, 1.3], [S(125) + 0.3, 1370, 360, 1.3], [E(125), 1370, 380, 1.3], [S(126) + 0.3, 1000, 680, 1.1], [E(126), 1000, 680, 1.1]] },
+  { a: st0(127), r: PalAdd, cam: [[S(127), 960, 330, 1.08], [E(127), 960, 340, 1.06], [S(128) + 0.2, 860, 380, 1.08], [E(128), 860, 400, 1.08], [S(129) + 0.3, 860, 720, 1.08], [E(129), 860, 720, 1.08], [S(130) + 0.3, 860, 760, 1.08], [E(130), 960, 600, 1.03]] },
+  { a: st0(131), r: Sim, cam: [[S(131), 580, 500, 1.15], [E(131), 600, 500, 1.15], [S(132) + 0.3, 1470, 440, 1.25], [E(133), 1450, 480, 1.2], [S(134) + 0.3, 1470, 560, 1.2], [E(134), 1300, 540, 1.05]] },
+  { a: st0(135), r: AdvLim, cam: [[S(135), 960, 540, 1.0], [S(135) + 1.9, 760, 520, 1.05], [E(138), 760, 520, 1.05], [S(139) + 0.3, 1160, 520, 1.05], [E(140), 960, 540, 1.0]] },
+  { a: st0(141), r: VsPC, cam: [[S(141), 500, 480, 1.2], [mid(141, 0.4), 520, 480, 1.2], [mid(141, 0.5), 1420, 520, 1.2], [E(141), 1300, 560, 1.05], [S(142) + 0.3, 960, 530, 1.05], [E(142), 960, 540, 1.0]] },
+  { a: st0(143), r: Influence, cam: [[S(143), 960, 520, 1.0], [E(143), 960, 520, 1.03], [S(144) + 0.3, 960, 560, 1.1], [E(144), 960, 560, 1.05]] },
+  { a: st0(145), r: Persp, cam: [[S(145), 960, 540, 1.0], [mid(145, 0.12), 860, 470, 1.04], [mid(145, 0.3), 1060, 470, 1.04], [mid(145, 0.5), 860, 620, 1.04], [mid(145, 0.72), 1060, 620, 1.04], [E(145), 960, 540, 1.0]] },
+  { a: st0(146), r: Concl, cam: [[S(146), 960, 540, 1.0], [S(146) + 1.9, 960, 300, 1.2], [E(146), 960, 320, 1.2], [S(147) + 0.3, 960, 600, 1.2], [E(147), 960, 600, 1.2], [S(148) + 0.3, 960, 800, 1.2], [E(148), 960, 820, 1.2], [S(149) + 0.3, 960, 900, 1.15], [mid(149, 0.55), 960, 540, 1.0], [TM.total, 960, 540, 1.04]] },
 ];
 const CHAPS: [number, string, string][] = [[0, "INTRODUCTION", ""], [10, "CHAPITRE 1", "Généralités et historique"], [30, "CHAPITRE 2", "Structure et fonctionnement"], [48, "CHAPITRE 3", "Les différents types de machines"],
-  [59, "CHAPITRE 4", "Machine de Turing et calculabilité"], [74, "CHAPITRE 5", "Machine de Turing et complexité"], [89, "CHAPITRE 6", "Applications et exemples pratiques"], [100, "CHAPITRE 7", "Avantages, limites et perspectives"], [111, "CONCLUSION", "Conclusion générale"]];
+  [59, "CHAPITRE 4", "Machine de Turing et calculabilité"], [109, "CHAPITRE 5", "Machine de Turing et complexité"], [124, "CHAPITRE 6", "Applications et exemples pratiques"], [135, "CHAPITRE 7", "Avantages, limites et perspectives"], [146, "CONCLUSION", "Conclusion générale"]];
 
 /* ---------- stage: black ground, one discreet blue glow, gentle camera, light glitch at scene changes ---------- */
 const VW = 1920, VH = 1080, CY = 540;
