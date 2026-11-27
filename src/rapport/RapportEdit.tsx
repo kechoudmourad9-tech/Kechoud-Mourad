@@ -1,7 +1,7 @@
 // "Projet : la machine de Turing" — the report as a silent guided explainer (no voice, no subtitles), 1920x1080: one image per idea, gentle camera, restrained palette.
 import "katex/dist/katex.min.css";
 import { useEffect, useState } from "react";
-import { AbsoluteFill, Audio, Sequence, continueRender, delayRender, interpolate, staticFile, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Audio, Img, Sequence, continueRender, delayRender, interpolate, staticFile, useCurrentFrame } from "remotion";
 import { useFontFaces } from "../components/FontFaces";
 import { clamp } from "../theme";
 import { Mark, Squig } from "../cx/clips";
@@ -11,7 +11,7 @@ const fr = (x: number) => Math.round(x * FPS);
 import TM from "./timing.json";
 export const RAPPORT_FRAMES = fr(TM.total);
 // restrained palette: white drawings, yellow accent, red = reject/problem, green = accept/solution, one discreet blue
-const CYAN = "#e8ecff", PUR = "#8f9bd6", RED = "#ff5252", BLUE = "#5b7fe0", YEL = "#ffd23f", GRN = "#3ecf82";
+const CYAN = "#eeeeee", PUR = "#9a9a9a", RED = "#ffd23f", BLUE = "#bdbdbd", YEL = "#ffd23f", GRN = "#f2f2f2";
 const sat = (x: number) => Math.min(1, Math.max(0, x));
 const eo = (x: number) => 1 - Math.pow(1 - sat(x), 3);
 /** 0→1 eased progress starting at `at` (s) lasting d */
@@ -19,7 +19,7 @@ const k = (u: number, at = 0, d = 0.3) => eo((u - at) / d);
 /** overshoot pop */
 const pp = (u: number, at = 0, d = 0.32) => { const x = sat((u - at) / d); if (x <= 0) return 0; const c = 2.4; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
 type Bg = "paper" | "dark" | "blue" | "red";
-const INK: Record<Bg, string> = { paper: "#141414", dark: "#ffffff", blue: "#eaf2ff", red: "#ffffff" };
+const INK: Record<Bg, string> = { paper: "#141414", dark: "#ffffff", blue: "#f0f0f0", red: "#ffffff" };
 
 /* ---------- drawing primitives (SVG, 1080 x 608) ---------- */
 const Draw: React.FC<{ d: string; p: number; c: string; w?: number; dash?: string; glow?: boolean }> = ({ d, p, c, w = 8, dash, glow }) => (
@@ -36,7 +36,7 @@ const Person: React.FC<{ x: number; y: number; s?: number; ink: string; col: str
   x, y, s = 1, col, label, wave = 0, sc = 1, t = 0, look = 0, skin = "#f2c29b", hair = "#2b1a10", glasses, pants = "#3b4270" }) => {
   const blink = (t * 1.3 + x * 0.01) % 3.1 < 0.12 ? 0.12 : 1, bob = Math.sin(t * 2.2 + x) * 2.5;
   return (
-    <g transform={`translate(${x} ${y}) scale(${s * sc})`}>
+    <g transform={`translate(${x} ${y}) scale(${s * sc})`} style={{ filter: "grayscale(1)" }}>
       <ellipse cx={0} cy={66} rx={52} ry={9} fill="#000" opacity={0.35} />
       {/* legs + shoes */}
       <rect x={-27} y={-24} width={22} height={84} rx={10} fill={pants} /><rect x={5} y={-24} width={22} height={84} rx={10} fill={pants} />
@@ -109,15 +109,15 @@ const cam = (keys: Key[], t: number): [number, number, number] => {
   const l = keys[keys.length - 1]; return [l[1], l[2], l[3]];
 };
 const soft = (z: number) => (1 + (z - 1) * 0.34) * 0.86;   // keep the drawings small: the camera only leans in
-const INKC = "#ffffff", DIM = "#a9b0d6";
+const INKC = "#ffffff", DIM = "#a6a6a6";
 const Chip: React.FC<{ x: number; y: number; text: string; c?: string; fg?: string; sc?: number; s?: number }> = ({ x, y, text, c = RED, fg = "#fff", sc = 1, s = 30 }) => {
-  const w = text.length * s * 0.5 + s * 1.1; return sc <= 0.001 ? null : <g transform={`translate(${x} ${y}) scale(${sc})`}><rect x={-w / 2} y={-s * 0.72} width={w} height={s * 1.44} rx={s * 0.42} fill={c} /><T x={0} y={1} s={s} c={fg}>{text}</T></g>;
+  const w = text.length * s * 0.5 + s * 1.1; return sc <= 0.001 ? null : <g transform={`translate(${x} ${y}) scale(${sc})`}><rect x={-w / 2} y={-s * 0.72} width={w} height={s * 1.44} rx={s * 0.42} fill={c} /><T x={0} y={1} s={s} c={/^#[def]/i.test(c) && fg === "#fff" ? "#141414" : fg}>{text}</T></g>;
 };
 /* ---------- scenes: one dark image per idea, everything animates inside it ---------- */
 const sub = (b: string, i: string) => <>{b}<tspan dy="0.28em" fontSize="62%">{i}</tspan><tspan dy="-0.28em" fontSize="1%"> </tspan></>;
 const Tick: React.FC<{ x: number; y: number; ok: boolean; sc: number; s?: number }> = ({ x, y, ok, sc, s = 1 }) => sc <= 0.001 ? null : (
   <g transform={`translate(${x} ${y}) scale(${sc * s})`}><circle r={22} fill={ok ? GRN : RED} style={{ filter: `drop-shadow(0 0 10px ${ok ? GRN : RED})` }} />
-    <path d={ok ? "M-10 1 L-3 9 L11 -8" : "M-9 -9 L9 9 M9 -9 L-9 9"} fill="none" stroke="#fff" strokeWidth={5} strokeLinecap="round" strokeLinejoin="round" /></g>);
+    <path d={ok ? "M-10 1 L-3 9 L11 -8" : "M-9 -9 L9 9 M9 -9 L-9 9"} fill="none" stroke="#141414" strokeWidth={5} strokeLinecap="round" strokeLinejoin="round" /></g>);
 const Axes: React.FC<{ ox: number; oy: number; w: number; h: number; p: number; xl?: string; yl?: React.ReactNode }> = ({ ox, oy, w, h, p, xl = "n", yl }) => <>
   <Draw d={`M${ox} ${oy} H${ox + w}`} p={p} c={INKC} w={4} /><Draw d={`M${ox} ${oy} V${oy - h}`} p={p} c={INKC} w={4} />
   <Head x={ox + w + 4} y={oy} p={p} c={INKC} s={0.45} /><Head x={ox} y={oy - h - 4} p={p} c={INKC} s={0.45} a={-90} />
@@ -125,7 +125,7 @@ const Axes: React.FC<{ ox: number; oy: number; w: number; h: number; p: number; 
 /* ================= La machine de Turing — primitives (1920 x 1080 stage) ================= */
 const S = (i: number) => TM.S[i], E = (i: number) => TM.E[i];
 const mid = (i: number, f = 0.5) => S(i) + (E(i) - S(i)) * f;
-const W = "#ffffff", KM = "KaTeX_Main", KI = "KaTeX_Math", PANEL = "#0d0e15", LINE = "#c9cde6", SOFT = "#1b1d2a";
+const W = "#ffffff", KM = "KaTeX_Main", KI = "KaTeX_Math", PANEL = "#0e0e0e", LINE = "#cfcfcf", SOFT = "#1d1d1d";
 const sup = (b: React.ReactNode, e: string) => <>{b}<tspan dy="-0.42em" fontSize="62%">{e}</tspan><tspan dy="0.42em" fontSize="1%"> </tspan></>;
 const kf = (t: number, keys: [number, number][]) => { if (t <= keys[0][0]) return keys[0][1]; for (let i = 0; i < keys.length - 1; i++) { const [a, va] = keys[i], [b, vb] = keys[i + 1]; if (t <= b) return va + (vb - va) * sm((t - a) / Math.max(1e-6, b - a)); } return keys[keys.length - 1][1]; };
 const bounce = (t: number, per: number, lo: number, hi: number) => { const n = Math.floor(t / per), L = hi - lo, f = sm((t - n * per) / (per * 0.55));
@@ -172,7 +172,7 @@ const Card: React.FC<{ x: number; y: number; w: number; h: number; c?: string; p
   <g transform={`translate(${x + w / 2} ${y + h / 2}) scale(${p}) translate(${-w / 2} ${-h / 2})`}><rect width={w} height={h} rx={26} fill={PANEL} stroke={c} strokeOpacity={0.6} strokeWidth={3} />
     {title ? <T x={w / 2} y={44} s={38} c={tc ?? c}>{title}</T> : null}{children}</g>);
 const Doc: React.FC<{ x: number; y: number; s?: number; sc?: number; rot?: number; title?: string; by?: string }> = ({ x, y, s = 1, sc = 1, rot = 0, title = "", by = "" }) => sc <= 0.001 ? null : (
-  <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${s * sc})`}><rect x={-130} y={-170} width={260} height={340} rx={10} fill="#f4f1e8" style={{ filter: "drop-shadow(0 20px 40px #000)" }} />
+  <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${s * sc})`}><rect x={-130} y={-170} width={260} height={340} rx={10} fill="#efefef" style={{ filter: "drop-shadow(0 20px 40px #000)" }} />
     <text x={0} y={-118} fontFamily={KM} fontSize={22} fill="#14101f" textAnchor="middle">{title}</text><text x={0} y={-88} fontFamily={KM} fontSize={15} fill="#555" textAnchor="middle">{by}</text>
     {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => <rect key={i} x={-100} y={-60 + i * 26} width={i % 3 === 2 ? 150 : 200} height={7} rx={3} fill="#c9cbd6" />)}</g>);
 const Bulb: React.FC<{ x: number; y: number; sc?: number; on?: number }> = ({ x, y, sc = 1, on = 1 }) => sc <= 0.001 ? null : (
@@ -185,11 +185,11 @@ const Desktop: React.FC<{ x: number; y: number; s?: number; sc?: number }> = ({ 
     <rect x={86} y={-110} width={56} height={158} rx={8} fill={PANEL} stroke={LINE} strokeWidth={5} /><circle cx={114} cy={-80} r={6} fill={GRN} /></g>);
 const Phone: React.FC<{ x: number; y: number; s?: number; sc?: number }> = ({ x, y, s = 1, sc = 1 }) => sc <= 0.001 ? null : (
   <g transform={`translate(${x} ${y}) scale(${s * sc})`}><rect x={-48} y={-90} width={96} height={180} rx={18} fill={PANEL} stroke={LINE} strokeWidth={5} /><rect x={-16} y={-80} width={32} height={6} rx={3} fill={LINE} />
-    {[0, 1, 2].map((r) => [0, 1, 2].map((c) => <rect key={`${r}${c}`} x={-34 + c * 24} y={-54 + r * 26} width={18} height={18} rx={5} fill={c === 1 && r === 1 ? YEL : "#2a2d40"} />))}</g>);
+    {[0, 1, 2].map((r) => [0, 1, 2].map((c) => <rect key={`${r}${c}`} x={-34 + c * 24} y={-54 + r * 26} width={18} height={18} rx={5} fill={c === 1 && r === 1 ? YEL : "#2a2a2a"} />))}</g>);
 const CpuMem: React.FC<{ x: number; y: number; s?: number; sc?: number }> = ({ x, y, s = 1, sc = 1 }) => sc <= 0.001 ? null : (
   <g transform={`translate(${x} ${y}) scale(${s * sc})`}><rect x={-140} y={-60} width={110} height={120} rx={12} fill={PANEL} stroke={LINE} strokeWidth={5} /><T x={-85} y={0} s={34} c={W}>UC</T>
     <path d="M-30 -20 H30 M-30 20 H30" stroke={YEL} strokeWidth={5} /><rect x={30} y={-60} width={120} height={120} rx={12} fill={PANEL} stroke={LINE} strokeWidth={5} />
-    {[0, 1, 2, 3].map((i) => <rect key={i} x={46} y={-46 + i * 26} width={88} height={16} rx={4} fill={i === 1 ? YEL : "#2a2d40"} />)}</g>);
+    {[0, 1, 2, 3].map((i) => <rect key={i} x={46} y={-46 + i * 26} width={88} height={16} rx={4} fill={i === 1 ? YEL : "#2a2a2a"} />)}</g>);
 const Win: React.FC<{ x: number; y: number; w: number; h: number; p: number; title: string; children?: React.ReactNode }> = ({ x, y, w, h, p, title, children }) => p <= 0.001 ? null : (
   <g transform={`translate(${x + w / 2} ${y + h / 2}) scale(${p}) translate(${-w / 2} ${-h / 2})`}><rect width={w} height={h} rx={18} fill={PANEL} stroke={LINE} strokeOpacity={0.6} strokeWidth={3} />
     <path d={`M0 18 Q0 0 18 0 H${w - 18} Q${w} 0 ${w} 18 V54 H0 Z`} fill={SOFT} />{[RED, YEL, GRN].map((c, i) => <circle key={c} cx={30 + i * 28} cy={27} r={8} fill={c} opacity={0.8} />)}
@@ -206,6 +206,12 @@ const Bracket: React.FC<{ x1: number; x2: number; y: number; p: number; label?: 
   {label ? <T x={(x1 + x2) / 2} y={y + 48} s={34} c={c} f={KM} sc={sat((p - 0.5) * 2)}>{label}</T> : null}</>;
 /* ---------- INTRO ---------- */
 const HOOK = ["_", "1", "0", "1", "1", "0", "_"], HX = 575;
+/** a real photograph in a thin white frame (an HTML <Img> inside the SVG, so each frame waits for it) */
+const Photo: React.FC<{ x: number; y: number; w: number; h: number; src: string; sc?: number; o?: number; cap?: string }> = ({ x, y, w, h, src, sc = 1, o = 1, cap }) => sc <= 0.001 || o <= 0.001 ? null : (
+  <g transform={`translate(${x} ${y}) scale(${sc})`} opacity={o}>
+    <rect x={-w / 2 - 9} y={-h / 2 - 9} width={w + 18} height={h + 18} rx={6} fill="#f2f2f2" style={{ filter: "drop-shadow(0 18px 30px rgba(0,0,0,0.8))" }} />
+    <foreignObject x={-w / 2} y={-h / 2} width={w} height={h}><Img src={staticFile(`rapport/photos/${src}`)} style={{ width: w, height: h, objectFit: "cover", objectPosition: "50% 25%", display: "block" }} /></foreignObject>
+    {cap ? <T x={0} y={h / 2 + 40} s={22} c={DIM} f="InterX">{cap}</T> : null}</g>);
 const Hook = (t: number) => { const pos = bounce(Math.max(0, t - 1.2), 0.62, 1, 5), turing = k(t, S(2) + 0.3, 0.5);
   return <>
     <Tape x={HX} y={540} cells={HOOK} cw={110} p={k(t, 0.2, 1.2)} hl={{ [Math.round(pos)]: YEL }} />
@@ -216,7 +222,7 @@ const Hook = (t: number) => { const pos = bounce(Math.max(0, t - 1.2), 0.62, 1, 
     <g opacity={1 - turing}><Laptop x={250} y={600} s={0.9} sc={pp(t, mid(0, 0.55))}><T x={0} y={-70} s={40} c={YEL} f={KM}>f(x)</T></Laptop>
       <T x={250} y={700} s={30} c={W} f="InterX" sc={pp(t, mid(0, 0.62))}>tout ordinateur</T></g>
     <T x={960} y={180} s={130} c={W} sc={pp(t, S(1) + 0.2)} glow={BLUE}>LA MACHINE DE TURING</T><Squig x={960} y={262} w={900} p={k(t, S(1) + 0.9, 0.5)} c={YEL} />
-    <Person x={260} y={800} s={1.35} ink={W} col="#3a4256" label="" t={t} hair="#3b2414" skin="#f0c8a8" sc={turing > 0 ? pp(t, S(2) + 0.3) : 0} wave={t > S(2) + 0.6 && t < S(2) + 2.4 ? 0.6 + Math.sin(t * 8) * 0.3 : 0} />
+    <Photo x={260} y={690} w={230} h={290} src="turing_1936.jpg" sc={turing > 0 ? pp(t, S(2) + 0.3) : 0} />
     <Chip x={260} y={460} text="ALAN TURING · 1936" c={YEL} fg="#14101f" sc={pp(t, S(2) + 0.9)} s={34} />
     <T x={430} y={600} s={110} c={YEL} f={KM} sc={pp(t, mid(2, 0.75))} glow={YEL}>?</T>
     <T x={960} y={850} s={32} c={DIM} f="InterX" sc={pp(t, mid(2, 0.3))}>avant même l’existence des ordinateurs</T>
@@ -238,12 +244,12 @@ const Plan = (t: number) => { const rx = (i: number) => 230 + i * 243, dot = kf(
 
 /* ---------- CHAPITRE 1 ---------- */
 const Hilbert = (t: number) => <>
-  <Person x={360} y={790} s={1.55} ink={W} col="#4a3b2a" label="" t={t} hair="#d6d6d6" skin="#f2c29b" glasses sc={pp(t, S(16) + 0.1)} pants="#2c2620" />
+  <Photo x={360} y={700} w={270} h={340} src="hilbert.jpg" sc={pp(t, S(16) + 0.1)} />
   <T x={360} y={400} s={50} c={W} sc={pp(t, S(16) + 0.3)}>DAVID HILBERT</T><T x={360} y={455} s={32} c={DIM} f={KM} sc={pp(t, S(16) + 0.5)}>1928</T>
   <g transform={`translate(930 270) scale(${pp(t, mid(16, 0.3))})`}><rect x={-420} y={-120} width={840} height={240} rx={40} fill={W} /><path d="M-300 110 L-380 200 L-230 118 Z" fill={W} />
     <T x={0} y={-40} s={40} c="#14101f" f="InterX">Existe-t-il une méthode mécanique</T><T x={0} y={14} s={40} c="#14101f" f="InterX">pour décider si un énoncé logique</T><T x={0} y={68} s={40} c="#14101f" f="InterX">est démontrable ?</T></g>
   <T x={930} y={440} s={32} c={DIM} f={KI} it sc={pp(t, mid(16, 0.6))}>« Entscheidungsproblem »</T>
-  <Person x={1580} y={790} s={1.55} ink={W} col="#3a4256" label="" t={t} hair="#3b2414" skin="#f0c8a8" sc={pp(t, S(17) + 0.1)} look={-1} pants="#262a38" />
+  <Photo x={1580} y={700} w={270} h={340} src="turing_1936.jpg" sc={pp(t, S(17) + 0.1)} />
   <T x={1580} y={400} s={50} c={W} sc={pp(t, S(17) + 0.3)}>ALAN TURING</T>
   <Doc x={1130} y={700} rot={-6} sc={pp(t, S(17) + 0.5)} title="On Computable Numbers" by="A. M. Turing · 1936" />
   <Chip x={1130} y={500} text="méthode mécanique = ?" c={SOFT} sc={pp(t, mid(17, 0.35))} s={32} />
@@ -260,8 +266,8 @@ const DefWhy = (t: number) => { const map: [string, string][] = [["regarder un s
     <HeadBox x={cxOf(1330, 2, 90)} y={430} cw={90} st={sub("q", "1")} sc={pp(t, mid(18, 0.62))} />
     <Card x={1340} y={560} w={420} h={250} c={LINE} p={pp(t, mid(18, 0.85))} title="RÈGLES" tc={DIM}>{[["0", "1", "1"], ["1", "0", "1"], ["⊔", "⊔", "acc"]].map(([a, b, q], i) => <T key={i} x={210} y={110 + i * 46} s={30} c={W} f={KM}>{sub("q", "1")}, {a} → {sub("q", q)}, {b}, D</T>)}</Card>
     <Person x={190} y={820} s={1.35} ink={W} col="#5a6b8c" label="" t={t} hair="#2b1a10" skin="#c98a5e" sc={pp(t, S(20) + 0.1)} wave={0.25 + Math.sin(t * 6) * 0.06} />
-    <g transform={`translate(420 560) rotate(-5) scale(${pp(t, S(20) + 0.3)})`}><rect x={-120} y={-150} width={240} height={300} rx={8} fill="#f4f1e8" />
-      {Array.from({ length: 5 }).map((_, r) => Array.from({ length: 4 }).map((_, c) => <rect key={`${r}${c}`} x={-96 + c * 50} y={-126 + r * 52} width={44} height={44} fill="none" stroke="#b9bccb" strokeWidth={2} />))}
+    <g transform={`translate(420 560) rotate(-5) scale(${pp(t, S(20) + 0.3)})`}><rect x={-120} y={-150} width={240} height={300} rx={8} fill="#efefef" />
+      {Array.from({ length: 5 }).map((_, r) => Array.from({ length: 4 }).map((_, c) => <rect key={`${r}${c}`} x={-96 + c * 50} y={-126 + r * 52} width={44} height={44} fill="none" stroke="#bdbdbd" strokeWidth={2} />))}
       {["1", "0", "1", "1"].map((x, i) => <text key={i} x={-74 + i * 50} y={-90} fontFamily={KM} fontSize={30} fill="#14101f" textAnchor="middle">{x}</text>)}
       <path d={`M${-80 + 50 * (Math.floor(t * 1.4) % 4)} -60 l40 -50`} stroke={YEL} strokeWidth={6} strokeLinecap="round" /></g>
     <T x={330} y={330} s={34} c={DIM} f="InterX" sc={pp(t, S(20) + 0.3)}>un humain qui calcule</T>
@@ -572,7 +578,7 @@ const VsPCBase = (t: number) => { const hop = bounce(Math.max(0, t - S(141) - 0.
     <Tape x={110} y={430} cells={["1", "0", "1", "1", "0", "1", "0"]} cw={92} p={k(t, S(141) + 0.2, 0.7)} hl={{ [Math.round(hop)]: YEL }} />
     <HeadBox x={cxOf(110, hop, 92)} y={430} cw={92} sc={pp(t, S(141) + 0.5)} />
     <Chip x={440} y={600} text="bande INFINIE" c={SOFT} sc={pp(t, mid(141, 0.1))} s={34} /><Chip x={440} y={690} text="case par case" c={SOFT} sc={pp(t, mid(141, 0.62))} s={34} />
-    <g transform={`translate(1420 400) scale(${pp(t, mid(141, 0.35))})`}><rect x={-300} y={-110} width={600} height={220} rx={16} fill="#163a24" stroke={GRN} strokeWidth={5} />
+    <g transform={`translate(1420 400) scale(${pp(t, mid(141, 0.35))})`}><rect x={-300} y={-110} width={600} height={220} rx={16} fill="#1a1a1a" stroke={GRN} strokeWidth={5} />
       {Array.from({ length: 6 }).map((_, i) => <rect key={i} x={-270 + i * 92} y={-78} width={72} height={120} rx={8} fill="#0d0e15" />)}
       {Array.from({ length: 18 }).map((_, i) => <rect key={`p${i}`} x={-284 + i * 32} y={110} width={16} height={26} fill={YEL} />)}<T x={0} y={74} s={30} c={W}>16 Go</T></g>
     <Chip x={1420} y={600} text="mémoire FINIE" c={SOFT} sc={pp(t, mid(141, 0.42))} s={34} />
@@ -628,13 +634,13 @@ const Contexte = (t: number) => { const X = [250, 700, 1090, 1570], cur = t < S(
     {["axiomes", "règles logiques", "démonstrations"].map((l, i) => { const at = mid(3, 0.2 + i * 0.15);
       return <g key={l} transform={`translate(${X[0]} ${650 - i * 76}) scale(${pp(t, at)})`}><rect x={-140} y={-32} width={280} height={64} rx={10} fill={SOFT} stroke={i === 2 ? YEL : LINE} strokeWidth={3} /><T x={0} y={0} s={26} c={W} f="InterX">{l}</T></g>; })}
     <Tick x={X[0]} y={380} ok sc={pp(t, mid(3, 0.7))} s={1.3} />
-    <Person x={X[1]} y={600} s={1.0} ink={W} col="#4a3b2a" label="" t={t} hair="#d6d6d6" skin="#f2c29b" glasses sc={pp(t, S(4) + 0.2)} pants="#2c2620" />
+    <Photo x={X[1]} y={545} w={170} h={215} src="hilbert.jpg" sc={pp(t, S(4) + 0.2)} />
     <T x={X[1]} y={330} s={34} c={W} sc={pp(t, S(4) + 0.4)}>DAVID HILBERT</T>
-    <Person x={X[2]} y={600} s={1.0} ink={W} col="#2f3340" label="" t={t} hair="#1e1e1e" skin="#efc7a4" glasses sc={pp(t, S(5) + 0.2)} pants="#22252e" />
+    <Photo x={X[2]} y={545} w={170} h={215} src="godel.jpg" sc={pp(t, S(5) + 0.2)} />
     <T x={X[2]} y={330} s={34} c={W} sc={pp(t, S(5) + 0.4)}>KURT GÖDEL</T>
-    <Person x={X[3] - 120} y={600} s={1.0} ink={W} col="#3b3f4a" label="" t={t} hair="#9a9a9a" skin="#f2c29b" glasses sc={pp(t, S(6) + 0.2)} pants="#2a2c33" look={1} />
+    <g transform={`translate(${X[3] - 120} 545) scale(${pp(t, S(6) + 0.2)})`}><rect x={-94} y={-116} width={188} height={232} rx={8} fill={SOFT} stroke={LINE} strokeWidth={3} /><T x={0} y={4} s={130} c={YEL} f={KM}>λ</T></g>
     <T x={X[3] - 120} y={312} s={30} c={W} sc={pp(t, S(6) + 0.4)}>ALONZO CHURCH</T><T x={X[3] - 120} y={354} s={26} c={YEL} f={KM} sc={pp(t, mid(6, 0.22))}>λ-calcul</T>
-    <Person x={X[3] + 120} y={600} s={1.0} ink={W} col="#3a4256" label="" t={t} hair="#3b2414" skin="#f0c8a8" sc={pp(t, mid(6, 0.3))} pants="#262a38" look={-1} />
+    <Photo x={X[3] + 120} y={545} w={170} h={215} src="turing_1936.jpg" sc={pp(t, mid(6, 0.3))} />
     <T x={X[3] + 120} y={312} s={30} c={W} sc={pp(t, mid(6, 0.32))}>ALAN TURING</T><T x={X[3] + 120} y={354} s={26} c={YEL} f="InterX" sc={pp(t, mid(6, 0.4))}>sa machine</T>
     <Caption o={fade(t, S(3) + 0.6, S(4) - 0.1)}><T x={960} y={940} s={36} c={W} f="InterX">fonder les mathématiques sur des bases <tspan fill={YEL}>parfaitement sûres</tspan></T></Caption>
     <Caption o={fade(t, S(4) + 0.6, S(5) - 0.1)} c={YEL}><T x={960} y={918} s={32} c={W} f="InterX">« Existe-t-il une méthode mécanique pour décider</T><T x={960} y={962} s={32} c={W} f="InterX">si n’importe quel énoncé logique est démontrable ? »</T></Caption>
@@ -651,7 +657,8 @@ const Bio = (t: number) => { const c0 = S(10) + 1.9, tl = (y: number) => 230 + (
   const yr = kf(t, [[c0, 1912], [S(11), 1912], [S(11) + 0.8, 1930], [S(12), 1930], [S(12) + 0.6, 1931], [mid(12, 0.35), 1931], [mid(12, 0.45), 1936], [mid(12, 0.7), 1936], [mid(12, 0.8), 1937], [S(13), 1937], [S(13) + 0.8, 1939], [S(14), 1939], [S(14) + 0.8, 1943], [S(15), 1943], [mid(15, 0.1), 1946], [mid(15, 0.32), 1946], [mid(15, 0.4), 1952], [mid(15, 0.5), 1952], [mid(15, 0.6), 1954]]);
   const on = (i: number) => fade(t, S(i) + (i === 10 ? 1.9 : 0.05), i === 15 ? 1e9 : S(i + 1) - 0.05, 0.35);
   return <>
-    <Person x={330} y={700} s={1.6} ink={W} col="#3a4256" label="" t={t} hair="#3b2414" skin="#f0c8a8" sc={pp(t, c0)} wave={t > c0 + 0.4 && t < c0 + 2 ? 0.7 : 0} pants="#262a38" />
+    {([["turing_1928.jpg", c0, S(12), "vers 1928, à 16 ans"], ["turing_1930s.jpg", S(12), mid(12, 0.5), "années 1930"], ["turing_1936.jpg", mid(12, 0.5), S(13), "1936, Princeton"], ["turing_1951.jpg", S(13), 1e9, "1951"]] as [string, number, number, string][]).map(([src, a, b, cap], i) =>
+      <Photo key={src} x={330} y={600} w={300} h={380} src={src} sc={i === 0 ? pp(t, c0) : 1} o={i === 0 ? 1 - k(t, b - 0.3, 0.5) : k(t, a - 0.3, 0.5) * (b > 1e8 ? 1 : 1 - k(t, b - 0.3, 0.5))} cap={cap} />)}
     <T x={330} y={230} s={64} c={W} sc={pp(t, c0 + 0.3)}>ALAN TURING</T><T x={330} y={292} s={30} c={DIM} f={KM} sc={pp(t, c0 + 0.6)}>Londres, 23 juin 1912</T>
     {/* timeline */}
     <Draw d={`M${tl(1912)} 960 H${tl(1954)}`} p={k(t, c0 + 0.4, 1.0)} c={LINE} w={5} />
@@ -665,7 +672,7 @@ const Bio = (t: number) => { const c0 = S(10) + 1.9, tl = (y: number) => 230 + (
     {/* 11 : Christopher Morcom */}
     <g opacity={on(11)}><Card x={720} y={250} w={1000} h={440} c={LINE} p={pp(t, S(11) + 0.15)} title="1930 · CHRISTOPHER MORCOM" tc={W}>
       <T x={500} y={130} s={30} c={DIM} f="InterX">un élève jugé « brouillon »</T>
-      <Person x={230} y={330} s={0.75} ink={W} col="#5a4a6a" label="" t={t} hair="#c9a060" skin="#f2c9a8" />
+      <T x={200} y={250} s={30} c={W} f="InterX">Christopher</T><T x={200} y={292} s={30} c={W} f="InterX">Morcom</T><T x={200} y={334} s={24} c={DIM} f={KM}>1911 – 1930</T>
       <path d="M470 270 q30 -40 60 0 q30 -40 60 0 q0 40 -60 70 q-60 -30 -60 -70 z" fill={RED} opacity={0.85 * k(t, mid(11, 0.35), 0.4)} transform="translate(-150 0)" />
       <T x={480} y={250} s={30} c={W} f="InterX" anchor="start">la mort de son ami</T><T x={480} y={295} s={30} c={W} f="InterX" anchor="start">le marque profondément</T>
       <Chip x={500} y={385} text="→ sa détermination se renforce" c={YEL} fg="#14101f" sc={pp(t, mid(11, 0.65))} s={32} /></Card></g>
@@ -681,24 +688,24 @@ const Bio = (t: number) => { const c0 = S(10) + 1.9, tl = (y: number) => 230 + (
     <g opacity={on(13)}>
       <T x={1250} y={170} s={48} c={W} sc={pp(t, S(13) + 0.2)}>BLETCHLEY PARK · 1939</T>
       <g transform={`translate(900 520) scale(${0.72 * pp(t, mid(13, 0.4))})`}>{t > S(13) && <>
-        <rect x={-230} y={-200} width={460} height={380} rx={22} fill="#2a2016" stroke="#8a6a44" strokeWidth={6} />
-        {[-110, 0, 110].map((x, i) => <g key={x}><Gear x={x} y={-120} r={34} a={t * (60 + i * 25) * (i % 2 ? -1 : 1)} c="#8a8f9e" /><rect x={x - 22} y={-82} width={44} height={36} rx={6} fill="#f4f1e8" />
+        <rect x={-230} y={-200} width={460} height={380} rx={22} fill="#1d1d1d" stroke="#8a8a8a" strokeWidth={6} />
+        {[-110, 0, 110].map((x, i) => <g key={x}><Gear x={x} y={-120} r={34} a={t * (60 + i * 25) * (i % 2 ? -1 : 1)} c="#8f8f8f" /><rect x={x - 22} y={-82} width={44} height={36} rx={6} fill="#efefef" />
           <T x={x} y={-63} s={26} c="#14101f" f={KM}>{String.fromCharCode(65 + Math.floor(t * (3 + i)) % 26)}</T></g>)}
-        {Array.from({ length: 24 }).map((_, i) => <circle key={i} cx={-180 + (i % 8) * 51} cy={-6 + Math.floor(i / 8) * 46} r={15} fill={i === Math.floor(t * 4) % 24 ? YEL : "#3d3428"} stroke="#8a6a44" strokeWidth={2} />)}</>}</g>
+        {Array.from({ length: 24 }).map((_, i) => <circle key={i} cx={-180 + (i % 8) * 51} cy={-6 + Math.floor(i / 8) * 46} r={15} fill={i === Math.floor(t * 4) % 24 ? YEL : "#333333"} stroke="#8a8a8a" strokeWidth={2} />)}</>}</g>
       <T x={900} y={700} s={40} c={W} sc={pp(t, mid(13, 0.45))}>ENIGMA</T>
-      <g transform={`translate(1560 500) scale(${pp(t, mid(13, 0.2))})`}><rect x={-230} y={-190} width={460} height={380} rx={18} fill="#1d222c" stroke={LINE} strokeWidth={5} />
+      <g transform={`translate(1560 500) scale(${pp(t, mid(13, 0.2))})`}><rect x={-230} y={-190} width={460} height={380} rx={18} fill="#1d1d1d" stroke={LINE} strokeWidth={5} />
         {Array.from({ length: 12 }).map((_, i) => { const cx = -150 + (i % 4) * 100, cy = -110 + Math.floor(i / 4) * 110, a = t * (120 + (i % 3) * 40) * (i % 2 ? 1 : -1);
-          return <g key={i}><circle cx={cx} cy={cy} r={38} fill="#3a404e" stroke="#9aa2b8" strokeWidth={4} /><path d={`M${cx} ${cy} L${cx + 30 * Math.cos(a / 57)} ${cy + 30 * Math.sin(a / 57)}`} stroke={i % 5 === 0 ? RED : W} strokeWidth={5} strokeLinecap="round" /></g>; })}</g>
+          return <g key={i}><circle cx={cx} cy={cy} r={38} fill="#3a3a3a" stroke="#a0a0a0" strokeWidth={4} /><path d={`M${cx} ${cy} L${cx + 30 * Math.cos(a / 57)} ${cy + 30 * Math.sin(a / 57)}`} stroke={i % 5 === 0 ? RED : W} strokeWidth={5} strokeLinecap="round" /></g>; })}</g>
       <T x={1560} y={735} s={40} c={W} sc={pp(t, mid(13, 0.25))}>LA BOMBE</T><T x={1560} y={780} s={26} c={DIM} f="InterX" sc={pp(t, mid(13, 0.3))}>avec Gordon Welchman</T>
       <Arr a={[1320, 430]} b={[1080, 430]} r={0} p={k(t, mid(13, 0.55), 0.4)} c={YEL} label="déchiffre" ls={26} lo={-30} w={5} />
       <Chip x={1250} y={850} text="messages Enigma déchiffrés" c={GRN} fg="#0b1a10" sc={pp(t, mid(13, 0.7))} s={34} /></g>
     {/* 14 : Colossus, Tommy Flowers, Lorenz */}
     <g opacity={on(14)}>
       <T x={1250} y={170} s={48} c={W} sc={pp(t, S(14) + 0.2)}>COLOSSUS</T>
-      <g transform={`translate(1250 480) scale(${pp(t, S(14) + 0.3)})`}><rect x={-420} y={-200} width={840} height={400} rx={14} fill="#1d222c" stroke={LINE} strokeWidth={5} />
-        {[-280, 0, 280].map((x) => <rect key={x} x={x - 130} y={-180} width={260} height={360} rx={8} fill="#15181f" stroke="#3a404e" strokeWidth={3} />)}
+      <g transform={`translate(1250 480) scale(${pp(t, S(14) + 0.3)})`}><rect x={-420} y={-200} width={840} height={400} rx={14} fill="#1d1d1d" stroke={LINE} strokeWidth={5} />
+        {[-280, 0, 280].map((x) => <rect key={x} x={x - 130} y={-180} width={260} height={360} rx={8} fill="#161616" stroke="#3a3a3a" strokeWidth={3} />)}
         {Array.from({ length: 54 }).map((_, i) => { const col = i % 18, row = Math.floor(i / 18), x = -390 + col * 46 + (col >= 12 ? 0 : 0), lit = Math.sin(t * 6 + i * 1.7) > 0.3;
-          return <circle key={i} cx={x} cy={-120 + row * 70} r={12} fill={lit ? "#ffb347" : "#3a2a18"} style={lit ? { filter: "drop-shadow(0 0 8px #ffb347)" } : undefined} />; })}
+          return <circle key={i} cx={x} cy={-120 + row * 70} r={12} fill={lit ? "#ffd23f" : "#2a2a2a"} style={lit ? { filter: "drop-shadow(0 0 8px #ffb347)" } : undefined} />; })}
         <circle cx={300} cy={110} r={60} fill="none" stroke={W} strokeWidth={6} strokeDasharray="10 8" transform={`rotate(${t * 90} 300 110)`} /><path d="M-360 110 H230" stroke={W} strokeWidth={10} strokeDasharray="4 10" /></g>
       <Chip x={1050} y={760} text="conçu par Tommy Flowers" c={SOFT} sc={pp(t, mid(14, 0.3))} s={32} /><Chip x={1520} y={760} text="contre le chiffre Lorenz" c={YEL} fg="#14101f" sc={pp(t, mid(14, 0.6))} s={32} /></g>
     {/* 15 : après la guerre */}
@@ -741,7 +748,7 @@ const T0011: Cf[] = [["0011__", 0, "0", -1], ["X011__", 1, "1", 0], ["X011__", 2
 const T001: Cf[] = [["001___", 0, "0", -1], ["X01___", 1, "1", 0], ["X01___", 2, "1", 2], ["X0Y___", 1, "2", 3], ["X0Y___", 0, "2", 5], ["X0Y___", 1, "0", 7], ["XXY___", 2, "1", 0], ["XXY___", 3, "1", 4]];
 const conf = (c: Cf) => { let s = c[0].replace(/_/g, "B").replace(/B+$/, "") + "B"; while (s.length <= c[1]) s += "B"; return [s.slice(0, c[1]), c[2], s.slice(c[1])] as [string, string, string]; };
 const SX = 140, SCW = 120;
-const Sim0011 = (t: number) => { const two = t >= S(47) + 0.2, tr = two ? T001 : T0011, t0 = two ? S(47) + 0.9 : S(46) + 0.7, dt = two ? 0.65 : 0.72;
+const Sim0011 = (t: number) => { const two = t >= S(47) + 0.2, tr = two ? T001 : T0011, t0 = two ? S(47) + 0.9 : S(46) + 0.7, dt = two ? Math.min(0.65, (E(47) - S(47) - 1.4) / 7.5) : Math.min(0.72, (E(46) - S(46) - 1.5) / 12.5);
   const n = t < S(46) + 0.7 && !two ? 0 : Math.min(tr.length - 1, Math.floor((t - t0) / dt) + 1), cf = tr[Math.max(0, n)];
   const hp = kf(t, tr.map((c, j) => [j === 0 ? t0 - 0.5 : t0 + (j - 1) * dt + 0.25, c[1]] as [number, number]));
   const acc = !two && n === tr.length - 1 && t > t0 + (tr.length - 2) * dt + 0.5, rej = two && t > t0 + (tr.length - 1) * dt + 0.2, [u, q, v] = conf(cf);
@@ -1451,8 +1458,8 @@ const Stage: React.FC = () => {
         <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b" /><feOffset in="b" dx={-dx} result="bo" />
         <feBlend in="ro" in2="g" mode="screen" result="rg" /><feBlend in="rg" in2="bo" mode="screen" /></filter></defs></svg>
       <div style={{ position: "absolute", inset: 0, filter: gl > 0 ? "url(#tmrgb)" : undefined }}>
-        <div style={{ position: "absolute", width: 1400, height: 1400, left: -520 + Math.sin(t * 0.3) * 80 - (cx - 960) * 0.12, top: -800, borderRadius: "50%", background: "radial-gradient(circle, rgba(70,110,255,0.24), transparent 62%)", filter: "blur(40px)" }} />
-        <div style={{ position: "absolute", width: 1300, height: 1300, right: -560 + Math.cos(t * 0.25) * 80 + (cx - 960) * 0.12, bottom: -820, borderRadius: "50%", background: "radial-gradient(circle, rgba(70,110,255,0.16), transparent 62%)", filter: "blur(40px)" }} />
+        <div style={{ position: "absolute", width: 1400, height: 1400, left: -520 + Math.sin(t * 0.3) * 80 - (cx - 960) * 0.12, top: -800, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,255,255,0.045), transparent 62%)", filter: "blur(40px)" }} />
+        <div style={{ position: "absolute", width: 1300, height: 1300, right: -560 + Math.cos(t * 0.25) * 80 + (cx - 960) * 0.12, bottom: -820, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,255,255,0.03), transparent 62%)", filter: "blur(40px)" }} />
         <div style={{ position: "absolute", inset: -300, opacity: 0.3, backgroundImage: "radial-gradient(rgba(255,255,255,0.5) 1.6px, transparent 1.6px)", backgroundSize: `${64 * z}px ${64 * z}px`, backgroundPosition: `${-cx * z * 0.6}px ${-cy * z * 0.6}px` }} />
         <svg width={VW} height={VH} viewBox={`0 0 ${VW} ${VH}`} style={{ position: "absolute", inset: 0, overflow: "visible" }}>
           <g transform={`translate(${VW / 2 - cx * z} ${CY - cy * z}) scale(${z})`}>{sc.r(t)}</g></svg>
