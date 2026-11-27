@@ -1393,12 +1393,258 @@ const Recap4 = (t: number) => <Card x={260} y={140} w={1400} h={800} c={YEL} p={
   {REC4.map((l, j) => <g key={l} opacity={k(t, mid(108, 0.06 + j * 0.14), 0.3)}><Tick x={100} y={150 + j * 105} ok={j !== 3} sc={1} s={0.9} /><C4Line x={150} y={150 + j * 105} s={34}>{l}</C4Line></g>)}
 </Card>;
 
+
+/* ======================= v4 : introduction et conclusion générales calquées sur le rapport ======================= */
+/** moment where the reader reaches the fraction f of the words of passage i */
+const wt = (i: number, f: number) => S(i) + f * Math.max(0.5, E(i) - S(i) - 0.5);
+/** a section heading of the report: kicker, title, yellow rule */
+const SecHead: React.FC<{ t: number; at: number; kicker: string; title: string; s?: number }> = ({ t, at, kicker, title, s = 58 }) => <>
+  <T x={960} y={86} s={25} c={YEL} f="InterX" ls={6} sc={pp(t, at)}>{kicker}</T>
+  <T x={960} y={146} s={s} c={W} sc={pp(t, at + 0.12)}>{title}</T>
+  <Draw d="M780 192 H1140" p={k(t, at + 0.35, 0.5)} c={YEL} w={6} />
+</>;
+const IG = "INTRODUCTION GÉNÉRALE", CG = "CONCLUSION GÉNÉRALE";
+/** fades in (and slides a little) at `at` */
+const In: React.FC<{ t: number; at: number; dx?: number; dy?: number; children: React.ReactNode }> = ({ t, at, dx = 0, dy = 14, children }) => { const o = k(t, at, 0.45);
+  return o <= 0.001 ? null : <g opacity={o} transform={`translate(${dx * (1 - o)} ${dy * (1 - o)})`}>{children}</g>; };
+const Arrow: React.FC<{ x1: number; x2: number; y: number; p: number; c?: string }> = ({ x1, x2, y, p, c = YEL }) => p <= 0.001 ? null : <>
+  <Draw d={`M${x1} ${y} H${x2}`} p={p} c={c} w={5} /><path d={`M${x1 + (x2 - x1) * p} ${y} l-18 -12 v24 z`} fill={c} opacity={sat(p * 3 - 2)} /></>;
+const Q0 = sub4("q", "0"), Q1 = sub4("q", "1");
+
+/* ---------- Présentation générale du sujet (0–2) ---------- */
+const IntroCover = (t: number) => { const pos = bounce(Math.max(0, t - 2.2), 0.62, 0, 4);
+  return <>
+    <SecHead t={t} at={S(0) + 0.1} kicker={IG} title="PRÉSENTATION GÉNÉRALE DU SUJET" />
+    <T x={960} y={385} s={108} c={W} sc={pp(t, 0.35)} glow={BLUE}>PROJET SUR LA MACHINE DE TURING</T>
+    <Squig x={960} y={458} w={1150} p={k(t, 1.0, 0.6)} c={YEL} />
+    <T x={960} y={552} s={46} c={DIM} f="InterX" sc={pp(t, 1.3)}>De la calculabilité à la complexité</T>
+    <Tape x={710} y={745} cells={["1", "0", "1", "1", "0"]} cw={100} p={k(t, 1.6, 1.0)} hl={{ [Math.round(pos)]: YEL }} />
+    <HeadBox x={cxOf(710, pos, 100)} y={745} sc={pp(t, 2.0)} />
+    <Caption o={k(t, wt(0, 0.5), 0.45)}><T x={960} y={940} s={36} c={W} f="InterX">le modèle mathématique qui donne un sens précis au mot <tspan fill={YEL}>« calcul »</tspan></T></Caption>
+  </>; };
+const IntroPres = (t: number) => { const a = S(1) - 3, cw = 80;
+  const parts: [string, number][] = [["UN RUBAN", 0.23], ["UNE TÊTE DE LECTURE ET D’ÉCRITURE", 0.42], ["UN ENSEMBLE FINI D’ÉTATS", 0.65], ["UNE TABLE DE RÈGLES", 0.84]];
+  const pos = bounce(Math.max(0, t - wt(1, 0.42) - 0.5), 0.7, 0, 2);
+  return <>
+    <SecHead t={t} at={a} kicker={IG} title="PRÉSENTATION GÉNÉRALE DU SUJET" />
+    <Photo x={310} y={545} w={250} h={315} src="turing_1936.jpg" sc={pp(t, wt(1, 0) + 0.1)} />
+    <Chip x={310} y={330} text="ALAN TURING · 1936" c={YEL} fg="#14101f" sc={pp(t, wt(1, 0.08))} s={30} />
+    {parts.map(([title, f], i) => { const x = 600 + (i % 2) * 630, y = 255 + Math.floor(i / 2) * 260;
+      return <Card key={title} x={x} y={y} w={580} h={225} c={LINE} p={pp(t, wt(1, f))} title={title} tc={W}>
+        {i === 0 && <Tape x={90} y={140} cells={["1", "0", "1", "1", "_"]} cw={cw} ends={false} p={k(t, wt(1, f) + 0.2, 0.8)} />}
+        {i === 1 && <><Tape x={170} y={160} cells={["1", "0", "1"]} cw={cw} ends={false} p={1} hl={{ [Math.round(pos)]: YEL }} /><HeadBox x={cxOf(170, pos, cw)} y={160} cw={cw} /></>}
+        {i === 2 && <><St x={120} y={140} l={Q0} r={40} sc={pp(t, wt(1, f) + 0.2)} /><St x={240} y={140} l={Q1} r={40} sc={pp(t, wt(1, f) + 0.3)} />
+          <St x={360} y={140} l="acc" ls={22} r={40} acc c={GRN} sc={pp(t, wt(1, f) + 0.4)} /><St x={480} y={140} l="rej" ls={22} r={40} c={RED} sc={pp(t, wt(1, f) + 0.5)} /></>}
+        {i === 3 && ([[Q0, "1", Q1, "0"], [Q1, "0", Q0, "1"]] as [React.ReactNode, string, React.ReactNode, string][]).map(([q, r, q2, w], j) =>
+          <T key={j} x={290} y={118 + j * 56} s={34} c={W} f={KM} sc={pp(t, wt(1, f) + 0.2 + j * 0.15)}>{q}, {r} → {q2}, {w}, D</T>)}
+      </Card>; })}
+    <In t={t} at={wt(2, 0)}><T x={620} y={840} s={40} c={W} f="InterX">grande simplicité</T></In>
+    <Arrow x1={810} x2={1010} y={840} p={k(t, wt(2, 0.12), 0.5)} />
+    <In t={t} at={wt(2, 0.16)}><T x={1300} y={840} s={40} c={YEL} f="InterX">n’importe quel algorithme</T></In>
+    <In t={t} at={wt(2, 0.36)}><T x={640} y={950} s={32} c={DIM} f="InterX">référence de l’informatique théorique :</T></In>
+    <Chip x={1160} y={950} text="calculabilité" c={SOFT} sc={pp(t, wt(2, 0.7))} s={32} />
+    <Arrow x1={1290} x2={1400} y={950} p={k(t, wt(2, 0.8), 0.4)} c={W} />
+    <Chip x={1520} y={950} text="complexité" c={SOFT} sc={pp(t, wt(2, 0.88))} s={32} />
+  </>; };
+
+/* ---------- Contexte historique et naissance de la machine de Turing (3–6) ---------- */
+const CTX = "CONTEXTE HISTORIQUE ET NAISSANCE DE LA MACHINE DE TURING";
+const IntroCtx = (t: number) => { const X = [250, 700, 1150, 1600], d36 = wt(5, 0.46), cur = t < S(4) ? 0 : t < S(5) ? 1 : t < d36 ? 2 : 3;
+  return <>
+    <SecHead t={t} at={S(3) + 0.1} kicker={IG} title={CTX} s={52} />
+    <Draw d="M140 760 H1820" p={k(t, wt(3, 0.3), 1.0)} c={LINE} w={5} />
+    {["≈ 1900", "1928", "1931", "1936"].map((y, i) => { const at = [wt(3, 0.36), wt(4, 0), wt(5, 0), d36][i];
+      return <g key={y}><circle cx={X[i]} cy={760} r={14 * pp(t, at)} fill={i === cur ? YEL : W} /><T x={X[i]} y={812} s={36} c={i === cur ? YEL : W} f={KM} sc={pp(t, at)}>{y}</T></g>; })}
+    {["axiomes", "règles logiques", "démonstrations"].map((l, i) => { const at = wt(3, 0.6) + i * 0.5;
+      return <g key={l} transform={`translate(${X[0]} ${650 - i * 76}) scale(${pp(t, at)})`}><rect x={-140} y={-32} width={280} height={64} rx={10} fill={SOFT} stroke={i === 2 ? YEL : LINE} strokeWidth={3} /><T x={0} y={0} s={26} c={W} f="InterX">{l}</T></g>; })}
+    <Tick x={X[0]} y={390} ok sc={pp(t, wt(3, 0.9))} s={1.3} />
+    <Caption o={fade(t, wt(3, 0.54), S(4) - 0.1)}><T x={960} y={940} s={36} c={W} f="InterX">fonder les mathématiques sur des bases <tspan fill={YEL}>parfaitement sûres</tspan></T></Caption>
+    {/* 1928 : Hilbert */}
+    <Photo x={X[1]} y={545} w={170} h={215} src="hilbert.jpg" sc={pp(t, wt(4, 0.03))} />
+    <T x={X[1]} y={330} s={34} c={W} sc={pp(t, wt(4, 0.05))}>DAVID HILBERT</T>
+    <Chip x={X[1] + 120} y={252} text="Entscheidungsproblem = « problème de la décision »" c={SOFT} sc={t < S(5) - 0.2 ? pp(t, wt(4, 0.1)) : 0} s={26} />
+    <Caption o={fade(t, wt(4, 0.32), wt(4, 0.73) - 0.05)} c={YEL}><T x={960} y={918} s={32} c={W} f="InterX">« Existe-t-il une méthode mécanique capable de décider</T><T x={960} y={962} s={32} c={W} f="InterX">si n’importe quel énoncé logique est démontrable ? »</T></Caption>
+    <Caption o={fade(t, wt(4, 0.73), S(5) - 0.1)}><T x={960} y={940} s={34} c={W} f="InterX">à cette époque, personne ne sait définir une « méthode mécanique » <tspan fill={RED}>?</tspan></T></Caption>
+    {/* 1931 : Gödel */}
+    <Photo x={X[2]} y={545} w={170} h={215} src="godel.jpg" sc={pp(t, wt(5, 0.03))} />
+    <T x={X[2]} y={330} s={34} c={W} sc={pp(t, wt(5, 0.05))}>KURT GÖDEL</T>
+    <Chip x={X[2]} y={252} text="théorèmes d’incomplétude" c={SOFT} sc={t < d36 ? pp(t, wt(5, 0.1)) : 0} s={26} />
+    <Caption o={fade(t, wt(5, 0.22), d36 - 0.05)}><T x={960} y={940} s={36} c={W} f="InterX">des énoncés <tspan fill={GRN}>vrais</tspan>… mais <tspan fill={RED}>indémontrables</tspan></T></Caption>
+    {/* 1936 : Church et Turing */}
+    <g transform={`translate(${X[3] - 120} 545) scale(${pp(t, wt(5, 0.5))})`}><rect x={-94} y={-116} width={188} height={232} rx={8} fill={SOFT} stroke={LINE} strokeWidth={3} /><T x={0} y={4} s={130} c={YEL} f={KM}>λ</T></g>
+    <T x={X[3] - 120} y={312} s={30} c={W} sc={pp(t, wt(5, 0.5))}>ALONZO CHURCH</T><T x={X[3] - 120} y={354} s={26} c={YEL} f={KM} sc={pp(t, wt(5, 0.54))}>λ-calcul</T>
+    <Photo x={X[3] + 120} y={545} w={170} h={215} src="turing_1936.jpg" sc={pp(t, wt(5, 0.61))} />
+    <T x={X[3] + 120} y={312} s={30} c={W} sc={pp(t, wt(5, 0.61))}>ALAN TURING</T><T x={X[3] + 120} y={354} s={26} c={YEL} f="InterX" sc={pp(t, wt(5, 0.67))}>sa machine</T>
+    <Caption o={k(t, wt(5, 0.74), 0.4)} c={RED}><T x={960} y={918} s={32} c={W} f="InterX">ils répondent indépendamment à Hilbert :</T><T x={960} y={962} s={32} c={W} f="InterX"><tspan fill={RED}>non</tspan>, il n’existe pas de méthode mécanique générale</T></Caption>
+    <g transform={`translate(${X[3]} 228) rotate(-5) scale(${0.88 * pp(t, wt(5, 0.86))})`}><rect x={-150} y={-44} width={300} height={88} rx={12} fill="none" stroke={RED} strokeWidth={6} /><T x={0} y={2} s={52} c={RED}>NON</T></g>
+  </>; };
+const IntroBirth = (t: number) => { const pos = bounce(Math.max(0, t - wt(6, 0.08) - 0.4), 0.6, 0, 4), pen = k(t, wt(6, 0.3), 1.6);
+  return <>
+    <SecHead t={t} at={S(6) - 3} kicker={IG} title={CTX} s={52} />
+    <In t={t} at={wt(6, 0.08)}><T x={520} y={300} s={44} c={W}>UNE MACHINE IMAGINAIRE</T></In>
+    <Tape x={270} y={520} cells={["1", "0", "1", "1", "_"]} cw={100} p={k(t, wt(6, 0.1), 0.8)} hl={{ [Math.round(pos)]: YEL }} />
+    <HeadBox x={cxOf(270, pos, 100)} y={520} sc={pp(t, wt(6, 0.14))} />
+    <Arrow x1={860} x2={1080} y={520} p={k(t, wt(6, 0.18), 0.5)} />
+    <In t={t} at={wt(6, 0.18)}><T x={970} y={470} s={34} c={YEL} f="InterX">imite</T></In>
+    <In t={t} at={wt(6, 0.24)}><T x={1420} y={300} s={44} c={W}>UN HUMAIN QUI CALCULE</T></In>
+    <g transform={`translate(1420 520) rotate(-4) scale(${pp(t, wt(6, 0.26))})`}>
+      <rect x={-170} y={-140} width={340} height={280} rx={8} fill="#efefef" style={{ filter: "drop-shadow(0 18px 30px rgba(0,0,0,0.8))" }} />
+      {[0, 1, 2, 3].map((l) => <line key={l} x1={-140} x2={140} y1={-80 + l * 60} y2={-80 + l * 60} stroke="#c8c8c8" strokeWidth={2} />)}
+      <T x={-40} y={-100} s={40} c="#222" f={KI} it>1 0 1 1</T><T x={-40} y={-40} s={40} c="#222" f={KI} it sc={pen > 0.3 ? 1 : 0}>+ 1</T>
+      <line x1={-120} x2={60} y1={-10} y2={-10} stroke="#222" strokeWidth={3} opacity={pen > 0.55 ? 1 : 0} />
+      <T x={-40} y={30} s={40} c="#222" f={KI} it sc={pen > 0.8 ? 1 : 0}>1 1 0 0</T>
+      <g transform={`translate(${110 - 40 * Math.sin(t * 5) * (pen < 1 ? 1 : 0)} ${40}) rotate(35)`}><rect x={-12} y={-140} width={24} height={130} rx={4} fill={YEL} /><path d="M-12 -10 L12 -10 L0 22 Z" fill="#e8c9a0" /><path d="M-4 12 L4 12 L0 22 Z" fill="#222" /></g>
+    </g>
+    <In t={t} at={wt(6, 0.4)}><T x={1420} y={710} s={30} c={DIM} f="InterX">avec un crayon et du papier</T></In>
+    <In t={t} at={wt(6, 0.62)}><T x={640} y={860} s={36} c={W} f="InterX">conçue <tspan fill={YEL}>avant même l’existence des ordinateurs</tspan></T></In>
+    <Arrow x1={1130} x2={1280} y={860} p={k(t, wt(6, 0.8), 0.5)} />
+    <Laptop x={1480} y={880} s={0.6} sc={pp(t, wt(6, 0.83))}><T x={0} y={-70} s={40} c={YEL} f={KM}>f(x)</T></Laptop>
+    <In t={t} at={wt(6, 0.85)}><T x={1480} y={975} s={30} c={YEL} f="InterX">à l’origine de l’informatique moderne</T></In>
+  </>; };
+
+/* ---------- Problématique du projet (7) ---------- */
+const IntroQ = (t: number) => <>
+  <SecHead t={t} at={S(7) + 0.1} kicker={IG} title="PROBLÉMATIQUE DU PROJET" />
+  <In t={t} at={wt(7, 0.12)}><T x={960} y={275} s={34} c={DIM} f="InterX">Notre travail cherche à répondre à la question suivante :</T></In>
+  <Card x={170} y={340} w={1580} h={380} c={YEL} p={pp(t, wt(7, 0.3))}>
+    <In t={t} at={wt(7, 0.33)}><T x={790} y={85} s={48} c={W} f="InterX">« Comment un modèle aussi simple,</T></In>
+    <In t={t} at={wt(7, 0.45)}><T x={790} y={160} s={48} c={W} f="InterX">composé d’un ruban, d’une tête et de quelques règles,</T></In>
+    <In t={t} at={wt(7, 0.68)}><T x={790} y={235} s={48} c={W} f="InterX">peut-il définir <tspan fill={YEL}>ce qu’un ordinateur peut calculer</tspan>,</T></In>
+    <In t={t} at={wt(7, 0.85)}><T x={790} y={310} s={48} c={W} f="InterX">et <tspan fill={YEL}>en combien de temps</tspan> ? »</T></In>
+  </Card>
+  <Tape x={500} y={870} cells={["1", "0", "1", "1", "0"]} cw={80} p={k(t, wt(7, 0.47), 0.8)} />
+  <HeadBox x={cxOf(500, 2, 80)} y={870} cw={80} sc={pp(t, wt(7, 0.55))} />
+  <g transform={`translate(1290 870) scale(${pp(t, wt(7, 0.6))})`}><rect x={-230} y={-70} width={460} height={140} rx={18} fill={PANEL} stroke={LINE} strokeOpacity={0.6} strokeWidth={3} />
+    <T x={0} y={-24} s={30} c={W} f={KM}>{Q0}, 1 → {Q1}, 0, D</T><T x={0} y={26} s={30} c={W} f={KM}>{Q1}, 0 → {Q0}, 1, D</T></g>
+  <In t={t} at={wt(7, 0.6)}><T x={1290} y={985} s={26} c={DIM} f="InterX">quelques règles</T></In>
+  <In t={t} at={wt(7, 0.47)}><T x={700} y={985} s={26} c={DIM} f="InterX">un ruban et une tête</T></In>
+</>;
+
+/* ---------- Objectifs du projet (8) ---------- */
+const OBJ2: [string[], number][] = [
+  [["retracer l’histoire d’Alan Turing et les raisons de la naissance de sa machine ;"], 0.1],
+  [["décrire la structure de la machine de Turing, sa définition mathématique", "et son fonctionnement pas à pas ;"], 0.23],
+  [["présenter et comparer les différents types de machines de Turing ;"], 0.39],
+  [["étudier la notion de calculabilité, les problèmes décidables et indécidables,", "et le problème de l’arrêt ;"], 0.49],
+  [["analyser la complexité des calculs et les classes P, NP, PSPACE et EXPTIME ;"], 0.64],
+  [["illustrer ces notions par des exemples pratiques simulés", "et analyser leur complexité ;"], 0.76],
+  [["dresser un bilan des avantages, des limites et des perspectives de ce modèle."], 0.88]];
+const IntroObj = (t: number) => { let y = 330; const cur = OBJ2.reduce((a, [, f], i) => (t >= wt(8, f) ? i : a), -1);
+  return <>
+    <SecHead t={t} at={S(8) + 0.1} kicker={IG} title="OBJECTIFS DU PROJET" />
+    <In t={t} at={wt(8, 0.03)}><T x={960} y={250} s={32} c={DIM} f="InterX">Les objectifs de ce projet sont les suivants :</T></In>
+    {OBJ2.map(([lines, f], i) => { const y0 = y; y += lines.length === 1 ? 80 : 122; const on = i === cur;
+      return <In key={i} t={t} at={wt(8, f)} dx={30} dy={0}>
+        <circle cx={175} cy={y0} r={27} fill={on ? YEL : PANEL} stroke={YEL} strokeWidth={3} /><T x={175} y={y0 + 2} s={30} c={on ? "#14101f" : YEL}>{`${i + 1}`}</T>
+        {lines.map((l, j) => <T key={j} x={228} y={y0 + j * 42} s={32} c={on ? W : "#c4c4c4"} f="InterX" anchor="start">{l}</T>)}</In>; })}
+  </>; };
+
+/* ---------- Organisation du travail (9) ---------- */
+const ORG: [string, string, string, number][] = [
+  ["I", "Généralités et historique de la machine de Turing", "Alan Turing et le contexte de la naissance de sa machine", 0.09],
+  ["II", "Structure et fonctionnement de la machine de Turing", "structure, définition mathématique, fonctionnement et simulation complète", 0.23],
+  ["III", "Les différents types de machines de Turing", "comparaison des différents types de machines", 0.38],
+  ["IV", "Machine de Turing et calculabilité", "calculabilité et problème de l’arrêt", 0.48],
+  ["V", "Machine de Turing et théorie de la complexité", "théorie de la complexité", 0.62],
+  ["VI", "Applications et exemples pratiques", "exemples pratiques et analyse de leur complexité", 0.69],
+  ["VII", "Avantages, limites et perspectives", "bilan des avantages, des limites et des perspectives", 0.8]];
+const IntroOrg = (t: number) => { const cur = ORG.reduce((a, [, , , f], i) => (t >= wt(9, f) ? i : a), -1);
+  return <>
+    <SecHead t={t} at={S(9) + 0.1} kicker={IG} title="ORGANISATION DU TRAVAIL" />
+    <In t={t} at={wt(9, 0.02)}><T x={960} y={250} s={32} c={DIM} f="InterX">Le document est organisé en sept chapitres.</T></In>
+    {ORG.map(([n, title, desc, f], i) => { const y = 318 + i * 86, on = i === cur;
+      return <In key={n} t={t} at={wt(9, f)} dx={30} dy={0}>
+        <circle cx={430} cy={y + 4} r={31} fill={on ? YEL : PANEL} stroke={YEL} strokeWidth={3} /><T x={430} y={y + 6} s={n.length > 2 ? 24 : 30} c={on ? "#14101f" : YEL}>{n}</T>
+        <T x={488} y={y - 12} s={34} c={on ? W : "#d2d2d2"} anchor="start">{`CHAPITRE ${n} : ${title}`}</T>
+        <T x={488} y={y + 25} s={25} c={DIM} f="InterX" anchor="start">{desc}</T></In>; })}
+    <Chip x={640} y={940} text="→ puis la conclusion générale" c={SOFT} sc={pp(t, wt(9, 0.95))} s={30} />
+  </>; };
+
+/* ---------- CONCLUSION GÉNÉRALE (146–149) ---------- */
+const ConcSum = (t: number) => { const c0 = S(146) + 1.9;
+  const comp: [string, number][] = [["un ruban", 0.29], ["une tête de lecture et d’écriture", 0.34], ["un ensemble fini d’états", 0.39], ["une fonction de transition", 0.43]];
+  const vars: [string, number][] = [["déterministe", 0.48], ["non déterministe", 0.5], ["à plusieurs bandes", 0.52], ["à plusieurs têtes", 0.55], ["universelle", 0.58]];
+  return <>
+    <SecHead t={t} at={c0} kicker={CG} title="RÉSUMÉ DES POINTS ESSENTIELS" />
+    <In t={t} at={Math.max(c0 + 0.4, wt(146, 0.06))}><T x={960} y={255} s={32} c={DIM} f="InterX">la machine de Turing, de son origine historique jusqu’à ses applications</T></In>
+    <Chip x={560} y={340} text="1936" c={YEL} fg="#14101f" sc={pp(t, wt(146, 0.18))} s={32} />
+    <In t={t} at={wt(146, 0.19)} dx={20} dy={0}><T x={640} y={340} s={32} c={W} f="InterX" anchor="start">pour répondre au problème de la décision de Hilbert</T></In>
+    {comp.map(([l, f], i) => { const x = 330 + i * 420, at = wt(146, f);
+      return <g key={l}>{i === 0 && <Tape x={x - 150} y={470} cells={["1", "0", "1"]} cw={100} ends={false} p={k(t, at, 0.4)} />}
+        {i === 1 && <><Tape x={x - 50} y={490} cells={["1"]} cw={100} ends={false} p={k(t, at, 0.3)} /><HeadBox x={x} y={490} sc={pp(t, at)} /></>}
+        {i === 2 && <><St x={x - 60} y={470} l={Q0} r={40} sc={pp(t, at)} /><St x={x + 60} y={470} l="acc" ls={20} r={40} acc c={GRN} sc={pp(t, at + 0.1)} /></>}
+        {i === 3 && <T x={x} y={470} s={90} c={YEL} f={KM} sc={pp(t, at)}>δ</T>}
+        <T x={x} y={575} s={26} c={W} f="InterX" sc={pp(t, at + 0.15)}>{l}</T></g>; })}
+    {vars.map(([l, f], i) => <Chip key={l} x={300 + i * 330} y={680} text={l} c={SOFT} sc={pp(t, wt(146, f))} s={28} />)}
+    <In t={t} at={wt(146, 0.6)}><T x={945} y={770} s={36} c={W} f="InterX" anchor="end">même puissance de calcul,</T></In>
+    <In t={t} at={wt(146, 0.66)}><T x={975} y={770} s={36} c={YEL} f="InterX" anchor="start">mais pas la même efficacité</T></In>
+    <Chip x={395} y={890} text="calculabilité · problème de l’arrêt" c={SOFT} sc={pp(t, wt(146, 0.71))} s={28} />
+    <In t={t} at={wt(146, 0.8)}><T x={680} y={888} s={34} c={YEL} f={KM}>→</T></In>
+    <Chip x={960} y={890} text="complexité · P, NP, PSPACE, EXPTIME" c={SOFT} sc={pp(t, wt(146, 0.81))} s={28} />
+    <In t={t} at={wt(146, 0.91)}><T x={1295} y={888} s={34} c={YEL} f={KM}>→</T></In>
+    <Chip x={1530} y={890} text="3 machines simulées" c={YEL} fg="#14101f" sc={pp(t, wt(146, 0.92))} s={28} />
+  </>; };
+const ConcAns = (t: number) => <>
+  <SecHead t={t} at={S(147) + 0.1} kicker={CG} title="RÉPONSE À LA PROBLÉMATIQUE" />
+  <In t={t} at={wt(147, 0.04)}><T x={960} y={252} s={30} c={DIM} f="InterX" it>« Comment un modèle aussi simple peut définir ce qu’un ordinateur peut calculer,</T></In>
+  <In t={t} at={wt(147, 0.19)}><T x={960} y={294} s={30} c={DIM} f="InterX" it>et en combien de temps ? »</T></In>
+  <In t={t} at={wt(147, 0.24)}><T x={960} y={372} s={36} c={W} f="InterX">La réponse tient en deux points.</T></In>
+  <Card x={110} y={430} w={830} h={510} c={LINE} p={pp(t, wt(147, 0.29))} title="1 · CE QU’UN ORDINATEUR PEUT CALCULER" tc={YEL}>
+    <In t={t} at={wt(147, 0.31)}><T x={415} y={120} s={30} c={W} f="InterX">elle capture l’essence de tout calcul mécanique</T></In>
+    <Chip x={415} y={200} text="thèse de Church-Turing" c={SOFT} sc={pp(t, wt(147, 0.42))} s={30} />
+    <In t={t} at={wt(147, 0.47)}><T x={415} y={285} s={34} c={YEL} f="InterX">ce qu’elle ne peut pas calculer,</T></In>
+    <In t={t} at={wt(147, 0.53)}><T x={415} y={332} s={34} c={YEL} f="InterX">aucun ordinateur ne le peut</T></In>
+    <In t={t} at={wt(147, 0.58)}><T x={415} y={425} s={30} c={W} f="InterX">le <tspan fill={RED}>problème de l’arrêt</tspan> : hors de portée</T></In>
+  </Card>
+  <Card x={980} y={430} w={830} h={510} c={LINE} p={pp(t, wt(147, 0.7))} title="2 · EN COMBIEN DE TEMPS" tc={YEL}>
+    <In t={t} at={wt(147, 0.72)}><T x={415} y={130} s={34} c={W} f="InterX">nombre d’étapes  →  <tspan fill={YEL}>temps</tspan></T></In>
+    <In t={t} at={wt(147, 0.78)}><T x={415} y={195} s={34} c={W} f="InterX">nombre de cases  →  <tspan fill={YEL}>espace</tspan></T></In>
+    <Chip x={415} y={290} text="mesure indépendante de la technologie" c={YEL} fg="#14101f" sc={pp(t, wt(147, 0.86))} s={30} />
+    <In t={t} at={wt(147, 0.92)}><T x={415} y={400} s={30} c={W} f="InterX">pour comparer rigoureusement les algorithmes</T></In>
+  </Card>
+</>;
+const ConcImp = (t: number) => <>
+  <SecHead t={t} at={S(148) + 0.1} kicker={CG} title="IMPORTANCE DE LA MACHINE DE TURING DANS LA COMPLEXITÉ" s={50} />
+  <Card x={380} y={260} w={540} h={150} c={LINE} p={pp(t, wt(148, 0.2))}><T x={270} y={52} s={44} c={YEL}>TEMPS</T><T x={270} y={108} s={30} c={W} f="InterX">= nombre d’étapes</T></Card>
+  <Card x={1000} y={260} w={540} h={150} c={LINE} p={pp(t, wt(148, 0.27))}><T x={270} y={52} s={44} c={YEL}>ESPACE</T><T x={270} y={108} s={30} c={W} f="InterX">= nombre de cases</T></Card>
+  <In t={t} at={wt(148, 0.32)}><T x={960} y={460} s={30} c={DIM} f="InterX">une définition précise, grâce à la machine de Turing</T></In>
+  <In t={t} at={wt(148, 0.42)}><T x={960} y={555} s={36} c={W} f="InterX">elle sert d’étalon pour :</T></In>
+  <Chip x={430} y={640} text="définir les classes de complexité" c={SOFT} sc={pp(t, wt(148, 0.46))} s={28} />
+  <Chip x={985} y={640} text="comparer par des réductions" c={SOFT} sc={pp(t, wt(148, 0.58))} s={28} />
+  <Chip x={1500} y={640} text="formuler P = NP" c={SOFT} sc={pp(t, wt(148, 0.68))} s={28} />
+  <T x={960} y={790} s={110} c={YEL} sc={pp(t, wt(148, 0.7))} glow={YEL}>P = NP ?</T>
+  <Chip x={960} y={915} text="ouverte depuis plus de cinquante ans" c={SOFT} sc={pp(t, wt(148, 0.77))} s={30} />
+  <In t={t} at={wt(148, 0.86)}><T x={960} y={990} s={30} c={DIM} f="InterX">l’un des grands défis des mathématiques</T></In>
+</>;
+const ConcPersp = (t: number) => { const fin = k(t, E(149) - 0.3, 0.6);
+  const nm: [string, number][] = [["CALCUL PARALLÈLE ET DISTRIBUÉ", 0.59], ["INFORMATIQUE QUANTIQUE", 0.63], ["INTELLIGENCE ARTIFICIELLE", 0.66]];
+  return <>
+    <g opacity={1 - fin}>
+      <SecHead t={t} at={S(149) + 0.1} kicker={CG} title="PERSPECTIVES ET OUVERTURE" />
+      <In t={t} at={wt(149, 0.05)}><T x={960} y={268} s={34} c={W} f="InterX">l’un des modèles les plus importants de l’histoire de l’informatique théorique</T></In>
+      <In t={t} at={wt(149, 0.23)}><T x={960} y={326} s={28} c={DIM} f="InterX">malgré son caractère abstrait et certaines limites</T></In>
+      <In t={t} at={wt(149, 0.32)}><T x={960} y={414} s={32} c={W} f="InterX">un outil essentiel pour comprendre les fondements de l’informatique</T></In>
+      <In t={t} at={wt(149, 0.45)}><T x={960} y={466} s={32} c={W} f="InterX">et orienter les recherches vers de nouveaux modèles de calcul :</T></In>
+      {nm.map(([l, f], i) => <Card key={l} x={170 + i * 550} y={540} w={480} h={120} c={YEL} p={pp(t, wt(149, f))}><T x={240} y={62} s={34} c={W}>{l}</T></Card>)}
+      <In t={t} at={wt(149, 0.7)}><T x={960} y={760} s={30} c={DIM} f="InterX">près de quatre-vingt-dix ans après sa naissance, la question posée par Turing</T></In>
+      <T x={960} y={860} s={80} c={YEL} sc={pp(t, wt(149, 0.84))} glow={YEL}>« QUE PEUT FAIRE UNE MACHINE ? »</T>
+      <In t={t} at={wt(149, 0.94)}><T x={960} y={965} s={32} c={W} f="InterX">reste au cœur de l’informatique.</T></In>
+    </g>
+    {fin > 0 && <g opacity={fin}><T x={960} y={430} s={100} c={W} glow={BLUE}>PROJET SUR LA MACHINE DE TURING</T><Squig x={960} y={500} w={1060} p={k(t, E(149) + 0.1, 0.5)} c={YEL} />
+      <T x={960} y={590} s={44} c={DIM} f="InterX">De la calculabilité à la complexité</T>
+      <Tape x={685} y={760} cells={["1", "0", "1", "1", "0"]} cw={110} p={1} hl={{ [Math.round(bounce(t, 0.6, 0, 4))]: YEL }} /><HeadBox x={cxOf(685, bounce(t, 0.6, 0, 4), 110)} y={760} cw={110} /></g>}
+  </>; };
+
 type Scene = { a: number; r: (t: number) => React.ReactNode; cam: Key[] };
 const st0 = (i: number) => (i === 0 ? 0 : S(i) - 0.35);
 const SCENES: Scene[] = [
-  { a: 0, r: Hook, cam: [[0, 960, 540, 1.15], [S(1), 960, 440, 1.0], [S(2) + 0.5, 760, 560, 1.1], [E(2), 760, 560, 1.12]] },
-  { a: st0(3), r: Contexte, cam: [[S(3), 400, 560, 1.15], [E(3), 420, 580, 1.15], [S(4) + 0.3, 720, 580, 1.15], [E(4), 740, 600, 1.12], [S(5) + 0.3, 1090, 580, 1.15], [E(5), 1090, 600, 1.12], [S(6) + 0.3, 1520, 560, 1.15], [mid(6, 0.6), 1400, 600, 1.05], [E(6), 960, 560, 1.0]] },
-  { a: st0(7), r: Plan, cam: [[S(7), 960, 230, 1.25], [E(7), 960, 260, 1.2], [S(8) + 0.4, 960, 520, 1.15], [E(8), 960, 540, 1.1], [S(9) + 0.4, 960, 780, 1.12], [E(9), 960, 560, 1.0]] },
+  { a: 0, r: IntroCover, cam: [[0, 960, 540, 1.0], [E(0), 960, 546, 1.02]] },
+  { a: st0(1), r: IntroPres, cam: [[S(1), 960, 540, 1.0], [E(2), 960, 546, 1.02]] },
+  { a: st0(3), r: IntroCtx, cam: [[S(3), 960, 540, 1.0], [E(5), 960, 546, 1.02]] },
+  { a: st0(6), r: IntroBirth, cam: [[S(6), 960, 540, 1.0], [E(6), 960, 546, 1.02]] },
+  { a: st0(7), r: IntroQ, cam: [[S(7), 960, 540, 1.0], [E(7), 960, 546, 1.02]] },
+  { a: st0(8), r: IntroObj, cam: [[S(8), 960, 540, 1.0], [E(8), 960, 546, 1.02]] },
+  { a: st0(9), r: IntroOrg, cam: [[S(9), 960, 540, 1.0], [E(9), 960, 546, 1.02]] },
   { a: st0(10), r: Bio, cam: [[S(10), 700, 560, 1.0], [S(10) + 1.9, 640, 540, 1.1], [E(10), 900, 540, 1.05], [S(11) + 0.3, 1150, 500, 1.1], [E(11), 1150, 520, 1.08], [S(12) + 0.3, 1200, 500, 1.06], [E(12), 1200, 520, 1.05], [S(13) + 0.3, 1250, 540, 1.08], [E(13), 1250, 560, 1.06], [S(14) + 0.3, 1250, 520, 1.08], [E(14), 1250, 540, 1.06], [S(15) + 0.3, 1200, 520, 1.05], [E(15), 1100, 600, 1.0]] },
   { a: st0(16), r: Hilbert, cam: [[S(16), 600, 520, 1.15], [mid(16, 0.4), 700, 400, 1.15], [E(16), 760, 420, 1.12], [S(17) + 0.4, 1250, 560, 1.12], [E(17), 1150, 600, 1.05]] },
   { a: st0(18), r: DefWhy, cam: [[S(18), 960, 220, 1.2], [mid(18, 0.5), 1350, 520, 1.15], [E(18), 1350, 560, 1.15], [S(19) + 0.3, 1300, 640, 1.08], [E(19), 1300, 640, 1.08], [S(20) + 0.4, 600, 600, 1.12], [E(20), 900, 580, 1.0], [S(21) + 0.3, 800, 760, 1.08], [E(21), 900, 700, 1.0]] },
@@ -1438,7 +1684,10 @@ const SCENES: Scene[] = [
   { a: st0(141), r: VsPC, cam: [[S(141), 500, 480, 1.2], [mid(141, 0.4), 520, 480, 1.2], [mid(141, 0.5), 1420, 520, 1.2], [E(141), 1300, 560, 1.05], [S(142) + 0.3, 960, 530, 1.05], [E(142), 960, 540, 1.0]] },
   { a: st0(143), r: Influence, cam: [[S(143), 960, 520, 1.0], [E(143), 960, 520, 1.03], [S(144) + 0.3, 960, 560, 1.1], [E(144), 960, 560, 1.05]] },
   { a: st0(145), r: Persp, cam: [[S(145), 960, 540, 1.0], [mid(145, 0.12), 860, 470, 1.04], [mid(145, 0.3), 1060, 470, 1.04], [mid(145, 0.5), 860, 620, 1.04], [mid(145, 0.72), 1060, 620, 1.04], [E(145), 960, 540, 1.0]] },
-  { a: st0(146), r: Concl, cam: [[S(146), 960, 540, 1.0], [S(146) + 1.9, 960, 300, 1.2], [E(146), 960, 320, 1.2], [S(147) + 0.3, 960, 600, 1.2], [E(147), 960, 600, 1.2], [S(148) + 0.3, 960, 800, 1.2], [E(148), 960, 820, 1.2], [S(149) + 0.3, 960, 900, 1.15], [mid(149, 0.55), 960, 540, 1.0], [TM.total, 960, 540, 1.04]] },
+  { a: st0(146), r: ConcSum, cam: [[S(146), 960, 540, 1.0], [E(146), 960, 546, 1.02]] },
+  { a: st0(147), r: ConcAns, cam: [[S(147), 960, 540, 1.0], [E(147), 960, 546, 1.02]] },
+  { a: st0(148), r: ConcImp, cam: [[S(148), 960, 540, 1.0], [E(148), 960, 546, 1.02]] },
+  { a: st0(149), r: ConcPersp, cam: [[S(149), 960, 540, 1.0], [TM.total, 960, 546, 1.02]] },
 ];
 const CHAPS: [number, string, string][] = [[0, "INTRODUCTION", ""], [10, "CHAPITRE 1", "Généralités et historique"], [30, "CHAPITRE 2", "Structure et fonctionnement"], [48, "CHAPITRE 3", "Les différents types de machines"],
   [59, "CHAPITRE 4", "Machine de Turing et calculabilité"], [109, "CHAPITRE 5", "Machine de Turing et complexité"], [124, "CHAPITRE 6", "Applications et exemples pratiques"], [135, "CHAPITRE 7", "Avantages, limites et perspectives"], [146, "CONCLUSION", "Conclusion générale"]];
