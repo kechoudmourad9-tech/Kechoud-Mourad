@@ -11,7 +11,7 @@ const fr = (x: number) => Math.round(x * FPS);
 import TM from "./timing.json";
 export const RAPPORT_FRAMES = fr(TM.total);
 // restrained palette: white drawings, yellow accent, red = reject/problem, green = accept/solution, one discreet blue
-const CYAN = "#eeeeee", PUR = "#9a9a9a", RED = "#ffd23f", BLUE = "#bdbdbd", YEL = "#ffd23f", GRN = "#f2f2f2";
+const CYAN = "#eeeeee", PUR = "#9a9a9a", RED = "#ff5252", BLUE = "#bdbdbd", YEL = "#ffd23f", GRN = "#3ecf82";
 const sat = (x: number) => Math.min(1, Math.max(0, x));
 const eo = (x: number) => 1 - Math.pow(1 - sat(x), 3);
 /** 0→1 eased progress starting at `at` (s) lasting d */
@@ -111,13 +111,13 @@ const cam = (keys: Key[], t: number): [number, number, number] => {
 const soft = (z: number) => (1 + (z - 1) * 0.34) * 0.86;   // keep the drawings small: the camera only leans in
 const INKC = "#ffffff", DIM = "#a6a6a6";
 const Chip: React.FC<{ x: number; y: number; text: string; c?: string; fg?: string; sc?: number; s?: number }> = ({ x, y, text, c = RED, fg = "#fff", sc = 1, s = 30 }) => {
-  const w = text.length * s * 0.5 + s * 1.1; return sc <= 0.001 ? null : <g transform={`translate(${x} ${y}) scale(${sc})`}><rect x={-w / 2} y={-s * 0.72} width={w} height={s * 1.44} rx={s * 0.42} fill={c} /><T x={0} y={1} s={s} c={/^#[def]/i.test(c) && fg === "#fff" ? "#141414" : fg}>{text}</T></g>;
+  const w = text.length * s * 0.5 + s * 1.1; return sc <= 0.001 ? null : <g transform={`translate(${x} ${y}) scale(${sc})`}><rect x={-w / 2} y={-s * 0.72} width={w} height={s * 1.44} rx={s * 0.42} fill={c} /><T x={0} y={1} s={s} c={fg}>{text}</T></g>;
 };
 /* ---------- scenes: one dark image per idea, everything animates inside it ---------- */
 const sub = (b: string, i: string) => <>{b}<tspan dy="0.28em" fontSize="62%">{i}</tspan><tspan dy="-0.28em" fontSize="1%"> </tspan></>;
 const Tick: React.FC<{ x: number; y: number; ok: boolean; sc: number; s?: number }> = ({ x, y, ok, sc, s = 1 }) => sc <= 0.001 ? null : (
   <g transform={`translate(${x} ${y}) scale(${sc * s})`}><circle r={22} fill={ok ? GRN : RED} style={{ filter: `drop-shadow(0 0 10px ${ok ? GRN : RED})` }} />
-    <path d={ok ? "M-10 1 L-3 9 L11 -8" : "M-9 -9 L9 9 M9 -9 L-9 9"} fill="none" stroke="#141414" strokeWidth={5} strokeLinecap="round" strokeLinejoin="round" /></g>);
+    <path d={ok ? "M-10 1 L-3 9 L11 -8" : "M-9 -9 L9 9 M9 -9 L-9 9"} fill="none" stroke="#fff" strokeWidth={5} strokeLinecap="round" strokeLinejoin="round" /></g>);
 const Axes: React.FC<{ ox: number; oy: number; w: number; h: number; p: number; xl?: string; yl?: React.ReactNode }> = ({ ox, oy, w, h, p, xl = "n", yl }) => <>
   <Draw d={`M${ox} ${oy} H${ox + w}`} p={p} c={INKC} w={4} /><Draw d={`M${ox} ${oy} V${oy - h}`} p={p} c={INKC} w={4} />
   <Head x={ox + w + 4} y={oy} p={p} c={INKC} s={0.45} /><Head x={ox} y={oy - h - 4} p={p} c={INKC} s={0.45} a={-90} />
